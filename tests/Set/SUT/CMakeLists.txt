@@ -1,4 +1,4 @@
-include_directories ($ENV{PFUNIT}/mod)
+include_directories (${PFUNIT}/mod)
 
 # Use relative paths for includes so that CMake correctly
 # detects the need to generate include files.
@@ -82,4 +82,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(setSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
-add_dependencies(setSUT ftl shared template_macros ftl types)
+add_dependencies(setSUT shared template_macros types)

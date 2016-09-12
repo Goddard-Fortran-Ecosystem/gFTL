@@ -22,9 +22,8 @@ endif ()
 include (cmake_utils/CheckCompilerCapabilities.cmake)
 
 add_subdirectory(include)
-add_subdirectory(src)
 add_subdirectory(examples)
 
-if(EXISTS $ENV{PFUNIT})
+if(EXISTS ${PFUNIT})
    add_subdirectory(tests)
 endif()

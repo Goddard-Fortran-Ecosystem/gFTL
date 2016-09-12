@@ -38,7 +38,7 @@ include_directories (${FTL_BINARY_DIR}/mod)
 include_directories(${FTL_BINARY_DIR}/tests/shared)
 include_directories (${FTL_SOURCE_DIR}/include)
 include_directories (${FTL_BINARY_DIR}/include)
-include_directories ($ENV{PFUNIT}/mod)
+include_directories (${PFUNIT}/mod)
 
 
 set (SRCS)
@@ -88,4 +88,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(mapSUT STATIC EXCLUDE_FROM_ALL ${SRCS} ${altSRCS})
-add_dependencies(mapSUT shared template_macros ftl types)
+add_dependencies(mapSUT shared template_macros types)

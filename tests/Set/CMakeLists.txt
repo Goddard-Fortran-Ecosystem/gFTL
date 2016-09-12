@@ -1,9 +1,9 @@
 add_subdirectory(SUT)
 
 
-include_directories ($ENV{PFUNIT}/include)
-include_directories ($ENV{PFUNIT}/mod)
-link_directories($ENV{PFUNIT}/lib)
+include_directories (${PFUNIT}/include)
+include_directories (${PFUNIT}/mod)
+link_directories(${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories (${FTL_BINARY_DIR}/mod)
@@ -70,7 +70,7 @@ foreach (type ${types} )
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -Dparam=${type} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND $ENV{PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -86,7 +86,7 @@ target_link_libraries (testSet shared setSUT pfunit)
 add_dependencies (testSet types)
 add_dependencies (testSet type_test_values)
 
-set (driver $ENV{PFUNIT}/include/driver.F90)
+set (driver ${PFUNIT}/include/driver.F90)
 add_executable (settests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (settests.x  pfunit testSet setSUT shared ftl)
 add_custom_target (settests COMMAND settests.x DEPENDS settests.x EXCLUDE_FROM_ALL)

@@ -1,9 +1,9 @@
 add_subdirectory (SUT)
 
 
-include_directories  ($ENV{PFUNIT}/include)
-include_directories  ($ENV{PFUNIT}/mod)
-link_directories ($ENV{PFUNIT}/lib)
+include_directories  (${PFUNIT}/include)
+include_directories  (${PFUNIT}/mod)
+link_directories (${PFUNIT}/lib)
 
 include_directories  (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories  (${FTL_SOURCE_DIR}/include)
@@ -66,7 +66,7 @@ foreach (type ${types} )
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -Dparam=${type} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND $ENV{PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -80,7 +80,7 @@ foreach (type ${types} )
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -Dparam=${type} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND $ENV{PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -94,7 +94,7 @@ target_link_libraries (testVector shared vectorSUT pfunit)
 add_dependencies (testVector types)
 add_dependencies (testVector type_test_values)
 
-set (driver $ENV{PFUNIT}/include/driver.F90)
+set (driver ${PFUNIT}/include/driver.F90)
 add_executable (vectortests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (vectortests.x pfunit testVector vectorSUT shared ftl)
 add_custom_target (vectortests COMMAND vectortests.x DEPENDS vectortests.x EXCLUDE_FROM_ALL)

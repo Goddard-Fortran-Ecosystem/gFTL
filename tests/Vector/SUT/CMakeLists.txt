@@ -1,6 +1,6 @@
 include_directories (${FTL_SOURCE_DIR}/include)
 include_directories (${FTL_BINARY_DIR}/include)
-include_directories ($ENV{PFUNIT}/mod)
+include_directories (${PFUNIT}/mod)
 include_directories (${FTL_BINARY_DIR}/mod)
 include_directories(${FTL_BINARY_DIR}/tests/shared)
 file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
@@ -77,4 +77,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(vectorSUT EXCLUDE_FROM_ALL STATIC ${SRCS})
-add_dependencies(vectorSUT shared template_macros ftl types)
+add_dependencies(vectorSUT shared template_macros types)
