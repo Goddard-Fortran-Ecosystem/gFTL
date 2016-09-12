@@ -1,0 +1,10 @@
+Q) Why am I getting messages about "IMPLICIT statement not positioned
+correctly within the scoping unit"?  
+
+A) Of necessity, the template header files include an "IMPLICIT NONE"
+statement.  Users should not put their own "IMPLICIT NONE" statement.
+Likewise only CPP token/macro/include definitions and Fortran USE
+statements should appear before the CPP include statement for the
+template.
+
+

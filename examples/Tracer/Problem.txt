@@ -1,0 +1,4 @@
+1) setValue in values. different rank and dimension?
+2) getValue in Values. a function or a subroutine?
+3) equals == for values
+4) assignment = for values

@@ -1,0 +1,7 @@
+changecom()
+define(_param,_`'param())
+define(__param,__`'param())
+define(_PARAM,_`'translit(param(),`a-z',`A-Z'))
+define(__PARAM,__`'translit(param(),`a-z',`A-Z'))
+ifelse(param,type,`define(`_base',)',`define(`_base',_param())')
+ifelse(param,type,`define(`_BASE',)',`define(`_BASE',_PARAM())')

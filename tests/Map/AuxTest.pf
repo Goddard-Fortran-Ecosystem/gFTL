@@ -1,0 +1,19 @@
+module AuxTest_mod
+   use pfunit_mod
+   implicit none
+
+contains
+
+!@test
+   subroutine test_loggerUseCase()
+      use integerintegermap_mod
+
+      type (map) :: m1, m2
+
+      call m2%insert(1,1)
+      m1 = m2
+
+   end subroutine test_loggerUseCase
+
+
+end module AuxTest_mod

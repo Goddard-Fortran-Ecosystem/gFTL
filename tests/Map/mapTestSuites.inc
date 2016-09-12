@@ -1,0 +1,34 @@
+! Vary value type
+ADD_TEST_SUITE(Test_integerintegerMap_mod_suite)
+ADD_TEST_SUITE(Test_integerrealMap_mod_suite)
+ADD_TEST_SUITE(Test_integerlogicalMap_mod_suite)
+ADD_TEST_SUITE(Test_integercomplexMap_mod_suite)
+ADD_TEST_SUITE(Test_integerFooMap_mod_suite)
+ADD_TEST_SUITE(Test_integerFooPolyMap_mod_suite)
+ADD_TEST_SUITE(Test_integerintegerPtrMap_mod_suite)
+ADD_TEST_SUITE(Test_integerintegerAllocMap_mod_suite)
+ADD_TEST_SUITE(Test_integerinteger1dMap_mod_suite)
+ADD_TEST_SUITE(Test_integerinteger2d_fixedExtentsMap_mod_suite)
+ADD_TEST_SUITE(Test_integerinteger2dPtrMap_mod_suite)
+
+! Vary key type
+ADD_TEST_SUITE(Test_real32IntegerMap_mod_suite)
+ADD_TEST_SUITE(Test_complexIntegerMap_mod_suite)
+ADD_TEST_SUITE(Test_deferredLengthStringintegerMap_mod_suite)
+ADD_TEST_SUITE(Test_integerPtrIntegerMap_mod_suite)
+ADD_TEST_SUITE(Test_integerAllocIntegerMap_mod_suite)
+ADD_TEST_SUITE(Test_integer1dIntegerMap_mod_suite)
+ADD_TEST_SUITE(Test_integer2dPtrIntegerMap_mod_suite)
+
+! duplicates
+ADD_TEST_SUITE(Test_integerPtrintegerPtrMap_mod_suite)
+ADD_TEST_SUITE(Test_integer1dinteger1dMap_mod_suite)
+
+
+#ifdef SUPPORT_FOR_POINTERS_TO_DEFERRED_LENGTH_STRINGS
+  ADD_TEST_SUITE(Test_integerdeferredLengthStringMap_mod_suite)
+ADD_TEST_SUITE(Test_deferredLengthStringdeferredLengthStringMap_mod_suite)
+#endif
+
+
+ADD_TEST_SUITE(AuxTest_mod_suite)

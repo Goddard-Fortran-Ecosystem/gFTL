@@ -1,0 +1,41 @@
+! Vary type
+ADD_TEST_SUITE(Test_IntegerVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_RealVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_ComplexVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_LogicalVectorIterator_mod_suite)
+
+! Vary kind/len
+ADD_TEST_SUITE(Test_Real64VectorIterator_mod_suite)
+
+! Vary attributes
+ADD_TEST_SUITE(Test_IntegerAllocVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_IntegerPtrVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_Integer1dVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_Integer2dVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_Integer2d_fixedExtentsVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_Integer2dPtrVectorIterator_mod_suite)
+
+! Derived types
+ADD_TEST_SUITE(Test_FooVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_FooPtrVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_FooPolyVectorIterator_mod_suite)
+ADD_TEST_SUITE(Test_FooPolyPtrVectorIterator_mod_suite)
+
+! Unlimited polymorphic
+#ifndef __GFORTRAN__
+ADD_TEST_SUITE(Test_UnlimitedPolyVectorIterator_mod_suite)
+#endif
+ADD_TEST_SUITE(Test_UnlimitedPolyPtrVectorIterator_mod_suite)
+
+
+! Some compilers have bugs related to returning pointers to fixed
+! length strings
+#ifdef SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS
+ADD_TEST_SUITE(Test_Character17VectorIterator_mod_suite)
+#endif
+
+! And other compilers have bugs related to returning pointers to
+! deferred length strings
+#ifdef SUPPORT_FOR_POINTERS_TO_DEFERRED_LENGTH_STRINGS
+ADD_TEST_SUITE(Test_DeferredLengthStringVectorIterator_mod_suite)
+#endif

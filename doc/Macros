@@ -1,0 +1,29 @@
+API
+
+\item \verb+_entry+
+\item \verb+_dim+
+\item \verb+_pointer+
+\item \verb+_allocatable+
+\item \verb+_string+
+\item \verb+_LEN+
+\item \verb+_logical+
+\item \verb+EQUAL_DEFINED+
+\item \verb+LESS_THAN_DEFINED+
+
+Items with defaults that users can override.
+\item \verb+__GET+
+\item \verb+__EQ+
+\item \verb+__COMPARE+
+\item \verb+__SET+
+\item \verb+__COMPARE+
+
+
+Internal
+
+\item \verb+__wrapentry+
+\item \verb+__ptrentry+
+\item \verb+__trgentry+
+\item \verb+__ALLOC_SET+
+\item \verb+__ptrtype+
+\item \verb+__trgtype+
+\item \verb+__NEED_COMPARE+

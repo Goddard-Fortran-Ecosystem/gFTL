@@ -1,0 +1,24 @@
+The following cases are covered by unit tests.  See footnotes below
+for per-compiler exceptions and other irregular support.
+
+
+* Vector
+  - integer
+  - real
+  - logical
+  - real(kind=real64)
+  - integer, pointer
+  - integer, allocatable, dimension(:)
+  - integer, allocatable, dimension(:,:)
+  - character(len=17)
+  - character(len=*), allocatable
+  - type (Foo)
+
+
+* VectorIterator
+
+* Map
+
+* Map Iterator
+
+
