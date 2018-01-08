@@ -20,6 +20,9 @@
 
 #include "set_decl.inc"
 
+#include "unused.inc"
+#include "error_codes.inc"
+
       contains
 
 #include "set_impl.inc"

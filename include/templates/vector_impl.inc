@@ -66,26 +66,35 @@
       ! =======================
       !  at
       ! =======================
-      function __PROC(at_size_kind)(this, i) result(res)
+      function __PROC(at_size_kind)(this, i, unused, rc) result(res)
          class(__vector), target, intent(in) :: this
          integer(KIND=SIZE_KIND), intent(in) :: i
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
          __type_declare_result, pointer :: res
 
-         if ((i<=0).or.(i>this%vsize)) stop 'vector::at() out of range'
+         _UNUSED_DUMMY(unused)
+
+         if ((i<=0).or.(i>this%vsize)) then
+            if (present(rc)) rc = OUT_OF_RANGE
+            return
+         end if
+
          res=>__GET(this%elements(i))
          return
       end function __PROC(at_size_kind)
 
 #ifdef SUPPORT_FOR_INT64
-      function __PROC(at_32)(this, i) result(res)
+      function __PROC(at_32)(this, i, unused, rc) result(res)
          class(__vector), target, intent(in) :: this
          integer, intent(in) :: i
          __type_declare_result, pointer :: res
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
 
-!!$         res => this%at_size_kind(int(i,kind=SIZE_KIND))
-         ! workaround for ifort 15.0.3 (no reproducer submitted)
-         if ((i<=0).or.(i>this%vsize)) stop 'vector::at() out of range'
-         res=>__GET(this%elements(i))
+         _UNUSED_DUMMY(unused)
+
+         res => this%at_size_kind(int(i,kind=SIZE_KIND),rc=rc)
 
       end function __PROC(at_32)
 #endif
@@ -372,13 +381,18 @@
       ! =======================
       !  push_back
       ! =======================
-      subroutine __PROC(push_back)(this, value)
+      subroutine __PROC(push_back)(this, value, unused, rc)
          class(__vector), intent(inout) :: this
          __type_declare_dummy, intent(in) :: value
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
+
+         _UNUSED_DUMMY(unused)
 
          call this%grow_to(this%vsize+1)
-         call this%resize(this%vsize+1, value)
+         call this%resize(this%vsize+1, value, rc=rc)
          return
+
       end subroutine __PROC(push_back)
       
       
@@ -396,13 +410,21 @@
       ! =======================
       !  insert
       ! =======================
-      subroutine __PROC(insert_size_kind)(this, index, value)
+      subroutine __PROC(insert_size_kind)(                              &
+     &   this, index, value, unused, rc)
          class(__vector), intent(inout) :: this
+
          integer(kind=SIZE_KIND), intent(in) :: index
+
          __type_declare_dummy, intent(in) :: value
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
+
          __type_declare_component :: temp
          integer(kind=SIZE_KIND) :: i, n
-         
+
+         _UNUSED_DUMMY(unused)
+
          n = this%vsize
          if (index==n+1) then
            call this%push_back(value)
@@ -410,7 +432,7 @@
          endif
          call this%grow_to(this%vsize+1)
          __TYPE_ASSIGN(temp,__GET(this%elements(n)))
-         call this%resize(n+1, temp)
+         call this%resize(n+1, temp, rc=rc)
          
          do i = n-1, index, -1
           __TYPE_MOVE(__GET(this%elements(i+1)),__GET(this%elements(i)))
@@ -433,15 +455,21 @@
       ! =======================
       !  resize
       ! =======================
-      subroutine __PROC(resize_size)(this, newsize, value)
+      subroutine __PROC(resize_size)(this, newsize, value, unused, rc)
          class(__vector), intent(inout) :: this
          integer(kind=SIZE_KIND), intent(in) :: newsize
          __type_declare_dummy, optional, intent(in) :: value
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
+
          integer(kind=SIZE_KIND) :: oldSize
          integer(kind=SIZE_KIND) :: i
          
          if (newSize == this%vsize) return
-         if (newSize < 0) stop 'vector resize: negative size'
+         if (newSize < 0) then
+            if (present(rc)) rc = ILLEGAL_INPUT
+            return
+         end if
          oldSize=this%vsize
          
          call this%reserve(newSize)
@@ -460,12 +488,16 @@
       end subroutine __PROC(resize_size)
 
 #ifdef SUPPORT_FOR_INT64
-      subroutine __PROC(resize_32)(this, newsize, value)
+      subroutine __PROC(resize_32)(this, newsize, value, unused, rc)
          class(__vector), intent(inout) :: this
          integer, intent(in) :: newsize
          __type_declare_dummy, optional, intent(in) :: value
+         type (KeywordEnforcer), optional, intent(in) :: unused
+         integer, optional, intent(out) :: rc
 
-         call this%resize(int(newsize,kind=SIZE_KIND), value)
+         _UNUSED_DUMMY(unused)
+         
+         call this%resize(int(newsize,kind=SIZE_KIND), value, rc=rc)
 
       end subroutine __PROC(resize_32)
 #endif
@@ -648,7 +680,11 @@
          class (__vector), target, intent(in) :: this
          
          iter%currentIndex = 1
-         iter%elements => this%elements
+         if (allocated(this%elements)) then
+            iter%elements => this%elements
+         else
+            iter%elements => null()
+         end if
          
       end function __PROC(begin)
       
@@ -662,8 +698,12 @@
          class (__vector), target, intent(in) :: this
          type (__iterator) :: iter
          
-         iter%elements => this%elements
          iter%currentIndex = this%size() + 1 ! past the end
+         if (allocated(this%elements)) then
+            iter%elements => this%elements
+         else
+            iter%elements => null()
+         end if
          
       end function __PROC(end)
 #endif      
@@ -677,7 +717,11 @@
          class (__vector), target, intent(in) :: this
          
          iter%currentIndex = this%vsize
-         iter%elements => this%elements
+         if (allocated(this%elements)) then
+            iter%elements => this%elements
+         else
+            iter%elements => null()
+         end if
          
       end function __PROC(rbegin)
       
@@ -691,8 +735,12 @@
          class (__vector), target, intent(in) :: this
          type (__riterator) :: iter
          
-         iter%elements => this%elements
          iter%currentIndex = 0 ! before beginning
+         if (allocated(this%elements)) then
+            iter%elements => this%elements
+         else
+            iter%elements => null()
+         end if
          
       end function __PROC(rend)
 #endif

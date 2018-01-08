@@ -29,6 +29,9 @@
 
 #include "vector_decl.inc"
 
+#include "unused.inc"
+#include "error_codes.inc"
+
       contains
 
 #include "vector_impl.inc"

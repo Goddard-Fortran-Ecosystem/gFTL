@@ -100,6 +100,9 @@
 #undef __iterator
 #undef __container_prefix
 
+#include "unused.inc"
+#include "error_codes.inc"
+
       contains
 
 ! Token is cleared out with the above include.  Need to redefine.
