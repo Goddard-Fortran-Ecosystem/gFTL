@@ -683,7 +683,7 @@ contains
 
 @test
    subroutine test_eraseOneCheckIter()
-      type (Vector) :: v
+      type (Vector), target :: v
       type (VectorIterator) :: iter
 
       v = Vector()

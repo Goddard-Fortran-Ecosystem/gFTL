@@ -23,7 +23,7 @@ module Test_`'param()VectorIterator_mod
 
 #include "genericItems_decl.inc"
 
-   type (Vector) :: v
+   type (Vector), target :: v
 
 contains
 
@@ -238,7 +238,7 @@ contains
 @test
    subroutine test_ValidIteratorAfterVectorSwap()
       type (VectorIterator) :: i1, i2
-      type (Vector) :: v1, v2
+      type (Vector), target :: v1, v2
 
       v1 = Vector()
       call v1%push_back(TWO)
