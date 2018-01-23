@@ -3,14 +3,17 @@ if(COMMAND cmake_policy)
   cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
-set(CMAKE_Fortran_COMPILER ${FC})
-
-project (FTL)
-enable_language (Fortran)
+set(PFUNIT "" CACHE PATH "(optional) path to installed testing framework")
+if (PFUNIT)
+  set(CMAKE_Fortran_COMPILER ${FC})
+  project (FTL Fortran)
+else ()
+  project (FTL NONE)
+endif()
 
 add_subdirectory(include)
 add_subdirectory(examples)
 
-if(EXISTS ${PFUNIT})
+if(PFUNIT)
    add_subdirectory(tests)
 endif()
