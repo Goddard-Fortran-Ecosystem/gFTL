@@ -32,7 +32,6 @@ ADD_TEST_SUITE(Test_FooPolyPtrSet_mod_suite)
 
 ! Unlimited polymorphic
 #ifndef __GFORTRAN__
-!ADD_TEST_SUITE(Test_UnlimitedPolySet_mod_suite) Test_UnlimitedPolyset)
+ADD_TEST_SUITE(Test_unlimitedPolyPtrSet_mod_suite)
 #endif
 
-ADD_TEST_SUITE(Test_unlimitedPolyPtrSet_mod_suite)

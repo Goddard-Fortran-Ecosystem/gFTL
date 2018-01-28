@@ -6,7 +6,6 @@ include_directories (${PFUNIT}/mod)
 link_directories(${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${FTL_BINARY_DIR}/mod)
 include_directories (${FTL_BINARY_DIR}/tests/shared)
 
 include_directories (${FTL_SOURCE_DIR}/include)
@@ -36,8 +35,6 @@ set  (types
   complex
 
   deferredLengthString
-#  unlimitedPoly
-  unlimitedPolyPtr
 
   integer1d
   integer2d
@@ -51,6 +48,11 @@ set  (types
   FooPtr
   FooPoly
   FooPolyPtr
+
+  unlimitedPolyPtr
+
+# Unsupportable combinations:
+# unlimitedPoly
   )
 
 if (SUPPORTS_POINTERS_TO_FIXED_LENGTH_STRINGS)

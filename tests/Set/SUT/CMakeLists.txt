@@ -11,7 +11,6 @@ file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
 
 include_directories (${INCLUDE_RELATIVE_PATH_SRC}/include)
 include_directories (${INCLUDE_RELATIVE_PATH_BIN}/include)
-include_directories (${FTL_BINARY_DIR}/mod)
 include_directories (${FTL_BINARY_DIR}/tests/shared)
 
 set (instantiations

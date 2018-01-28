@@ -9,7 +9,6 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/SUT)
 
 
-include_directories (${FTL_BINARY_DIR}/mod)
 include_directories(${FTL_BINARY_DIR}/tests/shared)
 file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
      ${CMAKE_CURRENT_SOURCE_DIR}

@@ -134,6 +134,15 @@ contains
       @assertEqual(1, s%count(ONE))
       @assertEqual(1, s%count(TWO))
 
+      call s%insert(THREE)
+      call s%insert(FOUR)
+      call s%insert(THREE)
+
+      @assertEqual(1, s%count(ONE))
+      @assertEqual(1, s%count(TWO))
+      @assertEqual(1, s%count(THREE))
+      @assertEqual(1, s%count(FOUR))
+
    end subroutine testCount
 
 #ifdef _pointer

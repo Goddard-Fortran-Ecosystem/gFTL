@@ -242,7 +242,7 @@ contains
 
 @test
    subroutine testGet()
-      type (Map) :: m
+      type (Map), target :: m
       logical :: f
       __value_declare_result, pointer :: val
 

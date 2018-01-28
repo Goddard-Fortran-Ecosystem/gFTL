@@ -6,7 +6,6 @@ include_directories (${PFUNIT}/mod)
 link_directories(${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${FTL_BINARY_DIR}/mod)
 include_directories (${FTL_BINARY_DIR}/tests/shared)
 
 include_directories (${FTL_SOURCE_DIR}/include)
@@ -36,7 +35,6 @@ set  (types
   complex
 
   deferredLengthString
-#  unlimitedPoly
   unlimitedPolyPtr
 
   integer1d

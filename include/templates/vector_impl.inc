@@ -419,7 +419,7 @@
       ! =======================
       !  insert
       ! =======================
-      subroutine __PROC(insert_size_kind)(                              &
+      subroutine __PROC(insert_size_kind)(                                                 &
      &   this, index, value, unused, rc)
          class(__vector), intent(inout) :: this
 
