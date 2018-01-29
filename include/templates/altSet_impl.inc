@@ -676,7 +676,7 @@
       integer, intent(in) :: side
 
       integer(kind=SIZE_KIND) :: parent, other, child0, child1,           &
-     &      otherchild, otherparent, tmp
+     &      otherchild, otherparent
 
       parent = this%parents%at(pos)
       other = pos
@@ -712,8 +712,6 @@
         end if
         call this%rebalance(otherparent, .false.)
       endif
-
-      tmp = this%items%size()
 
       ! declare this space available
       call this%parents%set(pos, this%next_free)

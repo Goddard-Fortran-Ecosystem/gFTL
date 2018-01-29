@@ -96,7 +96,6 @@ macro (CHECK_Fortran_SOURCE_COMPILE file var)
 
 endmacro (CHECK_Fortran_SOURCE_COMPILE)
 
-
 macro (CHECK_Fortran_SOURCE_RUN file var)
 
   if (NOT CMAKE_REQUIRED_QUIET)

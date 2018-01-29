@@ -1,16 +1,7 @@
 include_directories (${PFUNIT}/mod)
 
-# Use relative paths for includes so that CMake correctly
-# detects the need to generate include files.
-file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_SRC
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_SOURCE_DIR}/.)
-file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_BINARY_DIR}/.)
-
-include_directories (${INCLUDE_RELATIVE_PATH_SRC}/include)
-include_directories (${INCLUDE_RELATIVE_PATH_BIN}/include)
+include_directories (${FTL_SOURCE_DIR}/include)
+include_directories (${FTL_BINARY_DIR}/include)
 include_directories (${FTL_BINARY_DIR}/tests/shared)
 
 set (instantiations
