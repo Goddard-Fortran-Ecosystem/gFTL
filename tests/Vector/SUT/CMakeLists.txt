@@ -3,10 +3,7 @@ include_directories (${FTL_BINARY_DIR}/include)
 include_directories (${PFUNIT}/mod)
 include_directories (${FTL_BINARY_DIR}/mod)
 include_directories(${FTL_BINARY_DIR}/tests/shared)
-file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_BINARY_DIR}/.)
-include_directories(${INCLUDE_RELATIVE_PATH_BIN}/include)
+include_directories(${FTL_SOURCE_DIR}/include)
 
 set(src ${CMAKE_CURRENT_SOURCE_DIR})
 set(bin ${CMAKE_CURRENT_BINARY_DIR})
@@ -44,7 +41,6 @@ set (instantiations
 
 if (SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS)
   LIST (APPEND instantiations "character17\;free")
-  message("***************")
 endif ()
 
 set (SRCS)

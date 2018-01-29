@@ -473,7 +473,9 @@
 
          integer(kind=SIZE_KIND) :: oldSize
          integer(kind=SIZE_KIND) :: i
-         
+
+         _UNUSED_DUMMY(unused)
+
          if (newSize == this%vsize) return
          if (newSize < 0) then
             if (present(rc)) rc = ILLEGAL_INPUT
