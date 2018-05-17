@@ -55,9 +55,6 @@ foreach (instantiation ${instantiations})
      set (outfile ${key}${value}Map.F)
   endif ()
 
-  # Use relative path for outfile so that CMake correctly
-  # detects the need to generate include files.
-  
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -Dkey=${key} -DALT -Dvalue=${value} -Dformat=${format} < ${infile} > ${outfile}

@@ -1,5 +1,6 @@
 include(header.m4)
 
+#include "templates/unused.inc"
 module Test_`'param()VectorIterator_mod
 #include "types/param().inc"
 #include "type_test_values/param().inc"
@@ -66,7 +67,7 @@ contains
       type (VectorIterator) :: iter
 
       iter = v%end()
-
+      _UNUSED_DUMMY(iter)
    end subroutine test_End
 
 
@@ -287,7 +288,7 @@ contains
       type (VectorRiterator) :: iter
 
       iter = v%rend()
-
+      _UNUSED_DUMMY(iter)
    end subroutine test_Rend
 
 
