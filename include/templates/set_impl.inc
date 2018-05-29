@@ -642,7 +642,11 @@
       class(__iterator), intent(in) :: this
       __type_declare_result, pointer :: value
 
-      value=>this%node%value
+      if (associated(this%node)) then
+         value =>this%node%value
+      else
+         value => null()
+      end if
 
       end function __PROC(value)
 
