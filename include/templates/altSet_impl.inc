@@ -830,7 +830,11 @@
       class(__iterator), target, intent(in) :: this
       __type_declare_result, pointer :: value
 
-      value=>this%reference%items%at(this%current)
+      if (this%current == UNINITIALIZED) then
+         value => null()
+      else
+         value=>this%reference%items%at(this%current)
+      end if
 
       end function __PROC(value)
 

@@ -104,6 +104,16 @@ contains
    end subroutine test_at
 
 @test
+   subroutine test_value_empty_is_null()
+      type (Map), target :: m
+      type (MapIterator) :: iter
+
+      iter = m%find(KEY1)
+      @assertFalse(associated(iter%value()))
+
+   end subroutine test_value_empty_is_null
+
+@test
    subroutine test_find()
       type (Map), target :: m
       type (MapIterator) :: iter

@@ -332,7 +332,11 @@
          type(__pair), pointer :: p
 
          p => this%setIter%value()
-         res => p%value
+         if (associated(p)) then
+            res => p%value
+         else
+            res => null()
+         end if
 
       end function __PROC(value)
 
