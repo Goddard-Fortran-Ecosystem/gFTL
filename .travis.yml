@@ -1,0 +1,67 @@
+sudo: false
+dist: trusty
+language: c
+
+matrix:
+   include:
+      - os: linux
+        addons:
+           apt:
+              sources:
+                 - ubuntu-toolchain-r-test
+              packages:
+                 - gfortran-7
+                 - cmake3
+        env:
+           - FC='gfortran-7'
+      - os: linux
+        addons:
+           apt:
+              sources:
+                 - ubuntu-toolchain-r-test
+              packages:
+                 - gfortran-8
+                 - cmake3
+        env:
+           - FC='gfortran-8'
+      - os: osx
+        env: FC='gfortran-7' BREW='gcc@7' BREW_UP='cmake'
+      - os: osx
+        env: FC='gfortran-8' BREW='gcc@8' BREW_UP='cmake'
+
+before_install:
+   - |
+      if [ $TRAVIS_OS_NAME == osx ] ; then
+         brew cask uninstall oclint || exit 1
+         brew install ${BREW} make || exit 1
+         brew upgrade ${BREW_UP} || exit 1
+      fi
+
+before_script:
+   # First get pFUnit
+   - cd ${HOME}
+   - git clone https://github.com/Goddard-Fortran-Ecosystem/pFUnit.git
+
+   # Now build pFUnit
+   - cd ${HOME}/pFUnit
+   - mkdir build-serial
+   - cd build-serial
+   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit-serial
+   - make -j4 install
+
+   # Now build gFTL
+   - cd ${TRAVIS_BUILD_DIR}
+   - mkdir build
+   - cd build
+   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DPFUNIT=$HOME/Software/pFUnit-serial
+
+script:
+   # Build and install
+   - make -j4 install
+   # Test
+   - make -j4 tests
+
+notifications:
+   email:
+      recipients:
+         - matthew.thompson@nasa.gov
