@@ -40,7 +40,9 @@
         procedure :: dump => __PROC(dump)
 !!$#endif
         procedure :: deepCopy => __PROC(deepCopy)
+#ifndef __ifort_18
         generic :: assignment(=) => deepCopy
+#endif
         procedure :: equalSets
         generic :: operator(==) => equalSets
         procedure :: notEqualSets
