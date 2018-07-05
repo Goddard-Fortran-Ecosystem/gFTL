@@ -40,3 +40,6 @@ ADD_TEST_SUITE(Test_UnlimitedPolyPtrVector_mod_suite)
   ADD_TEST_SUITE(Test_deferredLengthStringVector_mod_suite)
 #endif
 
+! Test for broken intel 18 behavior with nested containers  
+ADD_MODULE_TEST_SUITE(Test_Nested_mod, Test_nested_suite)
+  

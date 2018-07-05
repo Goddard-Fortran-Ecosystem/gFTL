@@ -1,6 +1,5 @@
 add_subdirectory (SUT)
 
-
 include_directories  (${PFUNIT}/include)
 include_directories  (${PFUNIT}/mod)
 link_directories (${PFUNIT}/lib)
@@ -46,7 +45,8 @@ set  (types
   FooPolyPtr
   )
 
-set (SRCS)
+set (SRCS Test_nested.F90)
+
 if (SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS)
   LIST (APPEND types character17)
 endif ()
@@ -93,6 +93,14 @@ add_library (testVector STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testVector shared vectorSUT pfunit)
 add_dependencies (testVector types)
 add_dependencies (testVector type_test_values)
+if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+  if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 19)
+    if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER 17)
+      set_property(SOURCE Test_nested.F90 PROPERTY COMPILE_DEFINITIONS "__ifort_18")
+    endif()
+  endif()
+endif()
+
 
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (vectortests.x EXCLUDE_FROM_ALL ${driver})
