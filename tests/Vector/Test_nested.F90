@@ -20,6 +20,11 @@ module B_mod
 end module B_mod
    
 
+! 7/6/2018 Under Intel 18, some nested compilers were triggering a compiler bug
+! which is reladet to having a type-bound ASSIGNMENT(=) procedure.  A simplified
+! reproducer has been submitted to Intel, and 19 beta no longer has the issue.
+
+
 module Test_Nested_mod
    use pFUnit_mod
    use A_mod
