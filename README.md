@@ -2,7 +2,7 @@
 
 Fortran only provides one type of container: *array*.  While Fortran
 arrays are exemplary for their intended purpose such as numerical
-algorinthms, they are poorly suited in many other contexts.  Arrays
+algorithms, they are poorly suited in many other contexts.  Arrays
 can be thought of as a particular case of a "container" that holds
 multiple entities.  As a container, arrays are well suited for random
 access to a fixed number of objects.  (Yes, Fortran arrays are
