@@ -218,6 +218,17 @@ contains
 #endif
 
 @test
+   subroutine test_iterator_empty()
+      type (Set), target :: s
+      type (SetIterator) :: iter
+
+      iter = s%begin()
+      @assertFalse(associated(iter%value()))
+
+   end subroutine test_iterator_empty
+
+
+@test
    subroutine test_eraseOne()
       type (Set), target :: s
       type (SetIterator) :: iter

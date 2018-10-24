@@ -1,8 +1,7 @@
-# Compiler specific flags for Intel Fortran compiler
+# Compiler specific flags for NAG Fortran compiler
 
 set(no_optimize "-O0")
-#set(check_all "-C=all")
-set(check_all "-C=array -C=alias -C=bits -C=calls -C=do -C=intovf -C=present -C=pointer")
+set(check_all "-C=all")
 set(cpp "-fpp")
 set(suppress_fpp_warnings "-w")
 

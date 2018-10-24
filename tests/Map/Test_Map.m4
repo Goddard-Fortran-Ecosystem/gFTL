@@ -134,7 +134,7 @@ contains
 
 @test
    subroutine test_erase()
-      type (Map) :: m
+      type (Map), target :: m
       type (MapIterator) :: iter
 
       call m%insert(KEY1, ONE)
@@ -148,7 +148,7 @@ contains
 
 @test
    subroutine test_next()
-      type (Map) :: m
+      type (Map), target :: m
       type (MapIterator) :: iter
 
       __value_declare_result, pointer :: q1, q2, q3
@@ -173,7 +173,7 @@ contains
 
 @test
    subroutine test_previous()
-      type (Map) :: m
+      type (Map), target :: m
       type (MapIterator) :: iter
 
       __value_declare_result, pointer :: q1, q2, q3
@@ -200,7 +200,7 @@ contains
 
 @test
    subroutine test_iterGetValue()
-      type (Map) :: m
+      type (Map), target :: m
       type (MapIterator) :: iter
 
       __value_declare_result, pointer :: q1, q2, q3
