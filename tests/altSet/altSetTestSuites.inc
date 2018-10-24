@@ -35,3 +35,5 @@ ADD_TEST_SUITE(Test_FooPolyPtraltSet_mod_suite)
 ADD_TEST_SUITE(Test_unlimitedPolyPtraltSet_mod_suite)
 #endif
 
+! Test for robust pointers to allocatable components
+ADD_TEST_SUITE(Test_altSet_Allocatable_mod_suite)

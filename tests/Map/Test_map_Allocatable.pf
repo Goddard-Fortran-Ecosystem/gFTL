@@ -1,0 +1,60 @@
+! If a container is for allocatable entities, then gFTL should enable
+! external pointers into the structure to persist even when the
+! container is modified.  This relies on Fortran's move_alloc()
+! behavior, and thus cannot be supported for non allocatable container
+! elements.
+
+
+module MyMap_mod
+   use Foo_mod
+#include "types/key_deferredLengthString.inc"
+#include "types/value_FooPoly.inc"
+#define _alt
+#define _pair_allocatable
+#include "templates/map.inc"
+end module MyMap_mod
+
+
+module Test_map_Allocatable_mod
+   use pFUnit_mod
+   use MyMap_mod
+   use Foo_mod
+
+   @suite(name='Test_map_allocatable_suite')
+
+contains
+
+
+   @test
+   subroutine test_insert()
+      type (Map), target :: m
+      class (Foo), pointer :: pa, pb, pc
+
+      ! Try to insert in non canonical order so that things must move
+      ! But in the worst case, the fact that we have 5 elements should
+      ! cause some move_alloc() when internals are copied.
+
+      call m%insert('c',Foo(3))
+      pc => m%at('c')
+      call m%insert('b',Foo(2))
+      pb => m%at('b')
+      call m%insert('a',Foo(1))
+      pa => m%at('a')
+
+      ! Sanity checks
+      @assertEqual(1, pa%i)
+      @assertEqual(2, pb%i)
+      @assertEqual(3, pc%i)
+
+      call m%insert('A',Foo(4))
+      call m%insert('B',Foo(5))
+      call m%insert('C',Foo(6))
+
+      ! Pointers still valid?
+      @assertEqual(1, pa%i)
+      @assertEqual(2, pb%i)
+      @assertEqual(3, pc%i)
+   end subroutine test_insert
+
+
+end module Test_map_Allocatable_mod

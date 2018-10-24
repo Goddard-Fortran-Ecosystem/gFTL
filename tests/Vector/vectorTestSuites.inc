@@ -43,3 +43,5 @@ ADD_TEST_SUITE(Test_UnlimitedPolyPtrVector_mod_suite)
 ! Test for broken intel 18 behavior with nested containers  
 ADD_MODULE_TEST_SUITE(Test_Nested_mod, Test_nested_suite)
   
+! Test for robust pointers to allocatable components
+ADD_TEST_SUITE(Test_vector_Allocatable_mod_suite)

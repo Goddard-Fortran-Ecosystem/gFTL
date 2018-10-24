@@ -77,6 +77,13 @@ foreach (type ${types} )
 
 endforeach ()
 
+add_custom_command (
+  OUTPUT Test_altSet_Allocatable.F90
+  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_altSet_Allocatable.pf Test_altSet_Allocatable.F90
+  WORKING_DIRECTORY ${bin}
+  DEPENDS ${src}/Test_altSet_Allocatable.pf
+  )
+list(APPEND SRCS Test_altSet_Allocatable.F90)
 
 
 add_library (testaltSet STATIC EXCLUDE_FROM_ALL ${SRCS})

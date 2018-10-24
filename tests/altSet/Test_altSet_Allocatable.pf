@@ -1,0 +1,50 @@
+! If a container is for allocatable entities, then gFTL should enable
+! external pointers into the structure to persist even when the
+! container is modified.  This relies on Fortran's move_alloc()
+! behavior, and thus cannot be supported for non allocatable container
+! elements.
+
+module Test_altSet_Allocatable_mod
+   use pFUnit_mod
+   use FooPolyaltSet_mod
+   use Foo_mod
+
+contains
+
+   @test
+   subroutine test_insert()
+      type (Set), target :: s
+      class (Foo), pointer :: pa, pb, pc
+      type (SetIterator) :: iter
+      
+      call s%insert(Foo(3))
+      iter = s%begin()
+      pc => iter%value()
+      
+      call s%insert(Foo(2))
+      iter = s%begin()
+      pb => iter%value()
+
+      call s%insert(Foo(1))
+      iter = s%begin()
+      pa => iter%value()
+
+      ! Sanity checks
+      @assertEqual(1, pa%i)
+      @assertEqual(2, pb%i)
+      @assertEqual(3, pc%i)
+
+      call s%insert(Foo(5))
+      call s%insert(Foo(6))
+      call s%insert(Foo(-7))
+      call s%insert(Foo(-8))
+
+      ! Pointers still valid?
+      @assertEqual(1, pa%i)
+      @assertEqual(2, pb%i)
+      @assertEqual(3, pc%i)
+
+   end subroutine test_insert
+
+
+end module Test_altSet_Allocatable_mod
