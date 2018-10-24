@@ -445,10 +445,10 @@
          __TYPE_ASSIGN(temp,__GET(this%elements(n)))
          call this%resize(n+1, temp, rc=rc)
          
-         do i = n-1, index, -1
+         do i = n, index, -1
           __TYPE_MOVE(__GET(this%elements(i+1)),__GET(this%elements(i)))
          end do
-         
+
          __TYPE_ASSIGN(__GET(this%elements(index)), value)
          
          return

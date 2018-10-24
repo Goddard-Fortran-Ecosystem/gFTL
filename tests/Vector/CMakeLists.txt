@@ -89,6 +89,14 @@ foreach (type ${types} )
 
 endforeach ()
 
+add_custom_command (
+  OUTPUT Test_vector_Allocatable.F90
+  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_vector_Allocatable.pf Test_vector_Allocatable.F90
+  WORKING_DIRECTORY ${bin}
+  DEPENDS ${src}/Test_vector_Allocatable.pf
+  )
+list(APPEND SRCS Test_vector_Allocatable.F90)
+
 add_library (testVector STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testVector shared vectorSUT pfunit)
 add_dependencies (testVector types)

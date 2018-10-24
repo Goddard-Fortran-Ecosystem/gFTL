@@ -1,0 +1,36 @@
+! If a container is for allocatable entities, then gFTL should enable
+! external pointers into the structure to persist even when the
+! container is modified.  This relies on Fortran's move_alloc()
+! behavior, and thus cannot be supported for non allocatable container
+! elements.
+
+module Test_vector_Allocatable_mod
+   use pFUnit_mod
+   use FooPolyVector_mod
+   use Foo_mod
+
+contains
+
+   @test
+   subroutine test_insert()
+      type (Vector), target :: v
+      class (Foo), pointer :: p1, p2
+
+      call v%push_back(Foo(1))
+      p1 => v%at(1)
+      call v%insert(1, Foo(2))
+
+      ! Verify that 1st element has changed
+      p2 => v%at(1)
+      @assertEqual(2, p2%i)
+
+      ! Verify that p1 still points at correct target
+      @assertEqual(1, p1%i)
+      p2 => v%at(2)
+      @assertEqual(1, p2%i)
+      @assertTrue(associated(p1, p2))
+
+   end subroutine test_insert
+
+
+end module Test_vector_Allocatable_mod
