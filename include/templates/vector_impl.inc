@@ -436,8 +436,10 @@
 
          n = this%vsize
          if (index==n+1) then
-           call this%push_back(value)
-           return
+            call this%push_back(value)
+            ! Workaround for NAG -6221 - temp needs some status
+            __TYPE_ASSIGN(temp,value)
+            return
          endif
          call this%grow_to(this%vsize+1)
          __TYPE_ASSIGN(temp,__GET(this%elements(n)))
