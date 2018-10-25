@@ -251,6 +251,9 @@
       __type_declare_result, pointer :: p, q
 #endif
 
+#if (defined(__vector_debug) && defined(_DEBUG___))
+      print*,__FILE__,__LINE__
+#endif
       if (present(unused)) print*,shape(unused)
       
       if (exists(this%root)) then
@@ -287,7 +290,13 @@
            isNew = .true.
         end if
 
+#if (defined(__vector_debug) && defined(_DEBUG___))
+      print*,__FILE__,__LINE__, this%next_free
+#endif
         if (this%next_free == 0) then
+#if (defined(__vector_debug) && defined(_DEBUG___))
+      print*,__FILE__,__LINE__
+#endif
            call this%items%push_back(value)
            new = this%items%size()
            call this%heights%push_back(1_SIZE_KIND)
@@ -315,6 +324,9 @@
               call this%rights%set(parent,new)
            end if
 #else
+#if (defined(__vector_debug) && defined(_DEBUG___))
+      print*,__FILE__,__LINE__
+#endif
            if (__PROC(lessThan)(value, this%items%at(parent))) then
               call this%lefts%set(parent, new)
            else
@@ -325,6 +337,9 @@
 
       else ! new root
          
+#if (defined(__vector_debug) && defined(_DEBUG___))
+      print*,__FILE__,__LINE__, this%next_free
+#endif
         if (this%next_free == 0) then
            call this%items%push_back(value)
            new = this%items%size()

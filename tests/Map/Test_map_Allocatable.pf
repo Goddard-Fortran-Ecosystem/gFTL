@@ -10,7 +10,6 @@ module MyMap_mod
 #include "types/key_deferredLengthString.inc"
 #include "types/value_FooPoly.inc"
 #define _alt
-#define _pair_allocatable
 #include "templates/map.inc"
 end module MyMap_mod
 
@@ -36,10 +35,15 @@ contains
 
       call m%insert('c',Foo(3))
       pc => m%at('c')
+      @assertEqual(3, pc%i)
+
       call m%insert('b',Foo(2))
       pb => m%at('b')
+      @assertEqual(2, pb%i)
+
       call m%insert('a',Foo(1))
       pa => m%at('a')
+      @assertEqual(1, pa%i)
 
       ! Sanity checks
       @assertEqual(1, pa%i)
