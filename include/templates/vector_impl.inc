@@ -421,7 +421,7 @@
       ! =======================
       subroutine __PROC(insert_size_kind)(                                                 &
      &   this, index, value, unused, rc)
-         class(__vector), intent(inout) :: this
+         class(__vector), target, intent(inout) :: this
 
          integer(kind=SIZE_KIND), intent(in) :: index
 
@@ -445,10 +445,10 @@
          __TYPE_ASSIGN(temp,__GET(this%elements(n)))
          call this%resize(n+1, temp, rc=rc)
          
-         do i = n-1, index, -1
+         do i = n, index, -1
           __TYPE_MOVE(__GET(this%elements(i+1)),__GET(this%elements(i)))
          end do
-         
+
          __TYPE_ASSIGN(__GET(this%elements(index)), value)
          
          return
@@ -628,9 +628,9 @@
       !  set_capacity
       ! =======================
       subroutine __PROC(set_capacity)(this, capacity)
-         class(__vector), intent(inout) :: this
+         class(__vector), target, intent(inout) :: this
          integer(kind=SIZE_KIND), intent(in) :: capacity  ! capacity must be >=0
-         __declare_element_type, dimension(:), allocatable :: temp
+         __declare_element_type,dimension(:),allocatable,target :: temp
          integer(kind=SIZE_KIND) :: i
 
          if (capacity>0) then                     ! capacity>0
@@ -669,8 +669,8 @@
       !  swap
       ! =======================
       subroutine __PROC(swap)(this, other)
-         class(__vector), intent(inout) :: this
-         type(__vector), intent(inout) :: other
+         class(__vector), target, intent(inout) :: this
+         type(__vector), target, intent(inout) :: other
          __declare_element_type,                                                                &
      &           dimension(:), allocatable :: tmpelementsfer
          integer :: tmpsize

@@ -30,3 +30,5 @@ ADD_TEST_SUITE(Test_integer1dinteger1daltMap_mod_suite)
   ADD_TEST_SUITE(Test_deferredLengthStringdeferredLengthStringaltMap_mod_suite)
 #endif
 
+! Test for robust pointers to allocatable components
+ADD_TEST_SUITE(Test_map_Allocatable_suite)
