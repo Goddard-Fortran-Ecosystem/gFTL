@@ -56,9 +56,6 @@
 #undef __container_prefix
 
 #define _type type(__pair)
-#ifdef _pair_allocatable      
-#define _allocatable
-#endif      
 
 #include "templates/type_set_use_tokens.inc"
 
@@ -155,6 +152,10 @@
 #include "templates/type_use_tokens_undef.inc"
 
 #include "templates/type_set_use_tokens.inc"
+
+#define __USE_ASSIGN(dest,src) dest=src
+#define __USE_MOVE(dest,src)  __KEY_MOVE(dest%key,src%key); __VALUE_MOVE(dest%value,src%value)
+#define __USE_FREE(x)
 
 #ifdef _alt
 ! vector<_type>

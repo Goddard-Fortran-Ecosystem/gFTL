@@ -6,6 +6,6 @@ set(traceback "-fbacktrace")
 set(cpp "-cpp")
 
 
-set(CMAKE_Fortran_FLAGS_DEBUG  "${no_optimize}")
+set(CMAKE_Fortran_FLAGS_DEBUG  "${no_optimize}" ${check_all} ${traceback})
 set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
-set(CMAKE_Fortran_FLAGS "-g ${cpp} ${traceback} ${check_all}")
+set(CMAKE_Fortran_FLAGS "-g ${cpp} -ffree-line-length-255")
