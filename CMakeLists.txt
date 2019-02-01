@@ -6,14 +6,16 @@ endif(COMMAND cmake_policy)
 set(PFUNIT "" CACHE PATH "(optional) path to installed testing framework")
 if (PFUNIT)
   set(CMAKE_Fortran_COMPILER ${FC})
-  project (FTL Fortran)
+  project (gFTL Fortran)
 
   set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_utils")
   include(${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
   include(CheckFortranSource)
   include(CheckCompilerCapabilities)
 else ()
-  project (FTL NONE)
+  project (gFTL
+    VERSION 1.0.1
+    LANGUAGES NONE)
 endif()
 
 add_subdirectory(include)
