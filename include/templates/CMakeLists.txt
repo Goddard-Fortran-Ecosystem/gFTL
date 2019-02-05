@@ -39,5 +39,6 @@ add_custom_target( template_macros ALL
   DEPENDS ${depends}
   )
 
+file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
 
 
