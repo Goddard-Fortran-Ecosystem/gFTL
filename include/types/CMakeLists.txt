@@ -61,3 +61,5 @@ endforeach ()
 add_custom_target (types ALL
   DEPENDS ${depends}
   )
+
+file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
