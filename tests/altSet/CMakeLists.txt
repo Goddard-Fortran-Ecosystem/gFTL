@@ -6,16 +6,16 @@ include_directories (${PFUNIT}/mod)
 link_directories(${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${FTL_BINARY_DIR}/tests/shared)
+include_directories (${gFTL_BINARY_DIR}/tests/shared)
 
-include_directories (${FTL_SOURCE_DIR}/include)
-include_directories (${FTL_BINARY_DIR}/include)
+include_directories (${gFTL_SOURCE_DIR}/include)
+include_directories (${gFTL_BINARY_DIR}/include)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/SUT)
 
 
 
-include_directories(${FTL_BINARY_DIR}/tests/shared)
+include_directories(${gFTL_BINARY_DIR}/tests/shared)
 # Use relative paths for includes so that CMake correctly
 # detects the need to generate include files.
 file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
