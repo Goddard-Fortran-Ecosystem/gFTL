@@ -5,12 +5,12 @@ include_directories  (${PFUNIT}/mod)
 link_directories (${PFUNIT}/lib)
 
 include_directories  (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories  (${FTL_SOURCE_DIR}/include)
+include_directories  (${gFTL_SOURCE_DIR}/include)
 include_directories  (${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories  (${FTL_BINARY_DIR}/include)
-include_directories  (${FTL_BINARY_DIR}/mod)
+include_directories  (${gFTL_BINARY_DIR}/include)
+include_directories  (${gFTL_BINARY_DIR}/mod)
 include_directories  (${CMAKE_CURRENT_BINARY_DIR}/SUT)
-include_directories (${FTL_BINARY_DIR}/tests/shared)
+include_directories (${gFTL_BINARY_DIR}/tests/shared)
 
 file (RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
      ${CMAKE_CURRENT_SOURCE_DIR}
