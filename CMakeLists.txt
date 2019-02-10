@@ -1,30 +1,41 @@
-cmake_minimum_required(VERSION 3.0)
-if(COMMAND cmake_policy)
-  cmake_policy(SET CMP0003 NEW)
-endif(COMMAND cmake_policy)
+cmake_minimum_required (VERSION 3.0)
+if (COMMAND cmake_policy)
+  cmake_policy (SET CMP0003 NEW)
+endif (COMMAND cmake_policy)
 
-set(PFUNIT "" CACHE PATH "(optional) path to installed testing framework")
-if (PFUNIT)
-  set(CMAKE_Fortran_COMPILER ${FC})
+
+set (PFUNIT_DIR "" CACHE PATH "(optional) path to installed testing framework")
+if (PFUNIT_DIR)
+  set (PFUNIT ${PFUNIT_DIR})
+  set (CMAKE_Fortran_COMPILER ${FC})
   project (gFTL
-    VERSION 1.01
+    VERSION 1.1.0
     LANGUAGES Fortran
     )
-
-  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_utils")
-  include(${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
-  include(CheckFortranSource)
-  include(CheckCompilerCapabilities)
+  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_utils")
+  include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
+  include (CheckFortranSource)
+  include (CheckCompilerCapabilities)
 else ()
   project (gFTL
-    VERSION 1.0.1
-    LANGUAGES NONE
+    VERSION 1.1.0
+        LANGUAGES NONE
     )
-endif()
+endif ()
+if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
+  message("Setting default install prefix to ${CMAKE_INSTALL_PREFIX}.")
+  message("Override with -DCMAKE_INSTALL_PREFIX=<path>.")
+endif ()
 
-add_subdirectory(include)
-add_subdirectory(examples)
 
-if(PFUNIT)
+add_subdirectory (include)
+add_subdirectory (examples)
+
+if (PFUNIT)
    add_subdirectory(tests)
-endif()
+endif ()
+
+configure_file(gFTL-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config-version.cmake @ONLY)
+configure_file(gFTL-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config.cmake @ONLY)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config-version.cmake DESTINATION "share/gFTL-${gFTL_VERSION_MAJOR}.${gFTL_VERSION_MINOR}")

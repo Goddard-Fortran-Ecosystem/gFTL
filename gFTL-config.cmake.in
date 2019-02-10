@@ -1,0 +1,5 @@
+# Package configuration file
+
+get_filename_component (SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set (PREFIX ${SELF_DIR}/../..)
+include ("${PREFIX}/include/gFTL-@gFTL_VERSION_MAJOR@.@gFTL_VERSION_MINOR@/gFTL.cmake")
