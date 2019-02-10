@@ -8,6 +8,14 @@ target_include_directories (gFTL INTERFACE
 add_subdirectory (templates)
 add_subdirectory (types)
 
+
+add_custom_command(
+  OUTPUT gFTL_incs_generated_successfully
+  DEPENDS gFTL
+  COMMAND touch fidl_generated_successfully
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
+
 add_custom_target (force-generation-of-includes ALL)
 add_dependencies (force-generation-of-includes gFTL)
 

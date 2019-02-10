@@ -123,7 +123,7 @@ add_custom_command (
 
 add_library(testMap STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries(testMap mapSUT pfunit)
-add_dependencies(testMap types)
+add_dependencies(testMap gFTL)
 add_dependencies(testMap type_test_values)
 
 set(driver ${PFUNIT}/include/driver.F90)
