@@ -19,7 +19,7 @@ if (PFUNIT_DIR)
 else ()
   project (gFTL
     VERSION 1.1.0
-        LANGUAGES NONE
+    LANGUAGES NONE
     )
 endif ()
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
