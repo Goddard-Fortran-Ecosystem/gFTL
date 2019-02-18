@@ -85,7 +85,7 @@ endforeach ()
 
 add_library (testSet STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testSet shared setSUT pfunit)
-add_dependencies (testSet types)
+add_dependencies (testSet gFTL)
 add_dependencies (testSet type_test_values)
 
 set (driver ${PFUNIT}/include/driver.F90)
