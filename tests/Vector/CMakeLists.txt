@@ -99,7 +99,7 @@ list(APPEND SRCS Test_vector_Allocatable.F90)
 
 add_library (testVector STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testVector shared vectorSUT pfunit)
-add_dependencies (testVector types)
+add_dependencies (testVector gFTL)
 add_dependencies (testVector type_test_values)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 19)

@@ -84,4 +84,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(mapSUT STATIC EXCLUDE_FROM_ALL ${SRCS} ${altSRCS})
-add_dependencies(mapSUT shared template_macros types)
+add_dependencies(mapSUT shared gFTL)

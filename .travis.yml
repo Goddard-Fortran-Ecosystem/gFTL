@@ -52,7 +52,7 @@ before_script:
    - cd ${TRAVIS_BUILD_DIR}
    - mkdir build
    - cd build
-   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DPFUNIT=$HOME/Software/pFUnit-serial
+   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DPFUNIT_DIR=$HOME/Software/pFUnit-serial
 
 script:
    # Build and install

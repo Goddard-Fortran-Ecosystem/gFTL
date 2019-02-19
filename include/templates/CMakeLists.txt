@@ -13,32 +13,43 @@ set (macro_files
   set_use_tokens
   use_tokens_undef
   macros_undefs)
-set(depends)
+
+# Empty list - will append in loop below
+set(generated_incs)
 
 foreach( macro_file ${macro_files} )
   foreach( param ${template_params} )
     set( infile ${src}/${macro_file}.m4 )
     set( outfile ${param}_${macro_file}.inc )
+    set (outpath ${CMAKE_CURRENT_BINARY_DIR}/${outfile})
 
-# Use relative path for outfile so that CMake correctly
-# detects the need to generate include files.
+    add_custom_command (
+      OUTPUT ${outfile}
+      COMMAND m4 -s -Dparam=${param} -I${src}/../templates < ${infile} > ${outfile}
+      WORKING_DIRECTORY ${bin}
+      DEPENDS ${infile}
+      )
 
-    add_custom_command(
-	OUTPUT ${outfile}
-	COMMAND m4 -s -Dparam=${param} -I${src} < ${infile} > ${outfile}
-	WORKING_DIRECTORY ${bin}
-	DEPENDS ${infile}
-	)
 
-    list( APPEND depends ${outfile} )
+      list (APPEND generated_incs ${outfile} )
 
   endforeach()
 endforeach()
 
-add_custom_target( template_macros ALL 
-  DEPENDS ${depends}
+add_custom_target(
+  generate-template-incs
+  DEPENDS ${generated_incs}
   )
 
+add_dependencies (gFTL generate-template-incs)
+
+set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
+
 file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
+
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${include_dest}/templates"
+  FILES_MATCHING PATTERN "*.inc"
+  PATTERN CMakeFiles EXCLUDE
+  )
 
 

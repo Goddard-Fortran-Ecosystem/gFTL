@@ -88,7 +88,7 @@ list(APPEND SRCS Test_altSet_Allocatable.F90)
 
 add_library (testaltSet STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testaltSet shared altsetSUT pfunit)
-add_dependencies (testaltSet types)
+add_dependencies (testaltSet gFTL)
 add_dependencies (testaltSet type_test_values)
 
 set (driver ${PFUNIT}/include/driver.F90)

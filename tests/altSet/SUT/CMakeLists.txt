@@ -71,4 +71,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(altsetSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
-add_dependencies(altsetSUT shared template_macros types)
+add_dependencies(altsetSUT shared gFTL)

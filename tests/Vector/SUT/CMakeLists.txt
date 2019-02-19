@@ -73,4 +73,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(vectorSUT EXCLUDE_FROM_ALL STATIC ${SRCS})
-add_dependencies(vectorSUT shared template_macros types)
+add_dependencies(vectorSUT shared gFTL )
