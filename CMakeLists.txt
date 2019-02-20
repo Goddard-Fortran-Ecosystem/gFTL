@@ -8,16 +8,16 @@ set (PFUNIT_DIR "" CACHE PATH "(optional) path to installed testing framework")
 if (PFUNIT_DIR)
   set (PFUNIT ${PFUNIT_DIR})
   set (CMAKE_Fortran_COMPILER ${FC})
-  project (gFTL
+  project (GFTL
     VERSION 1.1.0
     LANGUAGES Fortran
     )
-  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake_utils")
+  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake_utils")
   include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
   include (CheckFortranSource)
   include (CheckCompilerCapabilities)
 else ()
-  project (gFTL
+  project (GFTL
     VERSION 1.1.0
     LANGUAGES NONE
     )
@@ -36,6 +36,6 @@ if (PFUNIT)
    add_subdirectory(tests)
 endif ()
 
-configure_file(gFTL-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config-version.cmake @ONLY)
-configure_file(gFTL-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config.cmake @ONLY)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/gFTL-config-version.cmake DESTINATION "share/gFTL-${gFTL_VERSION_MAJOR}.${gFTL_VERSION_MINOR}")
+configure_file(GFTL-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config-version.cmake @ONLY)
+configure_file(GFTL-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config.cmake @ONLY)
+install (FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config-version.cmake DESTINATION "share/GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
