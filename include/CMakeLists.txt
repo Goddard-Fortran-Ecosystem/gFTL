@@ -1,6 +1,6 @@
-add_library (gFTL INTERFACE)
-set (include_dest "include/gFTL-${gFTL_VERSION_MAJOR}.${gFTL_VERSION_MINOR}")
-target_include_directories (gFTL INTERFACE
+add_library (gftl INTERFACE)
+set (include_dest "include/GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
+target_include_directories (gftl INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for headers when building
   $<INSTALL_INTERFACE:${include_dest}> # for client in install mode
 )
@@ -10,16 +10,16 @@ add_subdirectory (types)
 
 
 add_custom_command(
-  OUTPUT gFTL_incs_generated_successfully
-  DEPENDS gFTL
+  OUTPUT GFTL_incs_generated_successfully
+  DEPENDS gftl
   COMMAND touch fidl_generated_successfully
   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
   )
 
 add_custom_target (force-generation-of-includes ALL)
-add_dependencies (force-generation-of-includes gFTL)
+add_dependencies (force-generation-of-includes gftl)
 
-install (TARGETS gFTL EXPORT gFTL DESTINATION "${include_dest}")
-install (EXPORT gFTL DESTINATION "${include_dest}")
+install (TARGETS gftl EXPORT GFTL DESTINATION "${include_dest}")
+install (EXPORT GFTL DESTINATION "${include_dest}")
 
 

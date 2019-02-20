@@ -41,7 +41,7 @@ add_custom_target(
   DEPENDS ${generated_incs}
   )
 
-add_dependencies (gFTL generate-template-incs)
+add_dependencies (gftl generate-template-incs)
 
 set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 

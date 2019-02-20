@@ -6,16 +6,16 @@ include_directories (${PFUNIT}/mod)
 link_directories(${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${gFTL_BINARY_DIR}/tests/shared)
+include_directories (${GFTL_BINARY_DIR}/tests/shared)
 
-include_directories (${gFTL_SOURCE_DIR}/include)
-include_directories (${gFTL_BINARY_DIR}/include)
+include_directories (${GFTL_SOURCE_DIR}/include)
+include_directories (${GFTL_BINARY_DIR}/include)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/SUT)
 
 
 
-include_directories(${gFTL_BINARY_DIR}/tests/shared)
+include_directories(${GFTL_BINARY_DIR}/tests/shared)
 # Use relative paths for includes so that CMake correctly
 # detects the need to generate include files.
 file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
@@ -88,11 +88,10 @@ list(APPEND SRCS Test_altSet_Allocatable.F90)
 
 add_library (testaltSet STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testaltSet shared altsetSUT pfunit)
-add_dependencies (testaltSet gFTL)
 add_dependencies (testaltSet type_test_values)
 
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (setalttests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries (setalttests.x  pfunit testaltSet altsetSUT shared ftl)
+target_link_libraries (setalttests.x  pfunit testaltSet altsetSUT shared)
 add_custom_target (setalttests COMMAND setalttests.x DEPENDS setalttests.x EXCLUDE_FROM_ALL)
 
