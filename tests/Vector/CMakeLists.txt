@@ -5,12 +5,12 @@ include_directories  (${PFUNIT}/mod)
 link_directories (${PFUNIT}/lib)
 
 include_directories  (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories  (${gFTL_SOURCE_DIR}/include)
+include_directories  (${GFTL_SOURCE_DIR}/include)
 include_directories  (${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories  (${gFTL_BINARY_DIR}/include)
-include_directories  (${gFTL_BINARY_DIR}/mod)
+include_directories  (${GFTL_BINARY_DIR}/include)
+include_directories  (${GFTL_BINARY_DIR}/mod)
 include_directories  (${CMAKE_CURRENT_BINARY_DIR}/SUT)
-include_directories (${gFTL_BINARY_DIR}/tests/shared)
+include_directories (${GFTL_BINARY_DIR}/tests/shared)
 
 file (RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
      ${CMAKE_CURRENT_SOURCE_DIR}
@@ -99,7 +99,7 @@ list(APPEND SRCS Test_vector_Allocatable.F90)
 
 add_library (testVector STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries (testVector shared vectorSUT pfunit)
-add_dependencies (testVector gFTL)
+add_dependencies (testVector gftl)
 add_dependencies (testVector type_test_values)
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 19)
@@ -112,6 +112,6 @@ endif()
 
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (vectortests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries (vectortests.x pfunit testVector vectorSUT shared ftl)
+target_link_libraries (vectortests.x pfunit testVector vectorSUT shared)
 add_custom_target (vectortests COMMAND vectortests.x DEPENDS vectortests.x EXCLUDE_FROM_ALL)
 

@@ -1,8 +1,8 @@
 include_directories (${PFUNIT}/mod)
 
-include_directories (${gFTL_SOURCE_DIR}/include)
-include_directories (${gFTL_BINARY_DIR}/include)
-include_directories (${gFTL_BINARY_DIR}/tests/shared)
+include_directories (${GFTL_SOURCE_DIR}/include)
+include_directories (${GFTL_BINARY_DIR}/include)
+include_directories (${GFTL_BINARY_DIR}/tests/shared)
 
 set (instantiations
 
@@ -72,4 +72,4 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(setSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
-add_dependencies(setSUT shared gFTL)
+add_dependencies(setSUT shared gftl)

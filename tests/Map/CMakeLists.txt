@@ -9,7 +9,7 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 include_directories (${CMAKE_CURRENT_BINARY_DIR}/SUT)
 
 
-include_directories(${gFTL_BINARY_DIR}/tests/shared)
+include_directories(${GFTL_BINARY_DIR}/tests/shared)
 file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
      ${CMAKE_CURRENT_SOURCE_DIR}
      ${CMAKE_BINARY_DIR}/.)
@@ -123,11 +123,10 @@ add_custom_command (
 
 add_library(testMap STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_link_libraries(testMap mapSUT pfunit)
-add_dependencies(testMap gFTL)
 add_dependencies(testMap type_test_values)
 
 set(driver ${PFUNIT}/include/driver.F90)
 add_executable(maptests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries(maptests.x pfunit testMap mapSUT shared ftl)
+target_link_libraries(maptests.x pfunit testMap mapSUT shared)
 add_custom_target(maptests COMMAND maptests.x DEPENDS maptests.x)
 
