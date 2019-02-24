@@ -1,5 +1,3 @@
-include (cmake_utils/CheckFortranSource.cmake)
-
 CHECK_Fortran_SOURCE_COMPILE (
   ${CMAKE_CURRENT_LIST_DIR}/pointerToFixedLengthString.F90
   SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS

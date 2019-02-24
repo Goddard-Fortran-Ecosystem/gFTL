@@ -57,7 +57,7 @@ foreach (instantiation ${instantiations})
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT= -Dformat=${format} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT= -Dformat=${format} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
     COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
@@ -74,7 +74,7 @@ foreach (instantiation ${instantiations})
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT=alt -Dformat=${format} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT=alt -Dformat=${format} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
     COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
