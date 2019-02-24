@@ -5,25 +5,6 @@ include_directories (${PFUNIT}/include)
 include_directories (${PFUNIT}/mod)
 link_directories(${PFUNIT}/lib)
 
-include_directories (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories (${CMAKE_CURRENT_BINARY_DIR}/SUT)
-
-
-include_directories(${GFTL_BINARY_DIR}/tests/shared)
-file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_BINARY_DIR}/.)
-file(RELATIVE_PATH INCLUDE_RELATIVE_PATH_SRC
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_SOURCE_DIR}/.)
-
-include_directories (${INCLUDE_RELATIVE_PATH_BIN}/include)
-include_directories (${INCLUDE_RELATIVE_PATH_SRC}/include)
-include_directories(${INCLUDE_RELATIVE_PATH_BIN}/tests/include)
-include_directories (${CMAKE_SOURCE_DIR}/include)
-include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
@@ -122,11 +103,13 @@ add_custom_command (
     )
 
 add_library(testMap STATIC EXCLUDE_FROM_ALL ${SRCS})
+target_include_directories (testMap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories (testMap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(testMap mapSUT pfunit)
 add_dependencies(testMap type_test_values)
 
 set(driver ${PFUNIT}/include/driver.F90)
 add_executable(maptests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries(maptests.x pfunit testMap mapSUT shared)
+target_link_libraries(maptests.x testMap)
 add_custom_target(maptests COMMAND maptests.x DEPENDS maptests.x)
 

@@ -34,12 +34,6 @@ set (instantiations
   "deferredLengthString\;deferredLengthString\;free"
 )
 
-include_directories(${GFTL_BINARY_DIR}/tests/shared)
-include_directories (${GFTL_SOURCE_DIR}/include)
-include_directories (${GFTL_BINARY_DIR}/include)
-include_directories (${PFUNIT}/mod)
-
-
 set (SRCS)
 set (altSRCS)
 set (infile ${src}/Map.m4)
@@ -84,4 +78,6 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(mapSUT STATIC EXCLUDE_FROM_ALL ${SRCS} ${altSRCS})
-add_dependencies(mapSUT shared gftl)
+target_include_directories (mapSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories (mapSUT PRIVATE ${PFUNIT}/mod)
+target_link_libraries(mapSUT type_test_values shared gftl)

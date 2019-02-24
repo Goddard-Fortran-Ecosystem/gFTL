@@ -4,8 +4,8 @@ set (SRCS
   pFUnitSupplement.F90
 )
 
-include_directories (${gFTL_SOURCE_DIR}/include)
-include_directories (${gFTL_BINARY_DIR}/include)
-include_directories (${PFUNIT}/mod)
-
 add_library(shared ${SRCS})
+target_include_directories (shared PRIVATE ${PFUNIT}/mod)
+target_include_directories (shared PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(shared gftl)
+

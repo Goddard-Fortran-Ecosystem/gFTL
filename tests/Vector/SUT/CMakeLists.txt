@@ -1,9 +1,3 @@
-include_directories (${GFTL_SOURCE_DIR}/include)
-include_directories (${GFTL_BINARY_DIR}/include)
-include_directories (${GFTL_BINARY_DIR}/mod)
-include_directories(${GFTL_BINARY_DIR}/tests/shared)
-include_directories (${PFUNIT}/mod)
-
 set(src ${CMAKE_CURRENT_SOURCE_DIR})
 set(bin ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -72,4 +66,6 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(vectorSUT EXCLUDE_FROM_ALL STATIC ${SRCS})
-add_dependencies(vectorSUT shared gftl )
+target_include_directories (vectorSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories (vectorSUT PRIVATE ${PFUNIT}/mod)
+target_link_libraries(vectorSUT type_test_values shared gftl)

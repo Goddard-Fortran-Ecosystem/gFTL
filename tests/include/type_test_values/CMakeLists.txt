@@ -48,7 +48,7 @@ foreach( macro_file ${macro_files} )
 
     add_custom_command(
 	OUTPUT ${outfile}
-	COMMAND m4 -s -Dparam=${param} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${outfile}
+	COMMAND m4 -s -Dparam=${param} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${outfile}
 	WORKING_DIRECTORY ${bin}
 	DEPENDS ${infile}
 	)
@@ -58,6 +58,7 @@ foreach( macro_file ${macro_files} )
   endforeach()
 endforeach()
 
-add_custom_target( type_test_values
+add_custom_target (make_type_test_values
   DEPENDS ${depends}
   )
+add_dependencies (type_test_values make_type_test_values)
