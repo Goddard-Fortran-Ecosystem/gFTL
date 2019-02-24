@@ -4,21 +4,6 @@ include_directories  (${PFUNIT}/include)
 include_directories  (${PFUNIT}/mod)
 link_directories (${PFUNIT}/lib)
 
-include_directories  (${CMAKE_CURRENT_SOURCE_DIR})
-include_directories  (${GFTL_SOURCE_DIR}/include)
-include_directories  (${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories  (${GFTL_BINARY_DIR}/include)
-include_directories  (${GFTL_BINARY_DIR}/mod)
-include_directories  (${CMAKE_CURRENT_BINARY_DIR}/SUT)
-include_directories (${GFTL_BINARY_DIR}/tests/shared)
-
-file (RELATIVE_PATH INCLUDE_RELATIVE_PATH_BIN
-     ${CMAKE_CURRENT_SOURCE_DIR}
-     ${CMAKE_BINARY_DIR}/.)
-include_directories (${INCLUDE_RELATIVE_PATH_BIN}/include)
-include_directories (${INCLUDE_RELATIVE_PATH_BIN}/tests/include)
-
-
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -65,7 +50,7 @@ foreach (type ${types} )
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -Dparam=${type} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND m4 -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
     COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
@@ -79,7 +64,7 @@ foreach (type ${types} )
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -Dparam=${type} -I${CMAKE_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND m4 -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
     COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
@@ -98,9 +83,11 @@ add_custom_command (
 list(APPEND SRCS Test_vector_Allocatable.F90)
 
 add_library (testVector STATIC EXCLUDE_FROM_ALL ${SRCS})
-target_link_libraries (testVector shared vectorSUT pfunit)
-add_dependencies (testVector gftl)
+target_include_directories (testVector PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories (testVector PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries (testVector vectorSUT pfunit)
 add_dependencies (testVector type_test_values)
+
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
   if(CMAKE_Fortran_COMPILER_VERSION VERSION_LESS 19)
     if(CMAKE_Fortran_COMPILER_VERSION VERSION_GREATER 17)
@@ -112,6 +99,6 @@ endif()
 
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (vectortests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries (vectortests.x pfunit testVector vectorSUT shared)
+target_link_libraries (vectortests.x testVector)
 add_custom_target (vectortests COMMAND vectortests.x DEPENDS vectortests.x EXCLUDE_FROM_ALL)
 
