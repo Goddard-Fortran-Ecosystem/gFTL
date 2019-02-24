@@ -1,9 +1,5 @@
 include_directories (${PFUNIT}/mod)
 
-include_directories (${GFTL_SOURCE_DIR}/include)
-include_directories (${GFTL_BINARY_DIR}/include)
-include_directories (${GFTL_BINARY_DIR}/tests/shared)
-
 set (instantiations
 
   "integer\;free"
@@ -72,4 +68,6 @@ endforeach ()
 list (APPEND SRCS MultiModule.F90)
 
 add_library(setSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
-add_dependencies(setSUT shared gftl)
+target_include_directories (setSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories (setSUT PRIVATE ${PFUNIT}/mod)
+target_link_libraries(setSUT type_test_values shared gftl)
