@@ -35,6 +35,5 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/Vector)
 set(driver ${PFUNIT}/include/driver.F90)
 add_executable(tests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries(tests.x testVector vectorSUT testaltSet altsetSUT testSet setSUT testMap mapSUT shared pfunit)
-add_custom_target(tests COMMAND tests.x DEPENDS tests.x)
-add_dependencies(tests tests.x)
+
 

@@ -16,6 +16,12 @@ if (PFUNIT_DIR)
   include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
   include (CheckFortranSource)
   include (CheckCompilerCapabilities)
+
+  enable_testing()
+  if (NOT TARGET (tests))
+    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
+  endif ()
+
 else ()
   project (GFTL
     VERSION 1.1.0
