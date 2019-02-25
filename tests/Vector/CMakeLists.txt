@@ -100,5 +100,10 @@ endif()
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (vectortests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (vectortests.x testVector)
-add_custom_target (vectortests COMMAND vectortests.x DEPENDS vectortests.x EXCLUDE_FROM_ALL)
+
+add_dependencies(tests vectortests.x)
+add_test(NAME vectortests
+  COMMAND vectortests.x
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
 

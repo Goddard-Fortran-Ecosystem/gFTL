@@ -72,5 +72,9 @@ target_link_libraries (testSet setSUT pfunit)
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (settests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (settests.x  pfunit testSet)
-add_custom_target (settests COMMAND settests.x DEPENDS settests.x EXCLUDE_FROM_ALL)
 
+add_dependencies(tests settests.x)
+add_test(NAME settests
+  COMMAND settests.x
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )

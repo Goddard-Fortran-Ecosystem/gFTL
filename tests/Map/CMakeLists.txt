@@ -111,5 +111,9 @@ add_dependencies(testMap type_test_values)
 set(driver ${PFUNIT}/include/driver.F90)
 add_executable(maptests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries(maptests.x testMap)
-add_custom_target(maptests COMMAND maptests.x DEPENDS maptests.x)
 
+add_dependencies(tests maptests.x)
+add_test(NAME maptests
+  COMMAND maptests.x
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
