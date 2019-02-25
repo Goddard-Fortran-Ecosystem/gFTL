@@ -76,5 +76,9 @@ add_dependencies (testaltSet type_test_values)
 set (driver ${PFUNIT}/include/driver.F90)
 add_executable (setalttests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (setalttests.x  testaltSet pfunit)
-add_custom_target (setalttests COMMAND setalttests.x DEPENDS setalttests.x EXCLUDE_FROM_ALL)
 
+add_dependencies(tests setalttests.x)
+add_test(NAME setalttests
+  COMMAND setalttests.x
+  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+  )
