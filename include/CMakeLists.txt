@@ -1,5 +1,5 @@
 add_library (gftl INTERFACE)
-set (include_dest "include/GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
+set (include_dest "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}/include")
 target_include_directories (gftl INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for headers when building
   $<INSTALL_INTERFACE:${include_dest}> # for client in install mode
