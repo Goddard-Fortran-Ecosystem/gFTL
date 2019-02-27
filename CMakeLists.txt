@@ -42,9 +42,9 @@ if (PFUNIT)
    add_subdirectory(tests)
 endif ()
 
-configure_file(GFTL-config-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config-version.cmake @ONLY)
-configure_file(GFTL-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config.cmake @ONLY)
+configure_file(GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake @ONLY)
+configure_file(GFTLConfig-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake @ONLY)
 install (
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTL-config-version.cmake
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
   DESTINATION "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}/cmake"
   )
