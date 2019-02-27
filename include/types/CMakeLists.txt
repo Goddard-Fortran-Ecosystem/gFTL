@@ -63,7 +63,7 @@ add_dependencies (gftl generate-type-incs)
 
 set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${include_dest}/types"
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/types"
   FILES_MATCHING PATTERN "*.inc"
   PATTERN CMakeFiles EXCLUDE
   )
