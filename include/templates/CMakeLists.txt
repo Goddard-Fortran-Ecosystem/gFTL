@@ -47,7 +47,7 @@ set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 
 file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${include_dest}/templates"
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/templates"
   FILES_MATCHING PATTERN "*.inc"
   PATTERN CMakeFiles EXCLUDE
   )
