@@ -1,0 +1,74 @@
+! Test for use fArgParse use case that fails with ifort-19.  Issue is
+! apparently related to copying of StringUnlimited maps at multiple
+! levels.  In the use case a function is used to return a map, and the
+! retun value is itself a function return at the level above.
+
+module String_mod
+  implicit none
+  private
+
+  public :: String
+  type :: String
+     character(:), allocatable :: string
+  end type String
+
+end module String_mod
+
+module UnlimitedMap_mod
+#include "types/key_deferredLengthString.inc"
+#include "types/value_unlimitedPoly.inc"
+#define _alt
+#include "templates/map.inc"
+end module UnlimitedMap_mod
+
+
+module Test_map_double_assigne_mod
+   use String_mod
+   use pFUnit_mod
+   use UnlimitedMap_mod
+   
+   @suite(name='Test_map_double_assign_suite')
+
+  type :: ArgParser
+     class(*), allocatable :: default
+  end type ArgParser
+
+
+contains
+
+   subroutine get_defaults(this, option_values)
+      type (Map), intent(out) :: option_values
+      class (ArgParser), target, intent(inout) :: this
+
+      class(*), pointer :: q
+
+      this%default = 'TestRunner'
+      q => this%default
+
+      select type (q)
+      type is (character(*))
+         print*,__FILE__,__LINE__
+         call option_values%insert('runner', String(q))
+      end select
+
+   end subroutine get_defaults
+
+   @test
+   subroutine test_unlimited
+      type (Map) :: m
+      type (ArgParser) :: p
+
+      class(*), pointer :: opt
+
+      print*,__FILE__,__LINE__
+      call get_defaults(p, m)
+      opt => m%at('runner')
+      select type (opt)
+      class is (String)
+         @assertEqual('TestRunner', opt%string)
+      class default
+         @assertFalse(.true.,message='should not get here')
+      end select
+      
+   end subroutine test_unlimited
+end module Test_map_double_assigne_mod

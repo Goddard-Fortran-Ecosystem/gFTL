@@ -32,3 +32,4 @@ ADD_TEST_SUITE(Test_integer1dinteger1daltMap_mod_suite)
 
 ! Test for robust pointers to allocatable components
 ADD_TEST_SUITE(Test_map_Allocatable_suite)
+ADD_TEST_SUITE(Test_map_double_assign_suite)
