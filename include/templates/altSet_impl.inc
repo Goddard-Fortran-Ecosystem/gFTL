@@ -944,14 +944,13 @@
          type (__iterator) :: iter
          __type_declare_result, pointer :: ptr
 
-#if  !defined(__INTEL_COMPILER) | !(defined(_string) & !defined(_string_deferred))
          iter = other%begin()
          do while (iter /= other%end())
             ptr => iter%value()
             call this%insert(ptr)
             call iter%next()
          end do
-#endif
+
          this%tsize = other%tsize
 
       end subroutine __PROC(deepCopy)
