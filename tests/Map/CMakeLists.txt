@@ -93,7 +93,14 @@ add_custom_command (
   WORKING_DIRECTORY ${bin}
   DEPENDS ${src}/Test_map_Allocatable.pf
   )
-list(APPEND SRCS Test_map_Allocatable.F90)
+
+add_custom_command (
+  OUTPUT Test_map_double_assign.F90
+  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_map_double_assign.pf Test_map_double_assign.F90
+  WORKING_DIRECTORY ${bin}
+  DEPENDS ${src}/Test_map_double_assign.pf
+  )
+list(APPEND SRCS Test_map_Allocatable.F90 Test_map_double_assign.F90)
 
 add_custom_command (
     OUTPUT AuxTest.F90
