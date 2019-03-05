@@ -38,7 +38,6 @@
         procedure :: end => __PROC(end)
         procedure :: dump => __PROC(dump)
         procedure :: deepCopy => __PROC(deepCopy)
-        generic :: assignment(=) => deepCopy
         procedure :: equalSets
         generic :: operator(==) => equalSets
         procedure :: notEqualSets
