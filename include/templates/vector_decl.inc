@@ -66,7 +66,9 @@
 
 #ifndef __type_wrapped
          procedure :: copyFromArray => __PROC(copyfromarray)
+#ifndef __ifort_18         
          generic :: assignment(=) => copyFromArray
+#endif
 #endif
          procedure :: push_back => __PROC(push_back)
          procedure :: pop_back => __PROC(pop_back)
