@@ -39,7 +39,7 @@ endif ()
 add_subdirectory (include)
 add_subdirectory (examples)
 
-if (PFUNIT)
+if (PFUNIT_DIR)
    add_subdirectory(tests)
 endif ()
 
