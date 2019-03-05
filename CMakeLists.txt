@@ -3,15 +3,21 @@ if (COMMAND cmake_policy)
   cmake_policy (SET CMP0003 NEW)
 endif (COMMAND cmake_policy)
 
-
 set (PFUNIT_DIR "" CACHE PATH "(optional) path to installed testing framework")
+if (PFUNIT_DIR)
+  set (LANGUAGES Fortran)
+else ()
+  set (LANGUAGES NONE)
+endif ()
+
+project (GFTL
+  VERSION 1.0
+  LANGUAGES ${LANGUAGES}
+  )
+
 if (PFUNIT_DIR)
   set (PFUNIT ${PFUNIT_DIR})
   set (CMAKE_Fortran_COMPILER ${FC})
-  project (GFTL
-    VERSION 1.1.0
-    LANGUAGES Fortran
-    )
   set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake_utils")
   include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
   include (CheckFortranSource)
@@ -21,13 +27,8 @@ if (PFUNIT_DIR)
   if (NOT TARGET (tests))
     add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
   endif ()
-
-else ()
-  project (GFTL
-    VERSION 1.1.0
-    LANGUAGES NONE
-    )
 endif ()
+
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
   message("Setting default install prefix to ${CMAKE_INSTALL_PREFIX}.")
