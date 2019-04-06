@@ -1,0 +1,9 @@
+# Include file for external  projects using Unix Make instead of cmake.
+
+
+GFTL_INSTALL_PREFIX := @CMAKE_INSTALL_PREFIX@
+GFTL_VERSION := @GFTL_VERSION_MAJOR@.@GFTL_VERSION_MINOR@
+GFTL_TOP_DIR = $(GFTL_INSTALL_PREFIX)/GFTL-$(GFTL_VERSION)
+GFTL_INCLUDE_DIR := $(GFTL_TOP_DIR)/include
+GFTL_LIBRARIES := # none
+
