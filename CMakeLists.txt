@@ -45,7 +45,14 @@ endif ()
 
 configure_file(GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake @ONLY)
 configure_file(GFTLConfig-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake @ONLY)
+configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
+
+set (top_dir "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
-  DESTINATION "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}/cmake"
+  DESTINATION "${top_dir}/cmake"
+  )
+install (
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
+  DESTINATION "${top_dir}/include"
   )
