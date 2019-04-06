@@ -11,7 +11,7 @@ else ()
 endif ()
 
 project (GFTL
-  VERSION 1.0
+  VERSION 1.1.3
   LANGUAGES ${LANGUAGES}
   )
 
