@@ -2,4 +2,5 @@
 
 get_filename_component (SELF_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 set (PREFIX ${SELF_DIR}/../..)
-include ("${PREFIX}/GFTL-@GFTL_VERSION_MAJOR@.@GFTL_VERSION_MINOR@/cmake/GFTL.cmake")
+set (GFTL_TOP_DIR ${PREFIX}/GFTL-@GFTL_VERSION_MAJOR@.@GFTL_VERSION_MINOR@ CACHE PATH "")
+include ("${GFTL_TOP_DIR}/cmake/GFTL.cmake")
