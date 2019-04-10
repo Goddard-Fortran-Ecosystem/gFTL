@@ -45,13 +45,17 @@ endif ()
 
 configure_file(GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake @ONLY)
 configure_file(GFTLConfig-version.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake @ONLY)
-configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 
 set (top_dir "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
   DESTINATION "${top_dir}/cmake"
   )
+
+# The following is needed for external projects using *nix make when
+# parent project builds gFTL as a subproject.
+set (GFTL_TOP_DIR "${CMAKE_INSTALL_PREFIX}/${top_dir}" CACHE PATH "")
+configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
   DESTINATION "${top_dir}/include"
