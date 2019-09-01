@@ -5,7 +5,6 @@ link_directories (${PFUNIT_TOP_DIR}/lib)
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
-message( "Vecttor Build type?: ${CMAKE_BUILD_TYPE}")
 
 set  (types
   integer
@@ -81,12 +80,12 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
 endif()
 
 
-add_pfunit_ctest (vectortests
+add_pfunit_ctest (vector_tests
   TEST_SOURCES ${SRCS}
   LINK_LIBRARIES vectorSUT
   )
 
-target_include_directories(vectortests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(vectortests PRIVATE ${GFTL_SOURCE_DIR}/include)
-
+target_include_directories (vector_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories (vector_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
+add_dependencies (tests vector_tests)
 

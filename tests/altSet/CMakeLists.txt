@@ -55,10 +55,11 @@ foreach (type ${types} )
 
 endforeach ()
 
-add_pfunit_ctest (altsettests
+add_pfunit_ctest (altSet_tests
   TEST_SOURCES ${SRCS}
   LINK_LIBRARIES altsetSUT
   )
 
-target_include_directories(altsettests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(altsettests PRIVATE ${GFTL_SOURCE_DIR}/include)
+target_include_directories (altSet_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories (altSet_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
+add_dependencies (tests altSet_tests)

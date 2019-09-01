@@ -3,6 +3,7 @@ include(header.m4)
 module Test_`'param()Vector
 #include "types/param().inc"
 #include "type_test_values/param().inc"
+   use, intrinsic :: iso_fortran_env, only: INT64
    use funit, only: assertTrue, assertFalse
    use funit, only: TestSuite
    use funit, only: SourceLocation
@@ -69,7 +70,7 @@ contains
       type (Vector) :: v
 
       v = [ONE,TWO]
-      @assertEqual(2, v%size())
+      @assert_that(v%size(), is(2_INT64))
 
    end subroutine testCopyFromArray_size
 #endif
@@ -80,19 +81,20 @@ contains
 
       v = Vector()
       call v%push_back(ONE)
-      @assertEqual(1, v%size())
+      @assert_that(v%size(), is(1_INT64))
 
       call v%push_back(TWO)
-      @assertEqual(2, v%size())
+      @assert_that(v%size(), is(2_INT64))
 
       call v%push_back(THREE)
-      @assertEqual(3, v%size())
+      @assert_that(v%size(), is(3_INT64))
+
 
       call v%push_back(FOUR)
-      @assertEqual(4, v%size())
+      @assert_that(v%size(), is(4_INT64))
 
       call v%push_back(FIVE)
-      @assertEqual(5, v%size())
+      @assert_that(v%size(), is(5_INT64))
 
    end subroutine test_push_back_size
 

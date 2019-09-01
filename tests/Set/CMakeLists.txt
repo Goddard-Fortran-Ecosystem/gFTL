@@ -60,10 +60,11 @@ foreach (type ${types} )
 endforeach ()
 
 
-add_pfunit_ctest (settests
+add_pfunit_ctest (set_tests
   TEST_SOURCES ${SRCS}
   LINK_LIBRARIES setSUT
   )
 
-target_include_directories(settests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(settests PRIVATE ${GFTL_SOURCE_DIR}/include)
+target_include_directories (set_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories (set_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
+add_dependencies (tests set_tests)

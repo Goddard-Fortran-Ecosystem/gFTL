@@ -4,7 +4,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.1.4
+  VERSION 1.2.0
   LANGUAGES NONE)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -16,9 +16,8 @@ endif ()
 
 add_subdirectory (include)
 add_subdirectory (examples)
-message( "Build type?: ${CMAKE_BUILD_TYPE}")
 
-find_package (PFUNIT QUIET)
+find_package (PFUNIT 4.0.1 QUIET)
 if (PFUNIT_FOUND)
   project (GFTL-TEST
     VERSION ${GFTL_VERSION}

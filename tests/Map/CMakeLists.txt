@@ -85,11 +85,12 @@ list (APPEND SRCS
   Test_map_Allocatable.pf
   Test_map_double_assign.pf)
 
-add_pfunit_ctest (maptests
+add_pfunit_ctest (map_tests
   TEST_SOURCES ${SRCS}
   LINK_LIBRARIES mapSUT
   )
 
-target_include_directories(maptests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories(maptests PRIVATE ${GFTL_SOURCE_DIR}/include)
+target_include_directories (map_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories (map_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
+add_dependencies (tests map_tests)
 
