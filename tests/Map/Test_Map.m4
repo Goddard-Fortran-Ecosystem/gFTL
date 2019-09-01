@@ -1,17 +1,17 @@
 changecom()
 #line 2 "tests/Map/Test_Map.m4"
 
-module Test_`'KEY()`'VALUE()`'ALT()Map_mod
+module Test_`'KEY()`'VALUE()`'ALT()Map
 #include "types/key_`'KEY().inc"
 #include "types/value_`'VALUE().inc"
 #include "type_test_values/key_`'KEY().inc"
 #include "type_test_values/value_`'VALUE().inc"
-   use pFUnit_mod, only: assertTrue, assertFalse
-   use pFUnit_mod, only: TestSuite, newTestSuite
-   use pFUnit_mod, only: newTestMethod
-   use pFUnit_mod, only: SourceLocation
-   use pFUnit_mod, only: anyExceptions
-   use pFUnit_mod, only: assertEqual
+   use funit, only: assertTrue, assertFalse
+   use funit, only: TestSuite, TestSuite
+   use funit, only: TestMethod
+   use funit, only: SourceLocation
+   use funit, only: anyExceptions
+   use funit, only: assertEqual
    use KEY()`'VALUE()`'ALT()Map_mod
 
 #include "templates/tmplbase.inc"
@@ -304,7 +304,7 @@ contains
 #endif
 
 #include "templates/type_use_tokens_undef.inc"
-end module Test_`'KEY()`'VALUE()`'ALT()Map_mod
+end module Test_`'KEY()`'VALUE()`'ALT()Map
 #include "templates/tmpltail.inc"
 
 

@@ -4,8 +4,8 @@
 ! behavior, and thus cannot be supported for non allocatable container
 ! elements.
 
-module Test_altSet_Allocatable_mod
-   use pFUnit_mod
+module Test_altSet_Allocatable
+   use funit
    use FooPolyaltSet_mod
    use Foo_mod
 
@@ -47,4 +47,4 @@ contains
    end subroutine test_insert
 
 
-end module Test_altSet_Allocatable_mod
+end module Test_altSet_Allocatable

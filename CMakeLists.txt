@@ -3,31 +3,9 @@ if (COMMAND cmake_policy)
   cmake_policy (SET CMP0003 NEW)
 endif (COMMAND cmake_policy)
 
-set (PFUNIT_DIR "" CACHE PATH "(optional) path to installed testing framework")
-if (PFUNIT_DIR)
-  set (LANGUAGES Fortran)
-else ()
-  set (LANGUAGES NONE)
-endif ()
-
 project (GFTL
-  VERSION 1.1.3
-  LANGUAGES ${LANGUAGES}
-  )
-
-if (PFUNIT_DIR)
-  set (PFUNIT ${PFUNIT_DIR})
-  set (CMAKE_Fortran_COMPILER ${FC})
-  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake_utils")
-  include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
-  include (CheckFortranSource)
-  include (CheckCompilerCapabilities)
-
-  enable_testing()
-  if (NOT TARGET (tests))
-    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
-  endif ()
-endif ()
+  VERSION 1.2.0
+  LANGUAGES NONE)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
@@ -39,8 +17,24 @@ endif ()
 add_subdirectory (include)
 add_subdirectory (examples)
 
-if (PFUNIT_DIR)
-   add_subdirectory(tests)
+find_package (PFUNIT 4.0.1 QUIET)
+if (PFUNIT_FOUND)
+  project (GFTL-TEST
+    VERSION ${GFTL_VERSION}
+    LANGUAGES Fortran
+    )
+
+  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake_utils")
+  include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
+  include (CheckFortranSource)
+  include (CheckCompilerCapabilities)
+
+  enable_testing()
+  if (NOT TARGET (tests))
+    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
+  endif ()
+  
+  add_subdirectory(tests)
 endif ()
 
 configure_file(GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake @ONLY)
