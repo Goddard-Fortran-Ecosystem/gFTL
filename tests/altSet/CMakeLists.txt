@@ -40,45 +40,25 @@ set(SRCS)
 foreach (type ${types} )
   set (infile ${src}/Test_altSet.m4)
   set (pfunitfile Test_${type}altSet.pf)
-  set (outfile Test_${type}altSet.F90)
 
   # Use relative path for outfile so that CMake correctly
   # detects the need to generate include files.
 
   add_custom_command (
-    OUTPUT ${outfile}
+    OUTPUT ${pfunitfile}
     COMMAND m4 -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
 
-  list (APPEND SRCS ${outfile} )
+  list (APPEND SRCS ${CMAKE_CURRENT_BINARY_DIR}/${pfunitfile} )
 
 endforeach ()
 
-add_custom_command (
-  OUTPUT Test_altSet_Allocatable.F90
-  COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${src}/Test_altSet_Allocatable.pf Test_altSet_Allocatable.F90
-  WORKING_DIRECTORY ${bin}
-  DEPENDS ${src}/Test_altSet_Allocatable.pf
+add_pfunit_ctest (altsettests
+  TEST_SOURCES ${SRCS}
+  LINK_LIBRARIES altsetSUT
   )
-list(APPEND SRCS Test_altSet_Allocatable.F90)
 
-
-add_library (testaltSet STATIC EXCLUDE_FROM_ALL ${SRCS})
-target_include_directories (testaltSet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories (testaltSet PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries (testaltSet altsetSUT pfunit)
-add_dependencies (testaltSet type_test_values)
-
-
-set (driver ${PFUNIT_TOP_DIR}/include/driver.F90)
-add_executable (setalttests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries (setalttests.x  testaltSet pfunit)
-
-add_dependencies(tests setalttests.x)
-add_test(NAME setalttests
-  COMMAND setalttests.x
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  )
+target_include_directories(altsettests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(altsettests PRIVATE ${GFTL_SOURCE_DIR}/include)
