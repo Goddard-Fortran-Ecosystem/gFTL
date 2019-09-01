@@ -1,9 +1,8 @@
 add_subdirectory(SUT)
 
 
-include_directories (${PFUNIT}/include)
-include_directories (${PFUNIT}/mod)
-link_directories(${PFUNIT}/lib)
+include_directories (${PFUNIT_TOP_DIR}/include)
+link_directories(${PFUNIT_TOP_DIR}/lib)
 
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
@@ -58,7 +57,7 @@ foreach (instantiation ${instantiations})
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT= -Dformat=${format} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -75,7 +74,7 @@ foreach (instantiation ${instantiations})
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -DKEY=${key} -DVALUE=${value} -DALT=alt -Dformat=${format} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -89,14 +88,14 @@ list (APPEND SRCS AuxTest.F90)
 
 add_custom_command (
   OUTPUT Test_map_Allocatable.F90
-  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_map_Allocatable.pf Test_map_Allocatable.F90
+  COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${src}/Test_map_Allocatable.pf Test_map_Allocatable.F90
   WORKING_DIRECTORY ${bin}
   DEPENDS ${src}/Test_map_Allocatable.pf
   )
 
 add_custom_command (
   OUTPUT Test_map_double_assign.F90
-  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_map_double_assign.pf Test_map_double_assign.F90
+  COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${src}/Test_map_double_assign.pf Test_map_double_assign.F90
   WORKING_DIRECTORY ${bin}
   DEPENDS ${src}/Test_map_double_assign.pf
   )
@@ -104,7 +103,7 @@ list(APPEND SRCS Test_map_Allocatable.F90 Test_map_double_assign.F90)
 
 add_custom_command (
     OUTPUT AuxTest.F90
-    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/AuxTest.pf AuxTest.F90
+    COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${src}/AuxTest.pf AuxTest.F90
     WORKING_DIRECTORY ${bin}
     DEPENDS ${src}/AuxTest.pf
     )
@@ -115,7 +114,7 @@ target_include_directories (testMap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(testMap mapSUT pfunit)
 add_dependencies(testMap type_test_values)
 
-set(driver ${PFUNIT}/include/driver.F90)
+set(driver ${PFUNIT_TOP_DIR}/include/driver.F90)
 add_executable(maptests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries(maptests.x testMap)
 

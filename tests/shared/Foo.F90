@@ -1,5 +1,5 @@
 module Foo_mod
-   use pFUnit_mod
+   use funit
    implicit none
    private
 

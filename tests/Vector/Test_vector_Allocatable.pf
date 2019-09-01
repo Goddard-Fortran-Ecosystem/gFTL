@@ -4,8 +4,8 @@
 ! behavior, and thus cannot be supported for non allocatable container
 ! elements.
 
-module Test_vector_Allocatable_mod
-   use pFUnit_mod
+module Test_vector_Allocatable
+   use funit
    use FooPolyVector_mod
    use Foo_mod
 
@@ -33,4 +33,4 @@ contains
    end subroutine test_insert
 
 
-end module Test_vector_Allocatable_mod
+end module Test_vector_Allocatable

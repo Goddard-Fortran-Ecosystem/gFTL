@@ -1,9 +1,9 @@
 add_subdirectory(SUT)
 
 
-include_directories (${PFUNIT}/include)
-include_directories (${PFUNIT}/mod)
-link_directories(${PFUNIT}/lib)
+include_directories (${PFUNIT_TOP_DIR}/include)
+include_directories (${PFUNIT_TOP_DIR}/mod)
+link_directories(${PFUNIT_TOP_DIR}/lib)
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
@@ -48,7 +48,7 @@ foreach (type ${types} )
   add_custom_command (
     OUTPUT ${outfile}
     COMMAND m4 -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
-    COMMAND ${PFUNIT}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
+    COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${pfunitfile} ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -59,7 +59,7 @@ endforeach ()
 
 add_custom_command (
   OUTPUT Test_altSet_Allocatable.F90
-  COMMAND ${PFUNIT}/bin/pFUnitParser.py ${src}/Test_altSet_Allocatable.pf Test_altSet_Allocatable.F90
+  COMMAND ${PFUNIT_TOP_DIR}/bin/pFUnitParser.py ${src}/Test_altSet_Allocatable.pf Test_altSet_Allocatable.F90
   WORKING_DIRECTORY ${bin}
   DEPENDS ${src}/Test_altSet_Allocatable.pf
   )
@@ -73,7 +73,7 @@ target_link_libraries (testaltSet altsetSUT pfunit)
 add_dependencies (testaltSet type_test_values)
 
 
-set (driver ${PFUNIT}/include/driver.F90)
+set (driver ${PFUNIT_TOP_DIR}/include/driver.F90)
 add_executable (setalttests.x EXCLUDE_FROM_ALL ${driver})
 target_link_libraries (setalttests.x  testaltSet pfunit)
 

@@ -1,20 +1,19 @@
 include(header.m4)
 
-module Test_`'param()Vector_mod
+module Test_`'param()Vector
 #include "types/param().inc"
 #include "type_test_values/param().inc"
-   use pFUnit_mod, only: assertTrue, assertFalse
-   use pFUnit_mod, only: TestSuite, newTestSuite
-   use pFUnit_mod, only: newTestMethod
-   use pFUnit_mod, only: SourceLocation
-   use pFUnit_mod, only: anyExceptions
+   use funit, only: assertTrue, assertFalse
+   use funit, only: TestSuite
+   use funit, only: SourceLocation
+   use funit, only: anyExceptions
 #ifdef _unlimited
    use pFUnitSupplement_mod, only: assertEqual
 #else
-   use pFUnit_mod, only: assertEqual
+   use funit, only: assertEqual
 #endif
    use param()Vector_mod
-
+   use fhamcrest
 
 #include "templates/type_set_use_tokens.inc"
 #include "templates/type_template_macros.inc"
@@ -42,7 +41,7 @@ contains
       type (Vector) :: v
 
        v = Vector()
-       @assertEqual(0, v%size())
+       @assert_that(v%size(), is(0))
 
    end subroutine testSizeEmpty
 
@@ -959,7 +958,7 @@ contains
 
 #include "templates/type_use_tokens_undef.inc"
 
-end module Test_`'param()Vector_mod
+end module Test_`'param()Vector
 #include "templates/tmpltail.inc"
 
 
