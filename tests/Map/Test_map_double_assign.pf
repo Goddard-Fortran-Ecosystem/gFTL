@@ -22,9 +22,9 @@ module UnlimitedMap_mod
 end module UnlimitedMap_mod
 
 
-module Test_map_double_assigne_mod
+module Test_map_double_assign
    use String_mod
-   use pFUnit_mod
+   use funit
    use UnlimitedMap_mod
    
    @suite(name='Test_map_double_assign_suite')
@@ -71,4 +71,5 @@ contains
       end select
       
    end subroutine test_unlimited
-end module Test_map_double_assigne_mod
+
+end module Test_map_double_assign

@@ -1,10 +1,10 @@
-module AuxTest_mod
-   use pfunit_mod
+module AuxTest
+   use funit
    implicit none
 
 contains
 
-!@test
+@test
    subroutine test_loggerUseCase()
       use integerintegermap_mod
 
@@ -16,4 +16,4 @@ contains
    end subroutine test_loggerUseCase
 
 
-end module AuxTest_mod
+end module AuxTest
