@@ -33,13 +33,13 @@ set  (types
 set (SRCS Test_nested.pf)
 list(APPEND SRCS Test_vector_Allocatable.pf)
 
-#if (SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS)
-#  LIST (APPEND types character17)
-#endif ()
+if (SUPPORT_FOR_POINTERS_TO_FIXED_LENGTH_STRINGS)
+  LIST (APPEND types character17)
+endif ()
 
-#if (SUPPORT_FOR_POINTERS_TO_DEFERRED_LENGTH_STRINGS)
-#  LIST (APPEND types deferredLengthString)
-#endif ()
+if (SUPPORT_FOR_POINTERS_TO_DEFERRED_LENGTH_STRINGS)
+  LIST (APPEND types deferredLengthString)
+endif ()
 
 foreach (type ${types} )
   set (infile ${src}/Test_Vector.m4)
