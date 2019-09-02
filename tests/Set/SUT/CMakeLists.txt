@@ -1,5 +1,3 @@
-include_directories (${PFUNIT}/mod)
-
 set (instantiations
 
   "integer\;free"

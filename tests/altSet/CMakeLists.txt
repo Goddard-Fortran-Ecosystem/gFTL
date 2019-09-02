@@ -1,10 +1,5 @@
 add_subdirectory(SUT)
 
-
-include_directories (${PFUNIT_TOP_DIR}/include)
-include_directories (${PFUNIT_TOP_DIR}/mod)
-link_directories(${PFUNIT_TOP_DIR}/lib)
-
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
 

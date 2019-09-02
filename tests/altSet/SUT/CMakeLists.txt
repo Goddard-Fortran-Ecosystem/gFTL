@@ -1,7 +1,3 @@
-include_directories (${PFUNIT}/mod)
-
-#include_directories (${GFTL_SOURCE_DIR}/include)
-#include_directories (${GFTL_BINARY_DIR}/include)
 include_directories (${GFTL_BINARY_DIR}/tests/shared)
 
 set (instantiations
