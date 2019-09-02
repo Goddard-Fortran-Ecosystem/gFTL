@@ -45,7 +45,7 @@ before_script:
    - cd ${HOME}/pFUnit
    - mkdir build-serial
    - cd build-serial
-   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit -DSKIP_MPI=YES
+   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit -DSKIP_MPI=YES -DSKIP_OPENMP
    - make -j4 install
 
    # Now build gFTL
