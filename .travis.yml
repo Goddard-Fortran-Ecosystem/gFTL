@@ -28,6 +28,8 @@ matrix:
         env: FC='gfortran-7' BREW='gcc@7' BREW_UP='cmake'
       - os: osx
         env: FC='gfortran-8' BREW='gcc@8' BREW_UP='cmake'
+      - os: osx
+        env: FC='gfortran-9' BREW='gcc@9' BREW_UP='cmake'
 
 before_install:
    - |
