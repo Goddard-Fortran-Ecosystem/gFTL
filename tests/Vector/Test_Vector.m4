@@ -23,6 +23,9 @@ module Test_`'param()Vector
 
 #include "genericItems_decl.inc"
 
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
+
 contains
 
 #include "genericSetUpTearDown.inc"
@@ -39,7 +42,7 @@ contains
 
       
    subroutine testSizeEmpty()
-      type (Vector) :: v
+      type (Vector), target :: v
 
        v = Vector()
        @assert_that(v%size(), is(0))
@@ -48,7 +51,7 @@ contains
 
 
    subroutine testEmpty()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = Vector()
       @assertTrue(v%empty())
@@ -58,7 +61,7 @@ contains
 #ifndef __type_wrapped
 @test(ifndef=__type_wrapped)
    subroutine testCopyFromArray_notEmpty()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = [ONE]
       @assertFalse(v%empty())
@@ -67,7 +70,7 @@ contains
 
 @test(ifndef=__type_wrapped)
    subroutine testCopyFromArray_size()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = [ONE,TWO]
       @assert_that(v%size(), is(2_INT64))
@@ -77,7 +80,7 @@ contains
 
 @test
    subroutine test_push_back_size()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = Vector()
       call v%push_back(ONE)
@@ -103,7 +106,7 @@ contains
    ! pushes.
 @test
    subroutine test_push_back_front()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -128,7 +131,7 @@ contains
 
 
    subroutine test_push_back_back()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -160,7 +163,7 @@ contains
 ! elements that already have values.
 @test
    subroutine test_push_back_shrink()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -192,7 +195,7 @@ contains
 
 @test
    subroutine test_at()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -218,7 +221,7 @@ contains
 
 @test
    subroutine test_of()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -244,7 +247,7 @@ contains
 
 @test
     subroutine test_get()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_component :: q
 
       v = Vector()
@@ -258,26 +261,32 @@ contains
       __TYPE_ASSIGN(q, v%get(1))
       @assertEqual(ONE, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(2))
       @assertEqual(TWO, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(3))
       @assertEqual(THREE, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(4))
       @assertEqual(FOUR, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(5))
       @assertEqual(FIVE, q)
+      __TYPE_FREE(q)
 
    end subroutine test_get
 
 
 @test
    subroutine test_get_negativeIndex()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_component :: q
 
+      v = Vector()
 
       call v%push_back(ONE)
       call v%push_back(TWO)
@@ -288,17 +297,22 @@ contains
       __TYPE_ASSIGN(q, v%get(0))
       @assertEqual(FIVE, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(-1))
       @assertEqual(FOUR, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(-2))
       @assertEqual(THREE, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(-3))
       @assertEqual(TWO, q)
       __TYPE_FREE(q)
+
       __TYPE_ASSIGN(q, v%get(-4))
       @assertEqual(ONE, q)
+      __TYPE_FREE(q)
 
    end subroutine test_get_negativeIndex
 
