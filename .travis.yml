@@ -45,14 +45,14 @@ before_script:
    - cd ${HOME}/pFUnit
    - mkdir build-serial
    - cd build-serial
-   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit-serial
+   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit -DSKIP_MPI
    - make -j4 install
 
    # Now build gFTL
    - cd ${TRAVIS_BUILD_DIR}
    - mkdir build
    - cd build
-   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DPFUNIT_DIR=$HOME/Software/pFUnit-serial
+   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DCMAKE_PREFIX_PATH=$HOME/Software/pFUnit
 
 script:
    # Build and install
