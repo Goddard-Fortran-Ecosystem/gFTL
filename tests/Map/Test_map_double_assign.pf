@@ -47,7 +47,6 @@ contains
 
       select type (q)
       type is (character(*))
-         print*,__FILE__,__LINE__
          call option_values%insert('runner', String(q))
       end select
 
