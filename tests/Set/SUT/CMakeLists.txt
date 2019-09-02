@@ -69,5 +69,5 @@ list (APPEND SRCS MultiModule.F90)
 
 add_library(setSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_include_directories (setSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories (setSUT PRIVATE ${PFUNIT}/mod)
+target_include_directories (setSUT PRIVATE ${PFUNIT_TOP_DIR}/include)
 target_link_libraries(setSUT type_test_values shared gftl)

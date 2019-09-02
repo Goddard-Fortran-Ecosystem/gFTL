@@ -79,5 +79,5 @@ list (APPEND SRCS MultiModule.F90)
 
 add_library(mapSUT STATIC EXCLUDE_FROM_ALL ${SRCS} ${altSRCS})
 target_include_directories (mapSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories (mapSUT PRIVATE ${PFUNIT}/mod)
+target_include_directories (mapSUT PRIVATE ${PFUNIT_TOP_DIR}/include)
 target_link_libraries(mapSUT type_test_values shared gftl)

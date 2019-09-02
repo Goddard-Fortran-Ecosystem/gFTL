@@ -72,5 +72,5 @@ list (APPEND SRCS MultiModule.F90)
 
 add_library(altsetSUT STATIC EXCLUDE_FROM_ALL ${SRCS})
 target_include_directories (altsetSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories (altsetSUT PRIVATE ${PFUNIT}/mod)
+target_include_directories (altsetSUT PRIVATE ${PFUNIT_TOP_DIR}/include)
 target_link_libraries(altsetSUT type_test_values shared gftl)
