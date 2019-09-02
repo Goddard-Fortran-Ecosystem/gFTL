@@ -25,6 +25,9 @@ module Test_`'param()VectorIterator
 
    type (Vector), target :: v
 
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
+
 contains
 
 #include <genericSetUpTearDown.inc>
