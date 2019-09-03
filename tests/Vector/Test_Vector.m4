@@ -246,6 +246,9 @@ contains
     end subroutine test_of
 
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
+
     subroutine test_get()
       type (Vector), target :: v
       __type_declare_component :: q
@@ -282,6 +285,8 @@ contains
 
 
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
    subroutine test_get_negativeIndex()
       type (Vector), target :: v
       __type_declare_component :: q
@@ -323,7 +328,7 @@ contains
    ! must reallocate the target and thus invalidate the pointer
 @test   
    subroutine test_atModify()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q1, q2, qt
 
       v = Vector()
@@ -352,7 +357,7 @@ contains
    ! provided.   
 @test
    subroutine test_resizeGrow()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -375,7 +380,7 @@ contains
 
 @test
    subroutine test_resizeShrink()
-      type (Vector) :: v
+      type (Vector), target :: v
       __type_declare_result, pointer :: q
 
       v = Vector()
@@ -397,7 +402,7 @@ contains
    
 @test
    subroutine test_reserve_capacity()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = Vector()
       @assertTrue(0 <= v%capacity())
@@ -412,7 +417,7 @@ contains
 
    
    subroutine test_shrink_to_fit()
-      type (Vector) :: v
+      type (Vector), target :: v
       v = Vector()
       call v%shrink_to_fit()
       @assertTrue(0 <= v%capacity())
@@ -434,7 +439,7 @@ contains
 
 @test
    subroutine test_pop_back()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = Vector()
       call v%push_back(ONE)
@@ -468,8 +473,10 @@ contains
    ! This test checks that an insertion at the beginning of the vector
    ! correctly adjusts the location of subsequest elements.
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
    subroutine test_insertBeginning()
-      type (Vector) :: v
+      type (Vector), target :: v
 
       v = Vector()
       call v%push_back(ONE)
@@ -491,6 +498,8 @@ contains
    ! This test checks that an insertion into the middle of the vector
    ! correctly adjusts the location of subsequest elements.
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
    subroutine test_insertMiddle()
       type (Vector) :: v
 
@@ -933,6 +942,8 @@ contains
 
 
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
    subroutine test_set()
       type (Vector) :: v
 
@@ -959,6 +970,8 @@ contains
 
 
 @test
+! Disable if unlimitedPoly and using GFortran
+ifelse(param,unlimitedPoly,`ifelse(compiler,GNU,@disable)')
    subroutine test_set_back()
       type (Vector) :: v
 

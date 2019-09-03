@@ -52,14 +52,15 @@ contains
 
    end subroutine get_defaults
 
-   @test
+#ifdef __INTEL_COMPILER
+   @test(ifdef=__INTEL_COMPILER)
+   @disable
    subroutine test_unlimited
       type (Map) :: m
       type (ArgParser) :: p
 
       class(*), pointer :: opt
 
-      print*,__FILE__,__LINE__
       call get_defaults(p, m)
       opt => m%at('runner')
       select type (opt)
@@ -70,5 +71,25 @@ contains
       end select
       
    end subroutine test_unlimited
+#else
+   @test(ifndef=__INTEL_COMPILER)
+   @disable
+   subroutine test_unlimited
+      type (Map) :: m
+      type (ArgParser) :: p
+
+      class(*), pointer :: opt
+
+      call get_defaults(p, m)
+      opt => m%at('runner')
+      select type (opt)
+      class is (String)
+         @assertEqual('TestRunner', opt%string)
+      class default
+         @assertFalse(.true.,message='should not get here')
+      end select
+      
+   end subroutine test_unlimited
+#endif
 
 end module Test_map_double_assign
