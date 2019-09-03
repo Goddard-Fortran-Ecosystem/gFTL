@@ -22,6 +22,9 @@ module Test_`'param()altSet
 #include "templates/tmplbase.inc"
 #include "genericItems_decl.inc"
 
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
+
 contains
 
 #include "genericSetUpTearDown.inc"

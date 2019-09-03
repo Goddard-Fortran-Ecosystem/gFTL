@@ -95,9 +95,9 @@ before_script:
 
 script:
    # Build and install
-   - make -j install
+   - make -j 2 install
    # Test
-   - make -j tests
+   - make -j 2 tests
 
 notifications:
    email:
