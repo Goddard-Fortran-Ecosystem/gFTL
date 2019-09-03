@@ -23,6 +23,9 @@ module Test_`'param()Set
 
 #include "genericItems_decl.inc"
 
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
+
 contains
 
 #include "genericSetUpTearDown.inc"
