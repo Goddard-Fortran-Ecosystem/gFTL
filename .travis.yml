@@ -50,8 +50,8 @@ before_install:
 
 install:
   # Set the ${CXX} variable properly
-  - export CXX=${COMPILER}
-  - ${CXX} --version
+#  - export CXX=${COMPILER}
+#  - ${CXX} --version
 
   # Dependencies required by the CI are installed in ${TRAVIS_BUILD_DIR}/deps/
   - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
