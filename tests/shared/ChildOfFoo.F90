@@ -1,5 +1,5 @@
 module ChildOfFoo_mod
-   use pFUnit_mod
+   use funit
    use Foo_mod, only: Foo
    implicit none
    private

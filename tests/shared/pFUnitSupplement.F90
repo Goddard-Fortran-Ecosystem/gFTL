@@ -9,9 +9,9 @@
 
 
 module pFUnitSupplement_mod
-   use pFUnit_mod, only: shadowAssert => assertEqual
-   use pFUnit_mod, only: SourceLocation
-   use pFUnit_mod, only: throw
+   use funit, only: shadowAssert => assertEqual
+   use funit, only: SourceLocation
+   use funit, only: throw
    use iso_fortran_env, only: INT64
    use iso_fortran_env, only: REAL64
    implicit none
@@ -46,8 +46,8 @@ contains
 
       type is (integer(kind=INT64))
          select type (pb => b)
-         type is (integer)
-            call shadowAssert(pa, pb, location=location)
+!!$         type is (integer)
+!!$            call shadowAssert(pa, pb, location=location)
          type is (integer(kind=INT64))
             call shadowAssert(pa, pb, location=location)
          class default

@@ -1,17 +1,17 @@
 include(header.m4)
 
-module Test_`'param()Set_mod
+module Test_`'param()Set
 #include "types/param().inc"
 #include "type_test_values/param().inc"
-   use pFUnit_mod, only: assertTrue, assertFalse
-   use pFUnit_mod, only: TestSuite, newTestSuite
-   use pFUnit_mod, only: newTestMethod
-   use pFUnit_mod, only: SourceLocation
-   use pFUnit_mod, only: anyExceptions
+   use funit, only: assertTrue, assertFalse
+   use funit, only: TestSuite
+   use funit, only: TestMethod
+   use funit, only: SourceLocation
+   use funit, only: anyExceptions
 #ifdef _unlimited
    use pFUnitSupplement_mod, only: assertEqual
 #else
-   use pFUnit_mod, only: assertEqual
+   use funit, only: assertEqual
 #endif
    use param()Set_mod
 
@@ -22,6 +22,9 @@ module Test_`'param()Set_mod
 #include "templates/type_testing_macros.inc"
 
 #include "genericItems_decl.inc"
+
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
 
 contains
 
@@ -399,5 +402,5 @@ contains
    end subroutine test_deepCopy2
 #include "templates/type_use_tokens_undef.inc"
       
-end module Test_`'param()Set_mod
+end module Test_`'param()Set
 #include "templates/tmpltail.inc"
