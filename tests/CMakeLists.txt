@@ -10,7 +10,6 @@ add_subdirectory(include)
 
 
 include_directories (${PFUNIT}/include)
-include_directories (${PFUNIT}/mod)
 link_directories (${PFUNIT}/lib)
 
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
@@ -32,8 +31,8 @@ include_directories (${CMAKE_CURRENT_SOURCE_DIR}/Set)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/Map)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/Vector)
 
-set(driver ${PFUNIT}/include/driver.F90)
-add_executable(tests.x EXCLUDE_FROM_ALL ${driver})
-target_link_libraries(tests.x testVector vectorSUT testaltSet altsetSUT testSet setSUT testMap mapSUT shared pfunit)
+#set(driver ${PFUNIT_TOP_DIR}/include/driver.F90)
+#add_executable(tests.x EXCLUDE_FROM_ALL ${driver})
+#target_link_libraries(tests.x testVector vectorSUT testaltSet altsetSUT testSet setSUT testMap mapSUT shared pfunit)
 
 

@@ -14,8 +14,8 @@ module MyMap_mod
 end module MyMap_mod
 
 
-module Test_map_Allocatable_mod
-   use pFUnit_mod
+module Test_map_Allocatable
+   use funit
    use MyMap_mod
    use Foo_mod
 
@@ -61,4 +61,4 @@ contains
    end subroutine test_insert
 
 
-end module Test_map_Allocatable_mod
+end module Test_map_Allocatable

@@ -67,5 +67,5 @@ list (APPEND SRCS MultiModule.F90)
 
 add_library(vectorSUT EXCLUDE_FROM_ALL STATIC ${SRCS})
 target_include_directories (vectorSUT PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories (vectorSUT PRIVATE ${PFUNIT}/mod)
+target_include_directories (vectorSUT PRIVATE ${PFUNIT_TOP_DIR}/include)
 target_link_libraries(vectorSUT type_test_values shared gftl)

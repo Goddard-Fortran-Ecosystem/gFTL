@@ -1,10 +1,12 @@
-module AuxTest_mod
-   use pfunit_mod
+module AuxTest
+   use funit
    implicit none
 
 contains
 
-!@test
+#ifdef __GFORTRAN__
+   @test(ifdef=__GFORTRAN__)
+   @disable
    subroutine test_loggerUseCase()
       use integerintegermap_mod
 
@@ -14,6 +16,17 @@ contains
       m1 = m2
 
    end subroutine test_loggerUseCase
+#else
+   @test(ifndef=__GFORTRAN__)
+   subroutine test_loggerUseCase()
+      use integerintegermap_mod
 
+      type (map) :: m1, m2
 
-end module AuxTest_mod
+      call m2%insert(1,1)
+      m1 = m2
+
+   end subroutine test_loggerUseCase
+#endif
+
+end module AuxTest

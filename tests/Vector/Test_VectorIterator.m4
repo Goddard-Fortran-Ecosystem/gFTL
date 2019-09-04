@@ -1,18 +1,17 @@
 include(header.m4)
 
 #include "templates/unused.inc"
-module Test_`'param()VectorIterator_mod
+module Test_`'param()VectorIterator
 #include "types/param().inc"
 #include "type_test_values/param().inc"
-   use pFUnit_mod, only: assertTrue, assertFalse
-   use pFUnit_mod, only: TestSuite, newTestSuite
-   use pFUnit_mod, only: newTestMethod
-   use pFUnit_mod, only: SourceLocation
-   use pFUnit_mod, only: anyExceptions
+   use funit, only: assertTrue, assertFalse
+   use funit, only: TestSuite
+   use funit, only: SourceLocation
+   use funit, only: anyExceptions
 #ifdef _unlimited
    use pFUnitSupplement_mod, only: assertEqual
 #else
-   use pFUnit_mod, only: assertEqual
+   use funit, only: assertEqual
 #endif
    use param()Vector_mod
 
@@ -25,6 +24,9 @@ module Test_`'param()VectorIterator_mod
 #include "genericItems_decl.inc"
 
    type (Vector), target :: v
+
+   ! GFortran 8.2 namespace is "leaky"
+   private :: assertEqual
 
 contains
 
@@ -231,7 +233,7 @@ contains
          call iter%next()
       end do
 
-      @assertEqual(v%size(), count)
+      @assertEqual(count, v%size())
 
    end subroutine test_IterationCount
 
@@ -457,7 +459,7 @@ contains
          call iter%next
       end do
 
-      @assertEqual(v%size(), count)
+      @assertEqual(count, v%size())
 
    end subroutine test_rIterationCount
 
@@ -514,5 +516,5 @@ contains
 
 #include "templates/type_use_tokens_undef.inc"
 
-end module Test_`'param()VectorIterator_mod
+end module Test_`'param()VectorIterator
 #include "templates/tmpltail.inc"

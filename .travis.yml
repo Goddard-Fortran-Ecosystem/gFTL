@@ -1,5 +1,5 @@
 sudo: false
-dist: trusty
+dist: xenial
 language: c
 
 matrix:
@@ -11,7 +11,7 @@ matrix:
                  - ubuntu-toolchain-r-test
               packages:
                  - gfortran-7
-                 - cmake3
+                 - cmake
         env:
            - FC='gfortran-7'
       - os: linux
@@ -21,13 +21,25 @@ matrix:
                  - ubuntu-toolchain-r-test
               packages:
                  - gfortran-8
-                 - cmake3
+                 - cmake
         env:
            - FC='gfortran-8'
+      - os: linux
+        addons:
+           apt:
+              sources:
+                 - ubuntu-toolchain-r-test
+              packages:
+                 - gfortran-9
+                 - cmake
+        env:
+           - FC='gfortran-9'
       - os: osx
         env: FC='gfortran-7' BREW='gcc@7' BREW_UP='cmake'
       - os: osx
         env: FC='gfortran-8' BREW='gcc@8' BREW_UP='cmake'
+      - os: osx
+        env: FC='gfortran-9' BREW='gcc@9' BREW_UP='cmake'
 
 before_install:
    - |
@@ -35,6 +47,33 @@ before_install:
          brew install ${BREW} make || exit 1
          brew upgrade ${BREW_UP} || exit 1
       fi
+
+install:
+  # Set the ${CXX} variable properly
+#  - export CXX=${COMPILER}
+#  - ${CXX} --version
+
+  # Dependencies required by the CI are installed in ${TRAVIS_BUILD_DIR}/deps/
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p "${DEPS_DIR}"
+  - cd "${DEPS_DIR}"
+
+  # Travis machines have 2 cores
+  - JOBS=2
+
+  ############################################################################
+  # Install a recent CMake (unless already installed on OS X)
+  ############################################################################
+  - CMAKE_VERSION=3.14.5
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="https://cmake.org/files/v${CMAKE_VERSION%.[0-9]}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --no-check-certificate -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    else
+      brew install cmake || brew upgrade cmake
+    fi
+  - cmake --version
 
 before_script:
    # First get pFUnit
@@ -45,20 +84,20 @@ before_script:
    - cd ${HOME}/pFUnit
    - mkdir build-serial
    - cd build-serial
-   - cmake .. -DMPI=NO -DOPENMP=NO -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit-serial
+   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/pFUnit -DSKIP_MPI=YES -DSKIP_OPENMP=YES
    - make -j4 install
 
    # Now build gFTL
    - cd ${TRAVIS_BUILD_DIR}
    - mkdir build
    - cd build
-   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DPFUNIT_DIR=$HOME/Software/pFUnit-serial
+   - cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=$HOME/Software/gFTL -DCMAKE_PREFIX_PATH=$HOME/Software/pFUnit -DCMAKE_BUILD_TYPE=Debug
 
 script:
    # Build and install
-   - make -j4 install
+   - make -j 1 install
    # Test
-   - make -j4 tests
+   - make -j 1 tests
 
 notifications:
    email:
