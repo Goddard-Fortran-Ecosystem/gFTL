@@ -153,7 +153,11 @@
 
 #include "templates/type_set_use_tokens.inc"
 
-#define __USE_ASSIGN(dest,src) dest=src
+#ifdef  __PAIR_ASSIGN
+#  define __USE_ASSIGN(dest,src) __PAIR_ASSIGN(dest,src)
+#else
+#  define __USE_ASSIGN(dest,src) __KEY_ASSIGN(dest%key,src%key); __VALUE_ASSIGN(dest%value,src%value)
+#endif
 #define __USE_MOVE(dest,src)  __KEY_MOVE(dest%key,src%key); __VALUE_MOVE(dest%value,src%value)
 #define __USE_FREE(x)
 

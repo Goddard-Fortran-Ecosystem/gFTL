@@ -54,7 +54,7 @@ foreach (type ${types} )
     DEPENDS ${infile}
     )
 
-  list (APPEND SRCS ${CMAKE_CURRENT_BINARY_DIR}/${pfunitfile} )
+  list (APPEND SRCS ${bin}/${pfunitfile} )
 
   set (infile ${src}/Test_VectorIterator.m4)
   set (pfunitfile Test_${type}VectorIterator.pf)
@@ -66,7 +66,7 @@ foreach (type ${types} )
     DEPENDS ${infile}
     )
 
-  list (APPEND SRCS ${CMAKE_CURRENT_BINARY_DIR}/${pfunitfile} )
+  list (APPEND SRCS ${bin}/${pfunitfile} )
 
 endforeach ()
 
@@ -78,7 +78,6 @@ if(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
     endif()
   endif()
 endif()
-
 
 add_pfunit_ctest (vector_tests
   TEST_SOURCES ${SRCS}
