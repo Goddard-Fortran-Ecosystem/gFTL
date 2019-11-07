@@ -35,11 +35,26 @@ matrix:
         env:
            - FC='gfortran-9'
       - os: osx
-        env: FC='gfortran-7' BREW='gcc@7' BREW_UP='cmake'
+        osx_image: xcode9.3
+        env:
+           - FC='gfortran-7'
+           - BREW='gcc@7'
+           - BREW_UP='cmake'
+           - CACHE_NAME=osx-gcc7
       - os: osx
-        env: FC='gfortran-8' BREW='gcc@8' BREW_UP='cmake'
+        osx_image: xcode9.3
+        env:
+           - FC='gfortran-8'
+           - BREW='gcc@8'
+           - BREW_UP='cmake'
+           - CACHE_NAME=osx-gcc8
       - os: osx
-        env: FC='gfortran-9' BREW='gcc@9' BREW_UP='cmake'
+        osx_image: xcode9.3
+        env:
+           - FC='gfortran-9'
+           - BREW='gcc@9'
+           - BREW_UP='cmake'
+           - CACHE_NAME=osx-gcc8
 
 before_install:
    - |

@@ -9,8 +9,8 @@ project (GFTL
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
-  message("Setting default install prefix to ${CMAKE_INSTALL_PREFIX}.")
-  message("Override with -DCMAKE_INSTALL_PREFIX=<path>.")
+  message("-- Setting default install prefix to ${CMAKE_INSTALL_PREFIX}.")
+  message("   Override with -DCMAKE_INSTALL_PREFIX=<path>.")
 endif ()
 
 
@@ -19,6 +19,7 @@ add_subdirectory (examples)
 
 find_package (PFUNIT 4.0.1 QUIET)
 if (PFUNIT_FOUND)
+  message("-- Detecting pFUnit: ${PFUNIT_DIR}")
   project (GFTL-TEST
     VERSION ${GFTL_VERSION}
     LANGUAGES Fortran
