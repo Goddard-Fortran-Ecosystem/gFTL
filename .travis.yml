@@ -34,16 +34,6 @@ matrix:
                  - cmake
         env:
            - FC='gfortran-9'
-      - os: linux
-        addons:
-           apt:
-              sources:
-                 - ubuntu-toolchain-r-test
-              packages:
-                 - gfortran-9
-                 - cmake
-        env:
-           - FC='gfortran-9'
       - os: osx
         osx_image: xcode9.3
         env:
