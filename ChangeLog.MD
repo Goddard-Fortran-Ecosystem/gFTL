@@ -1,3 +1,7 @@
+1.2.2   2019-11-15
+	- bugfix for workaround in v1.2.1; some use cases were not
+	  deallocating structure components prior to reallocation.
+	
 1.2.1	2019-11-07
 	- added workaround for memory leak detected with Intel 18 compiler
 
