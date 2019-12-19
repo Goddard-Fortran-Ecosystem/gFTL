@@ -68,12 +68,12 @@ matrix:
            - FC='gfortran-9'
            - CACHE_NAME=osx-gcc9
 
-before_install:
-   - |
-      if [ $TRAVIS_OS_NAME == osx ] ; then
-         brew install ${BREW} make || exit 1
-         brew upgrade ${BREW_UP} || exit 1
-      fi
+#before_install:
+#   - |
+#      if [ $TRAVIS_OS_NAME == osx ] ; then
+#         brew install ${BREW} make || exit 1
+#         brew upgrade ${BREW_UP} || exit 1
+#      fi
 
 install:
   # Set the ${CXX} variable properly
