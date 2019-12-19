@@ -31,7 +31,7 @@ if (PFUNIT_FOUND)
   include (CheckCompilerCapabilities)
 
   enable_testing()
-  if (NOT TARGET (tests))
+  if (NOT TARGET tests)
     add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
   endif ()
   
