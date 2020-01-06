@@ -22,7 +22,7 @@
 #  define __miterator __QUOTE(__map)__QUOTE(Iterator)
 #endif
 #define __siterator s_iterator
-#define __set set
+#define __set set2
 
 
 #ifdef _pair
