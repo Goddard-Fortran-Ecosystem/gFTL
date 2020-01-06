@@ -4,8 +4,8 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.2.1
-  LANGUAGES NONE)
+  VERSION 1.2.2
+  LANGUAGES Fortran)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
@@ -17,7 +17,7 @@ endif ()
 add_subdirectory (include)
 add_subdirectory (examples)
 
-find_package (PFUNIT 4.0.1 QUIET)
+find_package (PFUNIT 4.1 QUIET)
 if (PFUNIT_FOUND)
   message("-- Detecting pFUnit: ${PFUNIT_DIR}")
   project (GFTL-TEST
@@ -31,11 +31,11 @@ if (PFUNIT_FOUND)
   include (CheckCompilerCapabilities)
 
   enable_testing()
-  if (NOT TARGET (tests))
+  if (NOT TARGET tests)
     add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
   endif ()
   
-  add_subdirectory(tests)
+  add_subdirectory(tests EXCLUDE_FROM_ALL)
 endif ()
 
 configure_file(GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake @ONLY)

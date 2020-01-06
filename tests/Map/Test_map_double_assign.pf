@@ -92,4 +92,20 @@ contains
    end subroutine test_unlimited
 #endif
 
+
+   ! Reproducer for bug introduced in 1.2.1
+   ! Issue #86
+   @test
+   subroutine test_set_twice()
+     use Foo_mod
+     use integerFooPolyaltMap_mod
+
+      type (Map), target :: m
+      class (Foo), pointer :: p1, p2
+
+      call m%insert(1, Foo(1))
+      call m%set(1, Foo(2))  ! set() must first deallocate
+
+    end subroutine test_set_twice
+
 end module Test_map_double_assign

@@ -156,10 +156,19 @@
 #ifdef  __PAIR_ASSIGN
 #  define __USE_ASSIGN(dest,src) __PAIR_ASSIGN(dest,src)
 #else
-#  define __USE_ASSIGN(dest,src) __KEY_ASSIGN(dest%key,src%key); __VALUE_ASSIGN(dest%value,src%value)
+#  define __USE_ASSIGN(dest,src) __KEY_ASSIGN(dest%key,src%key);__VALUE_ASSIGN(dest%value,src%value)
 #endif
-#define __USE_MOVE(dest,src)  __KEY_MOVE(dest%key,src%key); __VALUE_MOVE(dest%value,src%value)
-#define __USE_FREE(x)
+
+#define __USE_MOVE(dest,src)  __KEY_MOVE(dest%key,src%key);__VALUE_MOVE(dest%value,src%value)
+
+#ifdef __PAIR_FREE
+#  define __USE_FREE(x) __PAIR_FREE(x)
+#else
+! FREE can be an empty string, but Fortran does not allow a bare ";".
+! The kludge is to put in a conditional that is always true.
+#  define __USE_FREE(x) if(.true.)then;__KEY_FREE(x%key); __VALUE_FREE(x%value);endif
+!#  define __USE_FREE(x)
+#endif
 
 #ifdef _alt
 ! vector<_type>
