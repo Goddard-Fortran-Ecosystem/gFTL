@@ -1,6 +1,6 @@
 # Change Log
 
-## [1.2.7] -  2019-12-19
+## [1.2.3] -  2020-01-06
 - Workaround for PGI compiler - does not like "set" as a derived type name.
 
 ## [1.2.4] -  2019-12-19
