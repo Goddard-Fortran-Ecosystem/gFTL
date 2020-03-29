@@ -17,6 +17,11 @@ set (macro_files
 # Empty list - will append in loop below
 set(generated_incs)
 
+find_program( m4_found "m4" )
+if( NOT m4_found )
+  message( SEND_ERROR "m4 program not found" )
+endif()
+
 foreach( macro_file ${macro_files} )
   foreach( param ${template_params} )
     set( infile ${src}/${macro_file}.m4 )
@@ -29,7 +34,6 @@ foreach( macro_file ${macro_files} )
       WORKING_DIRECTORY ${bin}
       DEPENDS ${infile}
       )
-
 
       list (APPEND generated_incs ${outfile} )
 
