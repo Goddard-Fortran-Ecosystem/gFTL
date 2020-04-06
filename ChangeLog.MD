@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## [1.2.5] - 2020-03-06
+## [1.2.5] - 2020-04-06
 
 ### Fixed
  - eliminated stray <tab> in source code; was generating annoying
