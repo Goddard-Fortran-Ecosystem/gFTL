@@ -641,7 +641,7 @@
              do i=1, this%vsize
                __TYPE_MOVE(__GET(temp(i)), __GET(this%elements(i)))
              end do
-	     deallocate(this%elements)
+             deallocate(this%elements)
              call move_alloc(temp, this%elements)
            endif
          else if (allocated(this%elements)) then  ! capacity==0

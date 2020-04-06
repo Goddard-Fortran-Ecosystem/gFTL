@@ -1,5 +1,12 @@
 # Change Log
 
+## Unreleased
+
+### Fixed
+ - eliminated stray <tab> in source code; was generating annoying
+   warnings in some compilers
+	
+	
 ## [1.2.4] -  2019-12-19
 - fixes for CMakeList
   - removed incorrect parens in conditionl
