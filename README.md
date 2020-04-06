@@ -41,6 +41,11 @@ Contributions of additional containers are very much welcomed.
 * Tom Clune
 * Doron Feldman
 
+# Prerequisites
+
+* CMake 3.0
+* m4 (must be in path)
+
 # Related package
 
 It is worth noting that there is a similar package
