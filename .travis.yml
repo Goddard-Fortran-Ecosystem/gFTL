@@ -10,16 +10,6 @@ matrix:
               sources:
                  - ubuntu-toolchain-r-test
               packages:
-                 - gfortran-7
-                 - cmake
-        env:
-           - FC='gfortran-7'
-      - os: linux
-        addons:
-           apt:
-              sources:
-                 - ubuntu-toolchain-r-test
-              packages:
                  - gfortran-8
                  - cmake
         env:
@@ -34,17 +24,6 @@ matrix:
                  - cmake
         env:
            - FC='gfortran-9'
-      - os: osx
-        osx_image: xcode9.3
-        addons:
-           homebrew:
-              packages:
-                 - gcc@7
-                 - cmake
-              update: true
-        env:
-           - FC='gfortran-7'
-           - CACHE_NAME=osx-gcc7
       - os: osx
         osx_image: xcode9.3
         addons:
