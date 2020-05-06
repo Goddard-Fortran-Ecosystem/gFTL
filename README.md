@@ -67,7 +67,7 @@ section be factually correct.
 
 ### Differences
 
-* Naming conventions for gFTL are much closer to C++ STL.
+* Naming conventions for gFTL are  closer to C++ STL.
 
 
 
