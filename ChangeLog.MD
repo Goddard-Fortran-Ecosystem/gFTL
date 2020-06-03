@@ -2,9 +2,17 @@
 
 ## Unreleased
 
+### Deleted
+- Eliminated some types in the includes directory: Foo, FooPtr,
+  FooPoly, ...  These were used in early development of gFTL, but are
+  now duplicated in the tests/include.  Users should not see these -
+  only tests.
+  
+
+
 ### Fixed
- - eliminated stray <tab> in source code; was generating annoying
-   warnings in some compilers
+- eliminated stray <tab> in source code; was generating annoying
+  warnings in some compilers
 	
 ## [1.2.4] -  2019-12-19
 - fixes for CMakeList

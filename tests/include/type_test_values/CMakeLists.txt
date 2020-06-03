@@ -23,12 +23,6 @@ set (macro_files
   integerPtr
   integer2dPtr
   integerAlloc
-
-  Foo
-  FooPtr
-  FooPoly
-  FooPolyPtr
-
   )
 
 # Empty list - will append in loop below
