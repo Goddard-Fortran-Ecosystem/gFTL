@@ -3,28 +3,10 @@ set(bin ${CMAKE_CURRENT_BINARY_DIR})
 
 set (template_params type key value)
 set (macro_files
-  integer
-  real
-  real32
-  real64
-  complex
-  complex64
-  complex128
-  logical
-  character
-  deferredLengthString
-  character17
-  unlimitedPoly
-  unlimitedPolyPtr
-  
-  integer1d
-  integer2d
-  integer2d_fixedExtents
-
-  integerPtr
-  integer2dPtr
-  integerAlloc
-
+  Foo
+  FooPtr
+  FooPoly
+  FooPolyPtr
   )
 
 # Empty list - will append in loop below
@@ -52,15 +34,10 @@ foreach (macro_file ${macro_files})
   endforeach ()
 endforeach ()
 
-add_custom_target (generate-type-incs
+add_custom_target (generate-test-type-incs
   DEPENDS ${generated_incs}
   )
-add_dependencies (gftl generate-type-incs)
 
 set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/types"
-  FILES_MATCHING PATTERN "*.inc"
-  PATTERN CMakeFiles EXCLUDE
-  )
 
