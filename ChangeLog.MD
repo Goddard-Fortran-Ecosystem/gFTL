@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+- Blocked installation of *Foo*.inc include files that are
+  only used for testing.
+  
 ## [1.2.5] - 2020-04-06
 
 ### Fixed
