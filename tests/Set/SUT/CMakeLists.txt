@@ -55,7 +55,7 @@ foreach (instantiation ${instantiations})
   add_custom_command (
     OUTPUT ${outfile}
     DEPENDS ${infile}
-    COMMAND m4 -Dtype=${type} -Dformat=${format} ${infile} > ${outfile}
+    COMMAND ${M4} -Dtype=${type} -Dformat=${format} ${infile} > ${outfile}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 

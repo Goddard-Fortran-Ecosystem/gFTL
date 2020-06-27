@@ -54,7 +54,7 @@ foreach (instantiation ${instantiations})
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -Dtype=${type} -Dformat=${format} < ${infile} > ${outfile}
+    COMMAND ${M4} -s -Dtype=${type} -Dformat=${format} < ${infile} > ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
