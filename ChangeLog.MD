@@ -48,6 +48,10 @@
       . ```configure_package_config_file()
       . ```write_basic_package_version_file()```
 
+- Moved ./cmake_utils to ./cmake
+- Relocated config related files to ./cmake
+  
+
 
 
 >>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
