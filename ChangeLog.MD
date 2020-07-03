@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+<<<<<<< HEAD
 ## [1.3.1] - 2021-02-06
 
 ### Changed
@@ -34,6 +35,22 @@
 - Reintroduced workarounds for older ifort and gfortran compilers.
   Annoyingly the workaround for one breaks the other.
   
+=======
+## [2.0.0] - ????
+
+## Changed
+- Changed location of GFTLConfig.cmake
+
+    Now installed in a more conventional location:
+    ```./lib/cmake/GFTL/GFTLConfig.cmake```
+    Previous location was really a windows convention (first attempt).
+    Also now using
+      . ```configure_package_config_file()
+      . ```write_basic_package_version_file()```
+
+
+
+>>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 ## [1.2.5] - 2020-04-06
 
 ### Fixed

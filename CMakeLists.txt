@@ -4,8 +4,13 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
+<<<<<<< HEAD
   VERSION 1.3.1
   LANGUAGES Fortran)
+=======
+  VERSION 2.0.0
+  LANGUAGES NONE)
+>>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/installed" CACHE PATH "..." FORCE)
@@ -43,6 +48,7 @@ if (PFUNIT_FOUND)
   add_subdirectory(tests EXCLUDE_FROM_ALL)
 endif ()
 
+<<<<<<< HEAD
 # The following is needed for external projects using *nix make when
 # parent project builds gFTL as a subproject.
 set (top_dir "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
@@ -57,11 +63,32 @@ write_basic_package_version_file(GFTLConfig-version.cmake
   COMPATIBILITY SameMajorVersion
   )
 
-install (
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
-  DESTINATION "${top_dir}/cmake"
+=======
+set(cmake_dir lib/cmake/GFTL)
+include (CMakePackageConfigHelpers)
+configure_package_config_file (GFTLConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake
+  INSTALL_DESTINATION ${cmake_dir}
+  PATH_VARS cmake_dir
+  )
+write_basic_package_version_file (GFTLConfig-version.cmake
+  VERSION ${GFTL_VERSION}
+  COMPATIBILITY SameMajorVersion
   )
 
+set (top_dir "GFTL-${GFTL_VERSION}")
+>>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
+install (
+  FILES  ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
+  DESTINATION ${top_dir}/${cmake_dir}
+  )
+
+<<<<<<< HEAD
+=======
+message("Top dir ${top_dir}")
+# The following is needed for external projects using *nix make when
+# parent project builds gFTL as a subproject.
+set (GFTL_TOP_DIR "${CMAKE_INSTALL_PREFIX}/${top_dir}" CACHE PATH "")
+>>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
