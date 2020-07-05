@@ -50,7 +50,7 @@
 
 - Moved ./cmake_utils to ./cmake
 - Relocated config related files to ./cmake
-  
+- Added namespace ```gFTL::``` for externa project use  
 
 
 
