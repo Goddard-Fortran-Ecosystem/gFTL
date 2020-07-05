@@ -51,6 +51,11 @@
 - Moved ./cmake_utils to ./cmake
 - Relocated config related files to ./cmake
 - Added namespace ```gFTL::``` for externa project use  
+- Cleaned up CMake logic in include dirs.
+- Only search for testing if Fortran compiler is detected.  gFTL does
+  not require a Fortran compiler for installation, but Fortran is
+  required to build the tests.  Previously, gFTL artificially included
+  Fortran in the project LANGUAGES option to sidestep the issue.
 
 
 

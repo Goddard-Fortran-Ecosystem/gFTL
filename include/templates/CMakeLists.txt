@@ -19,6 +19,7 @@ set(generated_incs)
 
 foreach( macro_file ${macro_files} )
   foreach( param ${template_params} )
+
     set( infile ${src}/${macro_file}.m4 )
     set( outfile ${param}_${macro_file}.inc )
     set (outpath ${CMAKE_CURRENT_BINARY_DIR}/${outfile})
@@ -41,8 +42,6 @@ add_custom_target(
   )
 
 add_dependencies (gftl generate-template-incs)
-
-set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 
 file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
 

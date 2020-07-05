@@ -22,25 +22,36 @@ endif()
 add_subdirectory (include)
 add_subdirectory (examples)
 
-find_package (PFUNIT 4.1 QUIET)
-if (PFUNIT_FOUND)
-  message("-- Detecting pFUnit: ${PFUNIT_DIR}")
-  project (GFTL-TEST
-    VERSION ${GFTL_VERSION}
-    LANGUAGES Fortran
-    )
+# No Fortran compiler is required to build gFTL, but the tests do
+# require Fortran.  So we check for that before searching for the
+# testing framework.
 
-  set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake")
-  include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
-  include (CheckFortranSource)
-  include (CheckCompilerCapabilities)
+include(CheckLanguage)
+check_language (Fortran)
+message ("Fortran?  ${CMAKE_Fortran_COMPILER}")
+if (CMAKE_Fortran_COMPILER)
+  enable_language(Fortran)
 
-  enable_testing()
-  if (NOT TARGET tests)
-    add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
-  endif ()
+  find_package (PFUNIT 4.1 QUIET)
+  if (PFUNIT_FOUND)
+    message("-- Detecting pFUnit: ${PFUNIT_DIR}")
+    project (GFTL-TEST
+      VERSION ${GFTL_VERSION}
+      LANGUAGES Fortran
+      )
+    
+    set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake")
+    include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
+    include (CheckFortranSource)
+    include (CheckCompilerCapabilities)
+
+    enable_testing()
+    if (NOT TARGET tests)
+      add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
+    endif ()
   
-  add_subdirectory(tests EXCLUDE_FROM_ALL)
+    add_subdirectory(tests EXCLUDE_FROM_ALL)
+  endif ()
 endif ()
 
 # The following is needed for external projects using *nix make when
