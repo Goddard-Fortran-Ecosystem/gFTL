@@ -1,8 +1,5 @@
 add_subdirectory (SUT)
 
-include_directories  (${PFUNIT_TOP_DIR}/include)
-link_directories (${PFUNIT_TOP_DIR}/lib)
-
 set (src ${CMAKE_CURRENT_SOURCE_DIR})
 set (bin ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -85,6 +82,6 @@ add_pfunit_ctest (vector_tests
   )
 
 target_include_directories (vector_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories (vector_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
+#target_include_directories (vector_tests PRIVATE ${GFTL_SOURCE_DIR}/include-v1)
 add_dependencies (tests vector_tests)
 

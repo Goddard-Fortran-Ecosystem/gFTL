@@ -19,7 +19,7 @@ if( NOT M4 )
   message( SEND_ERROR "m4 program not found" )
 endif()
 
-add_subdirectory (include)
+add_subdirectory (include-v1)
 add_subdirectory (examples)
 
 # No Fortran compiler is required to build gFTL, but the tests do
@@ -28,7 +28,6 @@ add_subdirectory (examples)
 
 include(CheckLanguage)
 check_language (Fortran)
-message ("Fortran?  ${CMAKE_Fortran_COMPILER}")
 if (CMAKE_Fortran_COMPILER)
   enable_language(Fortran)
 
@@ -77,7 +76,7 @@ configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
-  DESTINATION "${top_dir}/include"
+  DESTINATION "${top_dir}/include-v1"
   )
 
 install(EXPORT GFTL

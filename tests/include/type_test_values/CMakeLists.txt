@@ -48,7 +48,11 @@ foreach( macro_file ${macro_files} )
 
     add_custom_command(
 	OUTPUT ${outfile}
+<<<<<<< HEAD
 	COMMAND ${M4} -s -Dparam=${param} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${outfile}
+=======
+	COMMAND ${M4} -s -Dparam=${param} -I${GFTL_SOURCE_DIR}/include-v1/templates < ${infile} > ${outfile}
+>>>>>>> 73af527... Migrated legacy include tree to include-v1.
 	WORKING_DIRECTORY ${bin}
 	DEPENDS ${infile}
 	)

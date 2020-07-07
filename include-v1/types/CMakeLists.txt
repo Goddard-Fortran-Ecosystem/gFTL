@@ -60,9 +60,9 @@ endforeach ()
 add_custom_target (generate-type-incs
   DEPENDS ${generated_incs}
   )
-add_dependencies (gftl generate-type-incs)
+add_dependencies (gftl-v1 generate-type-incs)
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/types"
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include-v1/types"
   FILES_MATCHING PATTERN "*.inc"
   PATTERN CMakeFiles EXCLUDE
   PATTERN "*Foo*" EXCLUDE
