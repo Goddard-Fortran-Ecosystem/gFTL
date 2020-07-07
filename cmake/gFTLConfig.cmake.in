@@ -1,12 +1,6 @@
 # Package configuration file
-<<<<<<< HEAD
-
 @PACKAGE_INIT@
 
 include ("${CMAKE_CURRENT_LIST_DIR}/GFTLTargets.cmake")
-=======
-@PACKAGE_INIT@
-set (cmake_dir "@PACKAGE_cmake_dir@")
 include (${cmake_dir}/GFTL.cmake)
 check_required_components (GFTL)
->>>>>>> ad6bb41... Changed location of GFTLConfig.cmake

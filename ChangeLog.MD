@@ -56,7 +56,9 @@
   not require a Fortran compiler for installation, but Fortran is
   required to build the tests.  Previously, gFTL artificially included
   Fortran in the project LANGUAGES option to sidestep the issue.
-- Moved legacy 
+- Moved legacy include to include-v1
+- Changed capitalization of installation from GFTL to gFTL.
+  Users should now use ```find_package(gFTL)```
 
 
 >>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
