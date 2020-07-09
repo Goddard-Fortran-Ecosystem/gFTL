@@ -1,0 +1,3 @@
+integer, dimension(3)
+integer, dimension(:)
+integer, dimension(3)

@@ -1,0 +1,3 @@
+integer(kind=INT32), dimension(3,5)
+integer(kind=INT32), dimension(:,:)
+integer(kind=INT32), dimension(3,5)
