@@ -1,3 +1,15 @@
-logical
-logical
-logical
+declare string:    "logical"
+declare component: logical
+declare result:    logical
+declare dummy:     logical
+
+a == b:            a .eqv. b
+a NE b:            __T_NE_SCALAR__(a,b)
+a <= b:            __T_LE_SCALAR__(a,b)
+a >= b:            __T_GE_SCALAR__(a,b)
+a <  b:            __T_LT_SCALAR__(a,b)
+a >  b:            __T_GT_SCALAR__(a,b)
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src
