@@ -6,8 +6,8 @@ find_program(CPP cpp)
 
 set (types
   logical
-#  integer
-#  integer_INT32
+  integer
+  integer_INT32
 #  real
 #  complex
 #  fixed_string

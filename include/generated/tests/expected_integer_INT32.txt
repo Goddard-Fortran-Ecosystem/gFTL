@@ -1,3 +1,15 @@
-integer(kind=INT32)
-integer(kind=INT32)
-integer(kind=INT32)
+declare string:    "integer"//"(kind=INT32)"
+declare component: integer(kind=INT32)
+declare result:    integer(kind=INT32)
+declare dummy:     integer(kind=INT32)
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src

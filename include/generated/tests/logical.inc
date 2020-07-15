@@ -4,7 +4,7 @@
 #include "generated/define_derived_macros_for_T.inc"
 
 <start>
-declare string:    __T_DECLARE_STRING__()
+declare string:    __T_declare_string__
 declare component: __T_declare_component__
 declare result:    __T_declare_result__
 declare dummy:     __T_declare_dummy__

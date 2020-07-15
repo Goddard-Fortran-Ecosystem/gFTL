@@ -65,8 +65,6 @@ define(__T,`__`'_T()')
    ! Some older compilers do not support declaring intrinsics with TYPE,
    ! e.g., TYPE(integer), so we suppress that here.
 
-#    define __T()_DECLARE_STRING__(kindlen) __T()_name__
-
    ! Special per-type settings for different intrinsics:
 
 #    if __T() == __COMPLEX
@@ -79,6 +77,7 @@ define(__T,`__`'_T()')
 
 #        define __T()_DECLARE__(kindlen) __IDENTITY(logical)__IDENTITY(kindlen)
 #        define __T()_EQ_SCALAR__(a,b) a .eqv. b
+#        define __T()_NE_SCALAR__(a,b) a .neqv. b
 #        define __T()_name__ "logical"
 
 #    else
@@ -139,10 +138,10 @@ define(__T,`__`'_T()')
 #    define __T()_kindlen_component__ __T()_KINDLEN__(:)
 #endif
 
-#ifdef __T()_kindlen_component_string
-#    define __T()_kindlen_component_string__ __T()_kindlen_component_string
+#ifdef __T()_kindlen_string
+#    define __T()_kindlen_string__ //__T()_kindlen_string
 #else
-#    define __T()_kindlen_component_string__
+#    define __T()_kindlen_string__
 #endif
 
 #ifdef __T()_rank
@@ -179,14 +178,14 @@ define(__T,`__`'_T()')
          ! fixed shape       
 #        define __T()_dimension_component__ , __IDENTITY(dimension)__IDENTITY(__T()_shape)
 #        ifdef __T()_shape_string
-#            define __T()_dimension_component_string__ , ", dimension("//__T()_shape_string//")"
+#            define __T()_dimension_string__ , ", dimension("//__T()_shape_string//")"
 #        else
-#            define __T()_dimension_component_string__ , ", dimension(rank<"//"T_()_rank_string__//">)"
+#            define __T()_dimension_string__ , ", dimension(rank<"//"T_()_rank_string__//">)"
 #        endif
 #    else
 #        ! assumed shape
 #        define __T()_dimension_component__ __T()_dimension_result
-#        define __T()_dimension_component_string__ ", dimension("__T()_shape_string__//")"
+#        define __T()_dimension_string__ ", dimension("__T()_shape_string__//")"
 #    endif
 #    define __T()_dimension_dummy __T()_dimension_component
 #
@@ -195,16 +194,16 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_result__
 #    define __T()_dimension_component__
 #    define __T()_dimension_dummy__
-#    define __T()_dimension_component_string__
+#    define __T()_dimension_string__
 #endif
 
 #if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
 #   define __T()_allocatable__
 #   define __T()_allocatable_attr_ , allocatable
-#   define __T()_allocatable_attr_string__ ", allocatable"
+#   define __T()_allocatable_string__ ", allocatable"
 #else
 #   define __T()_allocatable_attr__
-#   define __T()_allocatable_attr_string__
+#   define __T()_allocatable_string__
 #endif
 
 #define __T()_declare_component__ __IDENTITY(__T()_DECLARE__(__T()_kindlen_component__))__IDENTITY(__T()_dimension_component__)__IDENTITY(__T()_allocatable_attr__)
@@ -215,7 +214,7 @@ define(__T,`__`'_T()')
 #    define __T()_name__ __T()_name
 #endif
 #ifdef __T()_name__
-#    define __T(_)declare_string__ __T()_DECLARE_STRING__(__T()_kindlen_component_string__)__IDENTITY(__T()_dimension_component_string__)__IDENTITY(__T()_allocatable_attr_string__)
+#    define __T()_declare_string__ __IDENTITY(__T()_name__)__IDENTITY(__T()_kindlen_string__)__IDENTITY(__T()_dimension_string__)__IDENTITY(__T()_allocatable_string__)
 #endif
 
 
