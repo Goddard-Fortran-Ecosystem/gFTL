@@ -13,13 +13,6 @@ set (m4_sources
   undef_derived_macros.m4
   )
 
-# Union of parameters across all supported
-# templates.
-set (template_parameters
-  T # vector, set, map
-  K # map
-  )
-
 # Start with an empty list and append as we loop over cases.
 set (generated_incs)
 

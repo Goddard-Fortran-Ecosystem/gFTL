@@ -1,4 +1,4 @@
-declare string:    "integer"
+declare string:    "integer"//""//""//""
 declare component: integer
 declare result:    integer
 declare dummy:     integer

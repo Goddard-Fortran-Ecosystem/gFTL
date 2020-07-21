@@ -1,4 +1,4 @@
-declare string:    "integer"//"(kind=INT32)"
+declare string:    "integer"//"(kind=INT32)"//""//""
 declare component: integer(kind=INT32)
 declare result:    integer(kind=INT32)
 declare dummy:     integer(kind=INT32)

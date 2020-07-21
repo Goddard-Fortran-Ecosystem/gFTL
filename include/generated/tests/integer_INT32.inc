@@ -1,6 +1,6 @@
-#define __T __INTEGER
-#define __T_KINDLEN(context) (kind=INT32)
-#define __T_kindlen_string "(kind=INT32)"
+#define __T __INTEGER32
+!#define __T_KINDLEN(context) (kind=INT32)
+!#define __T_kindlen_string "(kind=INT32)"
 
 #include "shared/define_common_macros.inc"
 #include "generated/define_derived_macros_for_T.inc"

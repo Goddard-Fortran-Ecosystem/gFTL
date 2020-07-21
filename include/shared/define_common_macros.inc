@@ -26,12 +26,36 @@
 
 ! Predefined intrinsic types
 
-#define __INTEGER 1
-#define __REAL 2
-#define __DOUBLE_PRECISION 3
-#define __COMPLEX 4
-#define __LOGICAL 5
-#define __CHARACTER 6
+#define __LOGICAL__          1   
+#define __INTEGER__          2
+#define __REAL__             3
+#define __COMPLEX__          4
+#define __CHARACTER__        5
+#define __DOUBLE_PRECISION__ 6
+
+#define __LOGICAL   010
+
+#define __INTEGER   020
+#define __INTEGER8  023
+#define __INTEGER16 024
+#define __INTEGER32 025
+#define __INTEGER64 026
+
+#define __REAL      030
+#define __REAL16    034
+#define __REAL32    035
+#define __REAL64    036
+#define __REAL128   037
+
+#define __COMPLEX      040
+#define __COMPLEX16    044
+#define __COMPLEX32    045
+#define __COMPLEX64    046
+#define __COMPLEX128   047
+
+#define __CHARACTER          050
+#define __CHARACTER_DEFERRED 051
+#define __DOUBLE_PRECISION   060
 
 
 ! Attributes

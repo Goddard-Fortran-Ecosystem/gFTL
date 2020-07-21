@@ -1,5 +1,7 @@
-#define __T __LOGICAL
+#include "types/T/logical.inc"
+!#define T __LOGICAL
 
+#include "types/T/define_internal.inc"
 #include "shared/define_common_macros.inc"
 #include "generated/define_derived_macros_for_T.inc"
 

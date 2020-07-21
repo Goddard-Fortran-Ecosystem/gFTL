@@ -57,7 +57,9 @@ define(__T,`__`'_T()')
    !     __T()_dimensions_component__
    !     __T()_dimensions_dummy__
 
-
+   !     __T()_type_id__
+   !     __T()_kind__
+   !     __T()_kindlen_string__
 
 #if __T() > 0
    ! Instrinsic types
@@ -67,15 +69,37 @@ define(__T,`__`'_T()')
 
    ! Special per-type settings for different intrinsics:
 
+#    define __T()_type_id__  __T() >> 3
+#    define __T()_kind__  1 << (__T() & 07)
+
+#    if __T()_kind__ == 0
+#        define __T()_KINDLEN__(context)
+#        define __T()_kindlen_string__ ""
+#    endif
+#    define __T()_DECLARE__(type,kindlen) __IDENTITY(type)__IDENTITY(kindlen)
+
 #    if __T() == __COMPLEX
 
-#        define __T()_DECLARE__(kindlen) __IDENTITY(complex)__IDENTITY(kindlen)
+#        define __T()_type__ complex
 #        define __T()_EQ_SCALAR__(a,b) a == b
 #        define __T()_name__ "complex"
+#        if __T()_kind__ == 16
+#           define __T()_KINDLEN__(context) (kind=REAL16)
+#           define __T()_kindlen_string__ "(kind=REAL16)"
+#        elif __T()_kind__ == 32
+#           define __T()_KINDLEN__(context) (kind=REAL32)
+#           define __T()_kindlen_string__ "(kind=REAL32)"
+#        elif __T()_kind__ == 64
+#           define __T()_KINDLEN__(context) (kind=REAL64)
+#           define __T()_kindlen_string__ "(kind=REAL64)"
+#        elif __T()_kind__ == 128
+#           define __T()_KINDLEN__(context) (kind=REAL128)
+#           define __T()_kindlen_string__ "(kind=REAL128)"
+#        endif
 
-#    elif __T() == __LOGICAL
+#    elif __T()_type_id__ == __LOGICAL__
 
-#        define __T()_DECLARE__(kindlen) __IDENTITY(logical)__IDENTITY(kindlen)
+#        define __T()_type__ logical
 #        define __T()_EQ_SCALAR__(a,b) a .eqv. b
 #        define __T()_NE_SCALAR__(a,b) a .neqv. b
 #        define __T()_name__ "logical"
@@ -90,40 +114,78 @@ define(__T,`__`'_T()')
 #        define __T()_LT_SCALAR__(a,b) a <  b
 #        define __T()_GT_SCALAR__(a,b) a >  b
 
-#        if __T() == __INTEGER
+#        if __T()_type_id__ == __INTEGER__
 
-#            define __T()_DECLARE__(kindlen) __IDENTITY(integer)__IDENTITY(kindlen)
+#            define __T()_type__ integer
 #            define __T()_name__ "integer"
-
-#        elif __T() == __REAL
-
-#            define __T()_DECLARE__(kindlen) __IDENTITY(real)__IDENTITY(kindlen)
-#            define __T()_name__ "real"
-
-#        elif __T() == __CHARACTER
-
-#            define __T()_DECLARE__(kindlen) __IDENTITY(character)__IDENTITY(kindlen)
-#            ifdef __T()_deferred
-#                define __T()_KINDLEN__(context) (len=context)
+#            if __T()_kind__ == 8
+#                define __T()_KINDLEN__(context) (kind=INT8)
+#                define __T()_kindlen_string__ "(kind=INT8)"
+#            elif __T()_kind__ == 16
+#                define __T()_KINDLEN__(context) (kind=INT16)
+#                define __T()_kindlen_string__ "(kind=INT16)"
+#            elif __T()_kind__ == 32
+#                define __T()_KINDLEN__(context) (kind=INT32)
+#                define __T()_kindlen_string__ "(kind=INT32)"
+#            elif __T()_kind__ == 64
+#                 define __T()_KINDLEN__(context) (kind=INT64)
+#                define __T()_kindlen_string__ "(kind=INT64)"
 #            endif
+
+#        elif __T()_type_id__ == __REAL__
+
+#            define __T()_type__ real
+#            define __T()_name__ "real"
+#            if __T()_kind__ == 16
+#                define __T()_KINDLEN__(context) (kind=REAL16)
+#                define __T()_kindlen_string__ "(kind=REAL16)"
+#            elif __T()_kind__ == 32
+#                define __T()_KINDLEN__(context) (kind=REAL32)
+#                define __T()_kindlen_string__ "(kind=REAL32)"
+#            elif __T()_kind__ == 64
+#                define __T()_KINDLEN__(context) (kind=REAL64)
+#                define __T()_kindlen_string__ "(kind=REAL64)"
+#            elif __T()_kind__ == 128
+#                define __T()_KINDLEN__(context) (kind=REAL128)
+#                define __T()_kindlen_string__ "(kind=REAL128)"
+#            endif
+
+#        elif __T()_type_id__ == __DOUBLE_PRECISION__
+
+#            define __T()_type__ double precision
+#            define __T()_name__ "double precision"
+
+#        elif __T()_type_id__ == __CHARACTER__
+
+#            define __T()_type__ character
 #            define __T()_name__ "character"
+#            if __T()_kind__ > 0
+#                define __T()_KINDLEN__(context) (len=contex)
+#                define __T()_kindlen_string__ "(len=:)"
+#            endif
 
 #        endif
 
 #    endif
+
 #else
 ! User defined derived type (or C_PTR, etc)
+
+#    define __T()_type __T()
+
 #    if  __T()_polymorphic
-#        define __T()_DECLARE__(t) class(t)
+#        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
 #    else
-#        define __T()_DECLARE__(t) type(t)
+#        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
 #    endif
 #endif
 
 #ifdef __T()_KINDLEN
 #    define __T()_KINDLEN__(context)  __T()_KINDLEN(context)
 #else
-#    define __T()_KINDLEN__(context)
+#    ifndef __T()_KINDLEN__
+#        define __T()_KINDLEN__(context)
+#    endif
 #endif
 
 #ifdef __T()_kindlen_dummy
@@ -139,9 +201,11 @@ define(__T,`__`'_T()')
 #endif
 
 #ifdef __T()_kindlen_string
-#    define __T()_kindlen_string__ //__T()_kindlen_string
+#    define __T()_kindlen_string__ __T()_kindlen_string
 #else
-#    define __T()_kindlen_string__
+#    ifndef __T()_kindlen_string__
+#        define __T()_kindlen_string__ ""
+#    endif
 #endif
 
 #ifdef __T()_rank
@@ -194,7 +258,7 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_result__
 #    define __T()_dimension_component__
 #    define __T()_dimension_dummy__
-#    define __T()_dimension_string__
+#    define __T()_dimension_string__ ""
 #endif
 
 #if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
@@ -203,18 +267,18 @@ define(__T,`__`'_T()')
 #   define __T()_allocatable_string__ ", allocatable"
 #else
 #   define __T()_allocatable_attr__
-#   define __T()_allocatable_string__
+#   define __T()_allocatable_string__ ""
 #endif
 
-#define __T()_declare_component__ __IDENTITY(__T()_DECLARE__(__T()_kindlen_component__))__IDENTITY(__T()_dimension_component__)__IDENTITY(__T()_allocatable_attr__)
-#define __T()_declare_result__ __IDENTITY(__T()_DECLARE__(__T()_kindlen_component__))__IDENTITY(__T()_dimension_result__)
-#define __T()_declare_dummy__ __IDENTITY(__T()_DECLARE__(__T()_kindlen_dummy__))__IDENTITY(__T()_dimension_dummy__)
+#define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_component__)__IDENTITY(__T()_allocatable_attr__)
+#define __T()_declare_result__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_result__)
+#define __T()_declare_dummy__ __T()_DECLARE__(__T()_type__,__T()_kindlen_dummy__)__IDENTITY(__T()_dimension_dummy__)
 
 #ifdef  __T()_name
 #    define __T()_name__ __T()_name
 #endif
 #ifdef __T()_name__
-#    define __T()_declare_string__ __IDENTITY(__T()_name__)__IDENTITY(__T()_kindlen_string__)__IDENTITY(__T()_dimension_string__)__IDENTITY(__T()_allocatable_string__)
+#    define __T()_declare_string__ __IDENTITY(__T()_name__)//__IDENTITY(__T()_kindlen_string__)//__IDENTITY(__T()_dimension_string__)//__IDENTITY(__T()_allocatable_string__)
 #endif
 
 
@@ -247,4 +311,3 @@ define(__T,`__`'_T()')
 #    define __T()_COPY__(dst,src) dst=src
 #endif
 
-  
