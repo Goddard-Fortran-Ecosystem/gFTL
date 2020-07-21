@@ -17,7 +17,11 @@ set (types
   integer_rank_1
   integer32_rank_2
   integer_shape_1d
-#  integer_shape_2d_INT32
+  integer32_shape_2d
+
+# Derived
+  Foo
+  FooPoly
   )
 
 set(actuals)

@@ -73,7 +73,7 @@ define(__T,`__`'_T()')
 #    define __T()_kind__  1 << (__T() & 07)
 
 #    define __T()_DECLARE__(type,kindlen) __IDENTITY(type)__IDENTITY(kindlen)
-
+#    define __T()_NAME__(type,kindlen) __IDENTITY(type)//__IDENTITY(kindlen)
 #    if __T() == __COMPLEX
 
 #        define __T()_type__ complex
@@ -168,12 +168,16 @@ define(__T,`__`'_T()')
 #else
 ! User defined derived type (or C_PTR, etc)
 
-#    define __T()_type __T()
-
-#    if  __T()_polymorphic
-#        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
+#    define __T()_type__ __T()
+#    ifdef __T()_name
+#        define __T()_name__ __T()_name
+#    endif
+#    ifdef __T()_polymorphic
+#        define __T()_DECLARE__(t,kindlen) class(__IDENTITY(t)__IDENTITY(kindlen))
+#        define __T()_NAME__(name,kindlen) "class("//name//kindlen//")"
 #    else
 #        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
+#        define __T()_NAME__(name,kindlen) "type("//name//kindlen//")"
 #    endif
 #endif
 
@@ -271,13 +275,9 @@ define(__T,`__`'_T()')
 #define __T()_declare_result__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_result__)
 #define __T()_declare_dummy__ __T()_DECLARE__(__T()_type__,__T()_kindlen_dummy__)__IDENTITY(__T()_dimension_dummy__)
 
-#ifdef  __T()_name
-#    define __T()_name__ __T()_name
-#endif
 #ifdef __T()_name__
-#    define __T()_declare_string__ __IDENTITY(__T()_name__)//__IDENTITY(__T()_kindlen_string__)//__IDENTITY(__T()_dimension_string__)//__IDENTITY(__T()_allocatable_string__)
+#    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__IDENTITY(__T()_dimension_string__)//__IDENTITY(__T()_allocatable_string__)
 #endif
-
 
 
 
