@@ -1,3 +1,15 @@
-character(len=:), allocatable
-character(len=:)
-character(len=*)
+declare string:    "character"//"(len=:)"//""//""
+declare component: character(len=:)
+declare result:    character(len=:)
+declare dummy:     character(len=*)
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src

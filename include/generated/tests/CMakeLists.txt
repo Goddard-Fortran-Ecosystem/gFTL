@@ -7,15 +7,16 @@ find_program(CPP cpp)
 set (types
   logical
   integer
-  integer_INT32
-#  real
-#  complex
-#  fixed_string
-#  deferred_string
-#
-#  integer_rank_1
-#  integer_rank_2_INT32
-#  integer_shape_1d
+  integer32
+  real
+  complex
+  fixed_string
+  deferred_string
+
+# Combos
+  integer_rank_1
+  integer32_rank_2
+  integer_shape_1d
 #  integer_shape_2d_INT32
   )
 
@@ -34,7 +35,7 @@ foreach(type ${types})
 
   add_custom_command (
     OUTPUT ${actual}
-    COMMAND ${CPP} -I${gFTL_SOURCE_DIR}/include -I${gFTL_BINARY_DIR}/include ${source} > ${tmp}
+    COMMAND ${CPP} -I${gFTL_SOURCE_DIR}/include -I${gFTL_BINARY_DIR}/include -I${gFTL_SOURCE_DIR}/include ${source} > ${tmp}
     # Strip all empty lines and comments
     COMMAND ${FILTER} ${tmp} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

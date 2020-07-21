@@ -1,7 +1,7 @@
-declare string:    "integer"//""//", dimension(:)"//", allocatable"
-declare component: integer, dimension(:), allocatable
-declare result:    integer, dimension(:)
-declare dummy:     integer, dimension(:)
+declare string:    "integer"//"(kind=INT32)"//", dimension(:,:)"//", allocatable"
+declare component: integer(kind=INT32), dimension(:,:), allocatable
+declare result:    integer(kind=INT32), dimension(:,:)
+declare dummy:     integer(kind=INT32), dimension(:,:)
 
 a == b:            a == b
 a NE b:            a /= b

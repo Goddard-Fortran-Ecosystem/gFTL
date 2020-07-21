@@ -72,10 +72,6 @@ define(__T,`__`'_T()')
 #    define __T()_type_id__  __T() >> 3
 #    define __T()_kind__  1 << (__T() & 07)
 
-#    if __T()_kind__ == 0
-#        define __T()_KINDLEN__(context)
-#        define __T()_kindlen_string__ ""
-#    endif
 #    define __T()_DECLARE__(type,kindlen) __IDENTITY(type)__IDENTITY(kindlen)
 
 #    if __T() == __COMPLEX
@@ -159,8 +155,9 @@ define(__T,`__`'_T()')
 
 #            define __T()_type__ character
 #            define __T()_name__ "character"
-#            if __T()_kind__ > 0
-#                define __T()_KINDLEN__(context) (len=contex)
+#            if __T()_kind__ > 1
+#                define __T()_deferred__
+#                define __T()_KINDLEN__(context) (len=context)
 #                define __T()_kindlen_string__ "(len=:)"
 #            endif
 
@@ -212,46 +209,46 @@ define(__T,`__`'_T()')
 #    if __T()_rank == 1
 #        define __T()_dimension_result__ , dimension(:)
 #        define __T()_rank_string__ "1"
-#        define __T()_dimension_string__ ", dimension(:)"
+#        define __T()_shape_string__ ", dimension(:)"
 #    elif __T()_rank == 2
 #        define __T()_dimension_result__ , dimension(:,:)
 #        define __T()_rank_string__ "2"
-#        define __T()_dimension_string__ ", dimension(:,:)"
+#        define __T()_shape_string__ ", dimension(:,:)"
 #    elif __T()_rank == 3
 #        define __T()_dimension_result__ , dimension(:,:,:)
 #        define __T()_rank_string__ "3"
-#        define __T()_dimension_string__ ", dimension(:,:,:)"
+#        define __T()_shape_string__ ", dimension(:,:,:)"
 #    elif __T()_rank == 4
 #        define __T()_dimension_result__ , dimension(:,:,:,:)
 #        define __T()_rank_string__ "4"
-#        define __T()_dimension_string__ ", dimension(:,:,:,:)"
+#        define __T()_shape_string__ ", dimension(:,:,:,:)"
 #    elif __T()_rank == 5
 #        define __T()_dimension_result__ , dimension(:,:,:,:,:)
 #        define __T()_rank_string__ "5"
-#        define __T()_dimension_string__ ", dimension(:,:,:,:,:)"
+#        define __T()_shape_string__ ", dimension(:,:,:,:,:)"
 #    elif __T()_rank == 6
 #        define __T()_dimension_result__ , dimension(:,:,:,:,:,:)
 #        define __T()_rank_string__ "6"
-#        define __T()_dimension_string__ ", dimension(:,:,:,:,:,:)"
+#        define __T()_shape_string__ ", dimension(:,:,:,:,:,:)"
 #    elif __T()_rank == 7
 #        define __T()_dimension_result__ , dimension(:,:,:,:,:,:,:)
 #        define __T()_rank_string__ "7"
-#        define __T()_dimension_string__ ", dimension(:,:,:,:,:,:,:)"
+#        define __T()_shape_string__ ", dimension(:,:,:,:,:,:,:)"
 #    endif
 #    if defined(__T()_shape)
          ! fixed shape       
 #        define __T()_dimension_component__ , __IDENTITY(dimension)__IDENTITY(__T()_shape)
 #        ifdef __T()_shape_string
-#            define __T()_dimension_string__ , ", dimension("//__T()_shape_string//")"
+#            define __T()_dimension_string__ ", "//__T()_shape_string
 #        else
-#            define __T()_dimension_string__ , ", dimension(rank<"//"T_()_rank_string__//">)"
+#            define __T()_dimension_string__ ", dimension(rank<"//T_()_rank_string__//">)"
 #        endif
 #    else
-#        ! assumed shape
-#        define __T()_dimension_component__ __T()_dimension_result
-#        define __T()_dimension_string__ ", dimension("__T()_shape_string__//")"
+         ! assumed shape
+#        define __T()_dimension_component__ __T()_dimension_result__
+#        define __T()_dimension_string__ __T()_shape_string__
 #    endif
-#    define __T()_dimension_dummy __T()_dimension_component
+#    define __T()_dimension_dummy__ __T()_dimension_component__
 #
 #else
 ! Scalar
@@ -263,7 +260,7 @@ define(__T,`__`'_T()')
 
 #if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
 #   define __T()_allocatable__
-#   define __T()_allocatable_attr_ , allocatable
+#   define __T()_allocatable_attr__ , allocatable
 #   define __T()_allocatable_string__ ", allocatable"
 #else
 #   define __T()_allocatable_attr__

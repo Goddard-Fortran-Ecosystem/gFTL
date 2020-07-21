@@ -1,3 +1,15 @@
-integer, dimension(3)
-integer, dimension(:)
-integer, dimension(3)
+declare string:    "integer"//""//", "//"dimension(3)"//""
+declare component: integer, dimension(3)
+declare result:    integer, dimension(:)
+declare dummy:     integer, dimension(3)
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src
