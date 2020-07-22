@@ -1,0 +1,4 @@
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/shared"
+  FILES_MATCHING PATTERN "*.inc"
+  PATTERN CMakeFiles EXCLUDE
+  )

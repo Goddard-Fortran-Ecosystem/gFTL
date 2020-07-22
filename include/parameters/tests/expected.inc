@@ -1,5 +1,5 @@
 #include "shared/define_common_macros.inc"
-#include "generated/define_derived_macros_for_T.inc"
+#include "parameters/T/define_derived_macros.inc"
 <start>
 declare string:    __T_declare_string__
 declare component: __T_declare_component__

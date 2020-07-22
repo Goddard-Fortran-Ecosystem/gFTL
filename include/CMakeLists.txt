@@ -1,3 +1,4 @@
+set (dest "gFTL-${gFTL_VERSION}")
 
 add_library (gftl INTERFACE)
 target_include_directories (gftl INTERFACE
@@ -15,7 +16,6 @@ set (template_parameters
   )
 
 #add_subdirectory(shared)
-add_subdirectory(types)
-add_subdirectory(generated)
+add_subdirectory(parameters)
 #add_subdirectory(templates)
 

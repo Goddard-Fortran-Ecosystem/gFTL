@@ -22,6 +22,7 @@ set (types
 # Derived
   Foo
   FooPoly
+  kitchen_sink
   )
 
 set(actuals)
@@ -57,4 +58,4 @@ foreach(type ${types})
 endforeach()
 
 add_custom_target (test_generated_incs ALL DEPENDS ${actuals})
-add_dependencies (test_generated_incs m4_generated_includes)
+add_dependencies (test_generated_incs m4_type_includes)

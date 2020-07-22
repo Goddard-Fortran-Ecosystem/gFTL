@@ -12,8 +12,8 @@
 #        define __gftl_impure_elemental _gftl_impure_elemental
 #    endif
 
-#    ifdef _gftl_size_kind
-#        define __gftl_size_kind _gftl_size_kind
+#    ifdef gftl_size_kind
+#        define __gftl_size_kind gftl_size_kind
 #    else
 !        Note: F2018 guarantees that there is at least one integer kind that supports 18 digits
 !        But, just in case, we fall back to default integer.
@@ -26,6 +26,10 @@
 
 ! Predefined intrinsic types
 
+! Note: Fortran preprocessors do not consistently intrepret octal
+! constants, so we have to do some careful arithmetic in base 10
+
+   
 #define __LOGICAL__          1   
 #define __INTEGER__          2
 #define __REAL__             3
@@ -33,29 +37,29 @@
 #define __CHARACTER__        5
 #define __DOUBLE_PRECISION__ 6
 
-#define __LOGICAL   010
+#define __LOGICAL   8
 
-#define __INTEGER   020
-#define __INTEGER8  023
-#define __INTEGER16 024
-#define __INTEGER32 025
-#define __INTEGER64 026
+#define __INTEGER   16
+#define __INTEGER8  __INTEGER+3
+#define __INTEGER16 __INTEGER+4
+#define __INTEGER32 __INTEGER+5
+#define __INTEGER64 __INTEGER+6
 
-#define __REAL      030
-#define __REAL16    034
-#define __REAL32    035
-#define __REAL64    036
-#define __REAL128   037
+#define __REAL      24
+#define __REAL16    __REAL+4
+#define __REAL32    __REAL+5
+#define __REAL64    __REAL+6
+#define __REAL128   __REAL+7
 
-#define __COMPLEX      040
-#define __COMPLEX16    044
-#define __COMPLEX32    045
-#define __COMPLEX64    046
-#define __COMPLEX128   047
+#define __COMPLEX      32
+#define __COMPLEX16    __COMPLEX+4
+#define __COMPLEX32    __COMPLEX+5
+#define __COMPLEX64    __COMPLEX+6
+#define __COMPLEX128   __COMPLEX+7
 
-#define __CHARACTER          050
-#define __CHARACTER_DEFERRED 051
-#define __DOUBLE_PRECISION   060
+#define __CHARACTER          40
+#define __CHARACTER_DEFERRED 41
+#define __DOUBLE_PRECISION   48
 
 
 ! Attributes
