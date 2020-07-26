@@ -41,7 +41,7 @@ foreach (type ${types} )
 
   add_custom_command (
     OUTPUT ${pfunitfile}
-    COMMAND m4 -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND ${M4} -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
