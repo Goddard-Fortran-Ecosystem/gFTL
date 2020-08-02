@@ -38,6 +38,9 @@
 =======
 ## [2.0.0] - ????
 
+## Fixed
+- +/- operators on vector reverse iterators were incorrectly implemented in v1.
+
 ## Changed
 - Changed location of GFTLConfig.cmake
 

@@ -7,15 +7,12 @@
 #    undef __IDENTITY
 #endif
 
-#ifdef __GUARD
-#    undef __GUARD
+#ifdef __MANGLE
+#    undef __MANGLE
 #endif
 
 
 ! Fortran portability support
-#ifdef __gftl_impure_elemental__
-#    undef __gftl_impure_elemental__
-#endif
 
 #ifdef __gftl_size_kind
 #    undef __gftl_size_kind
@@ -115,5 +112,7 @@
 #ifdef __DEFERRED
 #    undef __DEFERRED
 #endif
-
+#ifdef __UNUSED_DUMMY
+#    undef __UNUSED_DUMMY
+#endif
 

@@ -25,6 +25,13 @@ cpp_undef(declare_result)
 cpp_undef(declare_dummy)
 
 cpp_undef(allocatable)
+cpp_undef(listable)
 
+cpp_undef(EQ)
+cpp_undef(LT)
+
+cpp_undef(FREE)
+cpp_undef(MOVE)
+cpp_undef(COPY)
 
 

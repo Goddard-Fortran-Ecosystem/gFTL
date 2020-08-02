@@ -262,13 +262,18 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_string__ ""
 #endif
 
-#if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
-#   define __T()_allocatable__
-#   define __T()_allocatable_attr__ , allocatable
-#   define __T()_allocatable_string__ ", allocatable"
+#if defined(__T()_deferred) || defined(__T()_polymorphic) || (__T()_rank > 0)
 #else
-#   define __T()_allocatable_attr__
-#   define __T()_allocatable_string__ ""
+#    define __T()_listable__
+#endif
+
+#if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
+#    define __T()_allocatable__
+#    define __T()_allocatable_attr__ , allocatable
+#    define __T()_allocatable_string__ ", allocatable"
+#else
+#    define __T()_allocatable_attr__
+#    define __T()_allocatable_string__ ""
 #endif
 
 #define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_component__)__IDENTITY(__T()_allocatable_attr__)
@@ -279,6 +284,24 @@ define(__T,`__`'_T()')
 #    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__IDENTITY(__T()_dimension_string__)//__IDENTITY(__T()_allocatable_string__)
 #endif
 
+
+#ifdef __T()_EQ
+#    define __T()_EQ__(lhs,rhs) __T()_EQ(lhs,rhs)
+#elif defined(__T()_EQ_SCALAR__)
+#    if __T()_rank == 0
+#        define __T()_EQ__(lhs,rhs) __T()_EQ_SCALAR__(lhs,rhs)
+#    else
+#        define __T()_EQ__(lhs,rhs) all(__T()_EQ_SCALAR__([lhs],[rhs]))
+#    endif
+#endif
+
+#ifdef __T()_LT
+#    define __T()_LT__(lhs,rhs) __T()_LT(lhs,rhs)
+#elif defined(__T()_LT_SCALAR__)
+#    if __T()_rank == 0
+#        define __T()_LT__(lhs,rhs) __T()_LT_SCALAR__(lhs,rhs)
+#    endif
+#endif
 
 
 #ifdef __T()_FREE
@@ -292,19 +315,19 @@ define(__T,`__`'_T()')
 #endif
 
 #ifdef __T()_MOVE
-#    define  __T()_MOVE__(dst,src)  __T()_MOVE(dst,src)
+#    define  __T()_MOVE__(lhs,rhs)  __T()_MOVE(lhs,rhs)
 #else
 #    ifdef __T()_allocatable__
-#        define  __T()_MOVE__(dst,src)  call move_alloc(from=src,to=dst)
+#        define  __T()_MOVE__(lhs,rhs)  call move_alloc(from=rhs,to=lhs)
 #    else
-#        define  __T()_MOVE__(dst,src)  dst=src
+#        define  __T()_MOVE__(lhs,rhs)  lhs=rhs
 #    endif
 #endif
 
 
 #ifdef __T()_COPY
-#    define  __T()_COPY__(dst,src)  __T()_COPY(dst,src)
+#    define  __T()_COPY__(lhs,rhs)  __T()_COPY(lhs,rhs)
 #else
-#    define __T()_COPY__(dst,src) dst=src
+#    define __T()_COPY__(lhs,rhs) lhs=rhs
 #endif
 

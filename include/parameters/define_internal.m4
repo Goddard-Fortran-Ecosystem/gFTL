@@ -32,6 +32,6 @@ cpp_copy(rank)
 cpp_copy(extents)
 
 cpp_copy(FREE,x)
-cpp_copy(COPY,dst,src)
-cpp_copy(MOVE,dst,src)
+cpp_copy(COPY,lhs,rhs)
+cpp_copy(MOVE,lhs,rhs)
 

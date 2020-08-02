@@ -15,7 +15,7 @@ set (template_parameters
   T2 # pair
   )
 
-#add_subdirectory(shared)
+add_subdirectory(shared)
 add_subdirectory(parameters)
-#add_subdirectory(templates)
+add_subdirectory(templates)
 

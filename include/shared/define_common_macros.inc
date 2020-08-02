@@ -4,22 +4,19 @@
 
 ! Per-container name mangling   
 #    define __IDENTITY(x) x
-#    define __GUARD(proc) __IDENTITY(__guard)__IDENTITY(proc)
+#    define __MANGLE(proc) __IDENTITY(__guard)__IDENTITY(proc)
 
 
 ! Fortran portability support
-#    ifdef _gftl_impure_elemental
-#        define __gftl_impure_elemental _gftl_impure_elemental
-#    endif
-
-#    ifdef gftl_size_kind
+#    ifdef  gftl_size_kind
 #        define __gftl_size_kind gftl_size_kind
 #    else
-!        Note: F2018 guarantees that there is at least one integer kind that supports 18 digits
-!        But, just in case, we fall back to default integer.
-#        define __gftl_size_kind max(kind(1),selected_int_kind(18))
+!        Note: F2018 guarantees that there is at least one integer
+!        kind that supports 18 digits.  For all extant compilers (July
+!        2020), this will be different than default integer
+#        define __gftl_size_kind selected_int_kind(18)
 #    endif
-#    ifdef _gftl_disable_index_kind_overload
+#    ifdef gftl_disable_index_kind_overload
 #        define __gftl_disable_index_kind_overload
 #    endif
 
@@ -28,6 +25,7 @@
 
 ! Note: Fortran preprocessors do not consistently intrepret octal
 ! constants, so we have to do some careful arithmetic in base 10
+! instead of the more elegant approach possible in C.
 
    
 #define __LOGICAL__          1   
@@ -77,7 +75,10 @@
    
    implicit none
 #    include "shared/KeywordEnforcer.inc"
+#    include "shared/error_codes.inc"
 
+
+#    define __UNUSED_DUMMY(x) if (.false.) print*,shape(x)
 
 #endif
 
