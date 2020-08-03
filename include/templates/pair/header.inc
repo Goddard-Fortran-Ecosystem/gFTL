@@ -3,5 +3,5 @@
 #include "parameters/T2/define_internal.inc"
 
 #define __pair pair
-#define __guard pair_
+#define __pair_guard pair_
 

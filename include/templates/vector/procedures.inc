@@ -13,7 +13,7 @@
 !   __vector_riterator
 
 #include "parameters/T/define_derived_macros.inc"
-
+#define __guard __vector_guard
    ! =======================
    !  Structure constructors
    ! =======================
@@ -81,7 +81,7 @@
 
 
 #ifdef __T_listable__
-   function __MANGLE(new_vector_initializer)(il) result(v)
+   function __MANGLE(new_vector_initializer_list)(il) result(v)
       type (__vector) :: v
       __T_declare_dummy__, dimension(:), intent(in) :: il ! initializer list
 
@@ -93,7 +93,7 @@
       end do
 
       return
-   end function __MANGLE(new_vector_initializer)
+   end function __MANGLE(new_vector_initializer_list)
 #endif
 
    ! =======================
@@ -871,5 +871,6 @@
 #include "templates/vector/iterator_procedures.inc"
 #include "templates/vector/reverse_iterator_procedures.inc"
 
+#undef __guard
 #include "parameters/T/undef_derived_macros.inc"
 

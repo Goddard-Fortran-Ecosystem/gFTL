@@ -1,9 +1,8 @@
-#include "parameters/T/define_derived_macros.inc"
-
    public :: __vector
 
    ! Non type-bound procedures
    public :: swap
+
 #ifdef __T_EQ__
    public :: operator(==)
    public :: operator(/=)
@@ -24,6 +23,7 @@
    public :: end
    public :: next
    public :: previous
-   
-#include "parameters/T/undef_derived_macros.inc"
+   public :: operator(+)
+   public :: operator(-)
+
    

@@ -1,6 +1,7 @@
 
 
 #include "templates/pair/header.inc"
+#include "templates/vector/public.inc"   
 #include "templates/pair/specification.inc"
 
    contains

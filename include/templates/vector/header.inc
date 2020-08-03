@@ -4,5 +4,5 @@
 #define __vector Vector
 #define __vector_iterator VectorIterator
 #define __vector_riterator VectorRIterator
-#define __guard vector_
+#define __vector_guard vector_
 

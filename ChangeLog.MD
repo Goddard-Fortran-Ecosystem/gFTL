@@ -62,6 +62,10 @@
 - Moved legacy include to include-v1
 - Changed capitalization of installation from GFTL to gFTL.
   Users should now use ```find_package(gFTL)```
+- Vector template
+  . relational operators are module procedures rather than class methods
+  . arithmetic operators are module procedures rathen than class methods
+  . introduced a few iterator module procedures: advance, begin, distance, end, next, previous
 
 ## Added
 - Support for type names.

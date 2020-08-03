@@ -14,8 +14,9 @@
 !   __riterator
 
 #include "parameters/T/define_derived_macros.inc"
-
-   ! Structure constructor
+#define __guard __vector_guard
+   
+   ! Structure constructors
    interface __vector
       module procedure __MANGLE(new_vector_empty)
 #ifndef  __gftl_disable_index_kind_overload
@@ -27,7 +28,7 @@
       ! module procedure __MANGLE(new_vector_move) ! not supported
 
 #ifdef __T_listable__
-      module procedure __MANGLE(new_vector_initializer)
+      module procedure __MANGLE(new_vector_initializer_list)
 #endif
    end interface __vector
 
@@ -44,6 +45,7 @@
       type(__MANGLE(wrapper)), allocatable :: elements(:)
       integer(kind=__gftl_size_kind) :: vsize = 0
    contains
+
       procedure :: size => __MANGLE(size)
       procedure, nopass :: max_size => __MANGLE(max_size)
       procedure :: capacity => __MANGLE(capacity)
@@ -169,4 +171,5 @@
 #include "templates/vector/iterator_specification.inc"
 #include "templates/vector/reverse_iterator_specification.inc"
 
+#undef __guard
 #include "parameters/T/undef_derived_macros.inc"
