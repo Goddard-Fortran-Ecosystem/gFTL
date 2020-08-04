@@ -1,5 +1,5 @@
 !--------------------------------------------------------------------
-! Copyright © 2017 United States Government as represented by the   |
+! Copyright © 2020 United States Government as represented by the   |
 ! Administrator of the National Aeronautics and Space               |
 ! Administration. No copyright is claimed in the United States      |
 ! under Title 17, U.S. Code. All Other Rights Reserved.             |
@@ -7,13 +7,20 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-! Primary container should must define
-!   __vector
-!   __vector_iterator
-!   __vector_riterator
+!---------------
+! The sequence of includes below seems a bit of overkill in the
+! case of Pair containers.  However, it becomes necessary when
+! considering higher order containers that use lower order
+! containers.  E.g., Set uses Vector and Map uses Pair.
+!---------------
 
-#include "parameters/T/define_derived_macros.inc"
+! define generic internal template parameters from pair parameters.
+#include "templates/vector/copy_vector_T_to_T.inc"
 #define __guard __vector_guard
+
+! define derived generic template parameters from internal parameters.
+#include "parameters/T/define_derived_macros.inc"
+
    ! =======================
    !  Structure constructors
    ! =======================
@@ -871,6 +878,11 @@
 #include "templates/vector/iterator_procedures.inc"
 #include "templates/vector/reverse_iterator_procedures.inc"
 
-#undef __guard
+! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
+
+! undef internal template parameters
+#undef __guard
+#include "parameters/T/undef_internal.inc"
+
 

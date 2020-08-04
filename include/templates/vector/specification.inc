@@ -7,14 +7,19 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-! Main container file must define
-!   __vector
-! May also define
-!   __iterator
-!   __riterator
+!---------------
+! The sequence of includes below seems a bit of overkill in the
+! case of Pair containers.  However, it becomes necessary when
+! considering higher order containers that use lower order
+! containers.  E.g., Set uses Vector and Map uses Pair.
+!---------------
 
-#include "parameters/T/define_derived_macros.inc"
+! define generic internal template parameters from pair parameters.
+#include "templates/vector/copy_vector_T_to_T.inc"
 #define __guard __vector_guard
+
+! define derived generic template parameters from internal parameters.
+#include "parameters/T/define_derived_macros.inc"
    
    ! Structure constructors
    interface __vector
@@ -171,5 +176,11 @@
 #include "templates/vector/iterator_specification.inc"
 #include "templates/vector/reverse_iterator_specification.inc"
 
-#undef __guard
+
+! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
+
+! undef internal template parameters
+#undef __guard
+#include "parameters/T/undef_internal.inc"
+

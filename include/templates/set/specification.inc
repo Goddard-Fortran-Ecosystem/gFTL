@@ -8,8 +8,8 @@
 !--------------------------------------------------------------------
 
 #include "templates/set/stash_T.inc"
-#define __T __INTEGER
 
+#define __T __INTEGER
 #define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(i_)
 #define __vector __IDENTITY(__set_guard)__IDENTITY(Vector)
 #define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(VectorIterator)
@@ -20,11 +20,14 @@
 #undef __vector
 #undef __vector_iterator
 #undef __vector_riterator
-#undef __guard
+#undef __vector_guard
+#undef __T   
 
+   __set_T
 #include "templates/set/restore_T.inc"
+   __set_T
 
-#define __guard __IDENTITY(__set_guard)__IDENTITY(T_)
+#define __vector_guard __IDENTITY(__set_guard)__IDENTITY(T_)
 #define __vector __MANGLE(Vector)
 #define __vector_iterator __MANGLE(VectorIterator)
 #define __vector_riterator __MANGLE(VectorRIterator)
@@ -34,9 +37,11 @@
 #undef __vector
 #undef __vector_iterator
 #undef __vector_riterator
-#undef __guard
-#define __guard __set_guard
+#undef __vector_guard
 
+
+
+#define __guard __set_guard
 #include "parameters/T/define_derived_macros.inc"
 
 #define __UNINITIALIZED -1
@@ -128,7 +133,7 @@
 #undef __LEFT 0
 #undef __RIGHT 1
 
-#undef __set_guard
+#undef __guard
 
 #include "parameters/T/undef_derived_macros.inc"
 

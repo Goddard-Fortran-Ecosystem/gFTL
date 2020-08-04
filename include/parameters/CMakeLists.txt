@@ -19,20 +19,43 @@ function (process_m4 parameter input_file output_file)
 
 endfunction ()
   
+function (cpp_copy_parameter T_in T_out output_file)
+  add_custom_command (
+    OUTPUT ${output_file}
+    COMMAND ${M4} -s -D_T_in=${T_in} -D_T_out=${T_out} -I. ${CMAKE_CURRENT_SOURCE_DIR}/cpp_copy.m4 > ${output_file}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/cpp_copy.m4
+    )
+  list (APPEND type_incs ${output_file})
+  set (type_incs ${type_incs} PARENT_SCOPE)
 
+endfunction ()
+  
 # Start with an empty list and append as we loop over cases.
 
 set (type_incs)
 foreach (parameter ${template_parameters})
   file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${parameter})
 
-  process_m4 (${parameter} define_internal.m4 ${parameter}/define_internal.inc)
-  process_m4 (${parameter} undef_internal.m4 ${parameter}/undef_internal.inc)
-
+  process_m4 (${parameter} cpp_undef.m4 ${parameter}/undef_internal.inc)
   process_m4 (${parameter} define_derived_macros.m4 ${parameter}/define_derived_macros.inc)
   process_m4 (${parameter} undef_derived_macros.m4 ${parameter}/undef_derived_macros.inc)
 
-endforeach()
+endforeach ()
+
+# Template specific extras
+cpp_copy_parameter (T1 __pair_T1  T1/copy_T1_to_pair_T1.inc)
+cpp_copy_parameter (T2 __pair_T2  T2/copy_T2_to_pair_T2.inc)
+cpp_copy_parameter (__pair_T1 __T1 T1/copy_pair_T1_to_internal_T1.inc)
+cpp_copy_parameter (__pair_T2 __T2 T2/copy_pair_T2_to_internal_T2.inc)
+process_m4 (__pair_T1 cpp_undef.m4 T1/undef_pair_T1.inc)
+process_m4 (__pair_T2 cpp_undef.m4 T2/undef_pair_T2.inc)
+
+cpp_copy_parameter (__vector_T __T T/copy_vector_T to_T.inc)
+process_m4 (__vector_T cpp_undef.m4 T/undef_vector_T.inc)
+
+cpp_copy_parameter (__set_T __T T/copy_set_T to_T.inc)
+process_m4 (__set_T cpp_undef.m4 T/undef_set_T.inc)
 
 add_subdirectory(tests)
 

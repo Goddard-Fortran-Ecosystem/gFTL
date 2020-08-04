@@ -7,11 +7,44 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
+#include "templates/set/stash_T.inc"
+
+#define __T __INTEGER
+#define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(i_)
+#define __vector __IDENTITY(__set_guard)__IDENTITY(Vector)
+#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(VectorIterator)
+#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(VectorRIterator)
+
+#include "templates/vector/procedures.inc"
+
+#undef __vector
+#undef __vector_iterator
+#undef __vector_riterator
+#undef __vector_guard
+#undef __T   
+
+#include "templates/set/restore_T.inc"
+
+#define __vector_guard __IDENTITY(__set_guard)__IDENTITY(T_)
+#define __vector __MANGLE(Vector)
+#define __vector_iterator __MANGLE(VectorIterator)
+#define __vector_riterator __MANGLE(VectorRIterator)
+
+#include "templates/vector/procedures.inc"
+
+#undef __vector
+#undef __vector_iterator
+#undef __vector_riterator
+#undef __vector_guard
+
+
+
 #define __UNINITIALIZED -1
 #define __LEFT 0
 #define __RIGHT 1
 
-#include "templates/all_template_macros.inc"
+#include "parameters/T/define_derived_macros.inc"
+#define __guard __set_guard
 
 
    ! Constructors
@@ -83,7 +116,7 @@
          child = this%rights%at(pos)
       end select
 
-   end function __MANGLE(get_child
+   end function __MANGLE(get_child)
 
    ! =======================
    !  set_child
@@ -103,7 +136,7 @@
          call this%rights%set(pos, child)
       end select
 
-   end subroutine __MANGLE(set_child
+   end subroutine __MANGLE(set_child)
 
    ! =======================
    !  set_parent_child
@@ -120,7 +153,7 @@
          call this%set_child(parent, __RIGHT, other)
       end if
 
-   end subroutine __MANGLE(set_parent_child
+   end subroutine __MANGLE(set_parent_child)
 
    ! =======================
    !  update_height
@@ -973,9 +1006,10 @@
 
 
 
-
-#include "templates/all_template_macros_undefs.inc"
-
 #undef __UNINITIALIZED
 #undef __LEFT
 #undef __RIGHT
+
+#undef __guard
+#include "parameters/T/undef_derived_macros.inc"
+

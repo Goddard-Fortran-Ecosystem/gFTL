@@ -1,18 +1,20 @@
 changecom()
 
-define(__T,`__`'_T()')
 
 define(`cpp_copy',`
-#ifdef _T()_$1
+#ifdef _T_in()_$1
+! define _T_out()_$1
 ifelse($#,1,
-#    define __T()_$1 _T()_$1,
+#    define _T_out()_$1 _T_in()_$1,
 $#,2,
-#    define __T()_$1($2) _T()_$1($2),
-#    define __T()_$1($2,$3) _T()_$1($2,$3))
+#    define _T_out()_$1($2) _T_in()_$1($2),
+#    define _T_out()_$1($2,$3) _T_in()_$1($2,$3))
 #endif'
+
 )
 
-#define __T() _T()
+#define _T_out() _T_in()
+
 cpp_copy(is_intrinsic)
 cpp_copy(string)
 
