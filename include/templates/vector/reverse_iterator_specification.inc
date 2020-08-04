@@ -21,7 +21,7 @@
 !!$      procedure :: make_move_iterator => __MANGLE(make_move_iterator)
 
       procedure :: next => __MANGLE(riter_next)
-      procedure :: previous => __MANGLE(riter_previous)
+      procedure :: prev => __MANGLE(riter_prev)
 
       procedure :: get => __MANGLE(riter_get)
       procedure :: __MANGLE(riter_at)
@@ -100,6 +100,6 @@
    interface next
       module procedure __MANGLE(riter_next_f)
    end interface next
-   interface previous
-      module procedure __MANGLE(riter_previous_f)
-   end interface previous
+   interface prev
+      module procedure __MANGLE(riter_prev_f)
+   end interface prev

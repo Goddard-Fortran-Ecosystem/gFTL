@@ -1,3 +1,4 @@
+#include "parameters/T/undef_set_T.inc"
 
 #ifdef __set
 #    undef __set
@@ -13,6 +14,4 @@
 #    undef __set_guard
 #endif
 
-#include "parameters/T1/undef_internal.inc"
-#include "parameters/T2/undef_internal.inc"
 #include "shared/undef_common_macros.inc"

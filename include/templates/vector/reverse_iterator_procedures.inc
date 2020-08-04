@@ -23,12 +23,12 @@
       end subroutine __MANGLE(riter_next)
 
 
-      subroutine __MANGLE(riter_previous)(this)
+      subroutine __MANGLE(riter_prev)(this)
          class (__vector_riterator), intent(inout) :: this
 
          this%current_index = this%current_index + 1
 
-      end subroutine __MANGLE(riter_previous)
+      end subroutine __MANGLE(riter_prev)
 
 
 
@@ -250,14 +250,14 @@
          
       end function __MANGLE(riter_next_f)
 
-      function __MANGLE(riter_previous_f)(it) result(new_it)
+      function __MANGLE(riter_prev_f)(it) result(new_it)
          type(__vector_riterator) :: new_it
          type(__vector_riterator), intent(in) :: it
 
          new_it = it
-         call new_it%previous()
+         call new_it%prev()
          
-      end function __MANGLE(riter_previous_f)
+      end function __MANGLE(riter_prev_f)
 
 
       

@@ -65,7 +65,7 @@
 
       iter = first
       do while (iter /= last)
-         call v%push_back(iter%get())
+         call v%push_back(iter%at())
       end do
 
       return

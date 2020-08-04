@@ -7,15 +7,6 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-      function __MANGLE(iter_get)(this) result (item)
-         class (__vector_iterator), intent(in) :: this
-
-         __T_declare_result__, pointer :: item
-         item => this%elements(this%current_index)%item
-
-      end function __MANGLE(iter_get)
-
-
       subroutine __MANGLE(iter_next)(this)
          class (__vector_iterator), intent(inout) :: this
 
@@ -23,12 +14,12 @@
       end subroutine __MANGLE(iter_next)
 
 
-      subroutine __MANGLE(iter_previous)(this)
+      subroutine __MANGLE(iter_prev)(this)
          class (__vector_iterator), intent(inout) :: this
 
          this%current_index = this%current_index - 1
 
-      end subroutine __MANGLE(iter_previous)
+      end subroutine __MANGLE(iter_prev)
 
 
       function __MANGLE(iter_at)(this) result(ptr)
@@ -264,13 +255,13 @@
          
       end function __MANGLE(iter_next_f)
 
-      function __MANGLE(iter_previous_f)(it) result(new_it)
+      function __MANGLE(iter_prev_f)(it) result(new_it)
          type(__vector_iterator) :: new_it
          type(__vector_iterator), intent(in) :: it
 
          new_it = it
-         call new_it%previous()
+         call new_it%prev()
          
-      end function __MANGLE(iter_previous_f)
+      end function __MANGLE(iter_prev_f)
 
 

@@ -7,13 +7,15 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-#include "templates/set/stash_T.inc"
+#define __vector_T integer
+#define __vector_T_name "integer" 
+#define __vector_T_KINDLEN(context) (kind=__gftl_size_kind)
+#define __vector_T_kindlen_string "(kind=__gftl_size_kind)"
 
-#define __T __INTEGER
-#define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(i_)
-#define __vector __IDENTITY(__set_guard)__IDENTITY(Vector)
-#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(VectorIterator)
-#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(VectorRIterator)
+#define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(I_)
+#define __vector __IDENTITY(__set_guard)__IDENTITY(I_Vector)
+#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(I_VectorIterator)
+#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(I_VectorRIterator)
 
 #include "templates/vector/procedures.inc"
 
@@ -21,14 +23,13 @@
 #undef __vector_iterator
 #undef __vector_riterator
 #undef __vector_guard
-#undef __T   
+#include "parameters/T/undef_vector_T.inc"
 
-#include "templates/set/restore_T.inc"
-
+#include "parameters/T/copy_set_T_to_vector_T.inc"
 #define __vector_guard __IDENTITY(__set_guard)__IDENTITY(T_)
-#define __vector __MANGLE(Vector)
-#define __vector_iterator __MANGLE(VectorIterator)
-#define __vector_riterator __MANGLE(VectorRIterator)
+#define __vector __IDENTITY(__set_guard)__IDENTITY(T_Vector)
+#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(T_VectorIterator)
+#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(T_VectorRIterator)
 
 #include "templates/vector/procedures.inc"
 
@@ -36,10 +37,15 @@
 #undef __vector_iterator
 #undef __vector_riterator
 #undef __vector_guard
+#include "parameters/T/undef_vector_T.inc"
 
 
 
-#define __UNINITIALIZED -1
+#define __guard __set_guard
+#include "parameters/T/copy_set_T_to_internal_T.inc"
+#include "parameters/T/define_derived_macros.inc"
+
+#define __UNINITIALIZED int(-1,kind=__gftl_size_kind)
 #define __LEFT 0
 #define __RIGHT 1
 
@@ -48,17 +54,22 @@
 
 
    ! Constructors
-   function new_set_empty() result(s)
+   function __MANGLE(new_set_empty)() result(s)
       type(__set) :: s
-      allocate(s%elements(0))
-      s%vsize = 0
-   end function new_set_empty
+      s%items = __MANGLE(T_Vector)()
+      s%parents = __MANGLE(I_Vector)()
+      s%lefts = __MANGLE(I_Vector)()
+      s%rights = __MANGLE(I_Vector)()
+      s%heights = __MANGLE(I_Vector)()
+      s%tsize = 0
+      s%root = __UNINITIALIZED
+      s%next_free = 0
+   end function __MANGLE(new_set_empty)
 
 
    function __MANGLE(new_set_copy)(x) result(s)
       type(__set) :: s
       type(__set) :: x
-
       s = x
    end function __MANGLE(new_set_copy)
 
@@ -83,16 +94,16 @@
    ! =======================
    !  exists - a helper function
    ! =======================
-   logical function __MANGLE(exists)(pos)
+   logical function __MANGLE(exists)(pos) result(exists)
       integer(kind=__gftl_size_kind), intent(in) :: pos
-      exists = (pos /= UNINITIALIZED)
+      exists = (pos /= __UNINITIALIZED)
    end function __MANGLE(exists)
 
 
    ! =======================
    !  opposite - a helper function
    ! =======================
-   integer function __MANGLE(opposite)(dir)
+   integer function __MANGLE(opposite)(dir) result(opposite)
       integer, intent(in) :: dir
 
       opposite = (1 - dir)
@@ -224,14 +235,14 @@
    function __MANGLE(find)(this, value) result(find)
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
-      type(__iterator) :: find
+      type(__set_iterator) :: find
 
       find%reference => this
       associate (c => find%current)
         c = this%find_index(value, .false.)
 
         if (this%exists(c)) then
-           if (.not. __MANGLE(eq)(this%items%at(c),value)) then
+           if (.not. __MANGLE(order_eq)(this%items%at(c),value)) then
               c = __UNINITIALIZED
            end if
         end if
@@ -258,7 +269,7 @@
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
 
-      type (__iterator) :: i
+      type (__set_iterator) :: i
 
       i = this%find(value)
 
@@ -290,10 +301,10 @@
    ! =======================
    !  insert
    ! =======================
-   subroutine __MANGLE(insert)(this, value, unused, isNew, ref)
+   subroutine __MANGLE(insert_single)(this, value, unused, isNew, ref)
       class(__set), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
-      type (Unusable), optional :: unused
+      type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: isNew
 
       integer(kind=__gftl_size_kind), optional, intent(out) :: ref
@@ -345,7 +356,7 @@
 #endif
             call this%items%push_back(value)
             new = this%items%size()
-            call this%heights%push_back(1___gftl_size_kind)
+            call this%heights%push_back(int(1,kind=__gftl_size_kind))
             call this%lefts%push_back(__UNINITIALIZED)
             call this%rights%push_back(__UNINITIALIZED)
             call this%parents%push_back(parent)
@@ -353,7 +364,7 @@
             new = this%next_free
             this%next_free = this%parents%at(new)
             call this%items%set(new, value)
-            call this%heights%set(new, 1___gftl_size_kind)
+            call this%heights%set(new, int(1,kind=__gftl_size_kind))
             call this%lefts%set(new, __UNINITIALIZED)
             call this%rights%set(new, __UNINITIALIZED)
             call this%parents%set(new, parent)
@@ -380,7 +391,7 @@
          if (this%next_free == 0) then
             call this%items%push_back(value)
             new = this%items%size()
-            call this%heights%push_back(1___gftl_size_kind)
+            call this%heights%push_back(int(1,kind=__gftl_size_kind))
             call this%lefts%push_back(__UNINITIALIZED)
             call this%rights%push_back(__UNINITIALIZED)
             call this%parents%push_back(__UNINITIALIZED)
@@ -388,7 +399,7 @@
             new = this%next_free
             this%next_free = this%parents%at(new)
             call this%items%set(new, value)
-            call this%heights%set(new, 1___gftl_size_kind)
+            call this%heights%set(new, int(1,kind=__gftl_size_kind))
             call this%lefts%set(new, __UNINITIALIZED)
             call this%rights%set(new, __UNINITIALIZED)
             call this%parents%set(new, __UNINITIALIZED)
@@ -404,7 +415,38 @@
 
       this%tsize = this%tsize + 1
 
-   end subroutine __MANGLE(insert)
+   end subroutine __MANGLE(insert_single)
+
+
+   subroutine __MANGLE(insert_range)(this, first, last)
+      class(__set), intent(inout) :: this
+      type(__set_iterator), intent(in) :: first
+      type(__set_iterator), intent(in) :: last
+
+      type(__set_iterator) :: iter
+
+      iter = first
+      do while (iter /= last)
+         call this%insert(iter%at())
+         call iter%next()
+      end do
+      
+   end subroutine __MANGLE(insert_range)
+
+
+#ifdef __T_listable__
+   subroutine __MANGLE(insert_initializer_list)(this, il)
+      class(__set), intent(inout) :: this
+      __T_declare_component__, intent(in) :: il(:)
+
+      integer :: iter
+
+      do iter = 1, size(il)
+         call this%insert(il(iter))
+      end do
+      
+   end subroutine __MANGLE(insert_initializer_list)
+#endif
 
    logical function __MANGLE(lessThan)(x, y) result(less)
       __T_declare_dummy__, intent(in) :: x
@@ -475,9 +517,9 @@
    ! =======================
    subroutine __MANGLE(erase_one)(this, iter)
       class(__set), intent(inout) :: this
-      type(__iterator), intent(inout) :: iter
+      type(__set_iterator), intent(inout) :: iter
 
-      type (__iterator) :: last
+      type (__set_iterator) :: last
 
       last = iter
       call last%next()
@@ -491,13 +533,13 @@
    ! =======================
    subroutine __MANGLE(erase_multi)(this, first, last)
       class(__set), intent(inout) :: this
-      type(__iterator), intent(inout) :: first
-      type(__iterator), intent(in) :: last
+      type(__set_iterator), intent(inout) :: first
+      type(__set_iterator), intent(in) :: last
 
       integer(kind=__gftl_size_kind) :: parent
       integer(kind=__gftl_size_kind) :: pos
 
-      type (__iterator) :: iter
+      type (__set_iterator) :: iter
 
       iter = first
 
@@ -537,7 +579,7 @@
    subroutine __MANGLE(remove)(this, value)
       class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
-      type(__iterator) :: it
+      type(__set_iterator) :: it
 
       it=this%find(value)
       if (it/=this%end()) call this%erase(it)
@@ -549,7 +591,7 @@
    ! =======================
    function __MANGLE(begin)(this) result(begin)
       class(__set), target, intent(in) :: this
-      type(__iterator) :: begin
+      type(__set_iterator) :: begin
 
       begin%reference=>this
       call begin%next()
@@ -563,7 +605,7 @@
    ! results to be called "end"
    function __MANGLE(end)(this) result(end_)
       class(__set), target, intent(in) :: this
-      type(__iterator) :: end_
+      type(__set_iterator) :: end_
 
       end_%reference=>this
 
@@ -573,9 +615,8 @@
    ! =======================
    !  lower_bound()
    ! =======================
-   ! NOTE: This implementation is O(N).   A Log(N) implementation should be produced.
    function __MANGLE(lower_bound)(this, val) result(lower_bound)
-      type(__iterator) :: lower_bound
+      type(__set_iterator) :: lower_bound
       class(__set), target, intent(in) :: this
       __T_declare_dummy__ :: val
 
@@ -589,14 +630,14 @@
    ! =======================
    ! NOTE: This implementation is O(N).   A Log(N) implementation should be produced.
    function __MANGLE(upper_bound)(this, val) result(upper_bound)
-      type(__iterator) :: upper_bound
+      type(__set_iterator) :: upper_bound
       class(__set), target, intent(in) :: this
       __T_declare_dummy__ :: val
 
       upper_bound = this%end()
-      call upper_bound%previous()
-      do while (.not. __T_LT__(this%get(), val))
-         call upper_bound%previous()
+      call upper_bound%prev()
+      do while (.not. __T_LT__(upper_bound%at(), val))
+         call upper_bound%prev()
       end do
 
    end function __MANGLE(upper_bound)
@@ -877,7 +918,7 @@
    !  value
    ! =======================
    function __MANGLE(value)(this) result(value)
-      class(__iterator), target, intent(in) :: this
+      class(__set_iterator), target, intent(in) :: this
       __T_declare_result__, pointer :: value
 
       if (this%current == __UNINITIALIZED) then
@@ -892,7 +933,7 @@
    !  next
    ! =======================
    subroutine __MANGLE(next)(this)
-      class(__iterator), intent(inout) :: this
+      class(__set_iterator), intent(inout) :: this
 
       call this%reference%advpos(this%current, 1)
 
@@ -902,7 +943,7 @@
    !  prev
    ! =======================
    subroutine __MANGLE(prev)(this)
-      class(__iterator), intent(inout) :: this
+      class(__set_iterator), intent(inout) :: this
 
       call this%reference%advpos(this%current,0)
 
@@ -912,7 +953,7 @@
    !  equalIters
    ! =======================
    logical function __MANGLE(equalIters)(this, other)
-      class(__iterator), intent(in) :: this, other
+      class(__set_iterator), intent(in) :: this, other
 
       __MANGLE(equalIters) = this%current == other%current
 
@@ -923,7 +964,7 @@
    ! =======================
    logical function __MANGLE(notEqualIters)(this, other)
       implicit none
-      class(__iterator), intent(in) :: this, other
+      class(__set_iterator), intent(in) :: this, other
 
       __MANGLE(notEqualIters) = .not. (this == other)
 
@@ -937,12 +978,12 @@
       class (__set), target, intent(out) :: this
       class (__set), target, intent(in) :: other
 
-      type (__iterator) :: iter
+      type (__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
 
       iter = other%begin()
       do while (iter /= other%end())
-         ptr => iter%value()
+         ptr => iter%at()
          call this%insert(ptr)
          call iter%next()
       end do
@@ -958,6 +999,7 @@
       __T_declare_dummy__, intent(in) :: x
       __T_declare_dummy__, intent(in) :: y
 
+      __UNUSED_DUMMY(this)
       value_compare = __T_LT__(x,y)
 
       return
@@ -967,49 +1009,73 @@
    ! Non type-bound procedures
 
    ! =======================
-   !  equalSets
+   !  equal
    ! =======================
-   logical function __MANGLE(equal)(lhs, rhs) result(equal)
+   logical function __MANGLE(equal)(lhs, rhs) result(eq)
       type(__set), target, intent(in) :: lhs
       type(__set), target, intent(in) :: rhs
 
-      type (__iterator) :: iter
+      type (__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
 
-      equal = .false. ! unless
+      eq = .false. ! unless
       if (lhs%size() /= rhs%size()) return
 
       iter = lhs%begin()
       do while (iter /= lhs%end())
-         ptr => iter%value()
+         ptr => iter%at()
          if (rhs%count(ptr) == 0) then
             return
          end if
          call iter%next()
       end do
 
-      equalSets = .true.
+      eq = .true.
 
    end function __MANGLE(equal)
 
 
    ! =======================
-   !  notEqualSets
+   !  not_equal
    ! =======================
-   logical function __MANGLE(not_equal)(lhs, rhs) result(not_equal)
+   logical function __MANGLE(not_equal)(lhs, rhs) result(ne)
       type(__set), intent(in) :: lhs
       type(__set), intent(in) :: rhs
 
-      not_equal = .not. (lhs == rhs)
+      ne = .not. (lhs == rhs)
 
    end function __MANGLE(not_equal)
 
 
+   ! Suboptimal initial implementation.
+   subroutine __MANGLE(merge)(this, other)
+      class(__set), intent(inout) :: this
+      type(__set), intent(inout) :: other
+
+      type(__set_iterator) :: iter
+      __T_declare_result__, pointer :: item
+
+      iter = other%begin()
+      do while (iter /= other%end())
+         item => iter%at()
+         if (this%count(item) == 0) then
+            call this%insert(item)
+            call iter%next()
+            call other%erase(iter)
+         end if
+      end do
+      
+   end subroutine __MANGLE(merge)
+
+#include "templates/set/iterator_procedures.inc"
+   !#include "templates/set/reverse_iterator_procedures.inc"
 
 #undef __UNINITIALIZED
 #undef __LEFT
 #undef __RIGHT
 
-#undef __guard
+! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
-
+! undef internal template parameters
+#undef __guard
+#include "parameters/T/undef_internal.inc"

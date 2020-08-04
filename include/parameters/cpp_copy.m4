@@ -15,6 +15,8 @@ $#,2,
 
 #define _T_out() _T_in()
 
+cpp_copy(name)
+
 cpp_copy(is_intrinsic)
 cpp_copy(string)
 

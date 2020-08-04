@@ -3,9 +3,9 @@
    type :: __set_iterator
       private
       type (__set), pointer :: reference => null()
-      integer(kind=__gftl_size_kind) :: current = UNINITIALIZED
+      integer(kind=__gftl_size_kind) :: current = __UNINITIALIZED
    contains
-      procedure :: value => __MANGLE(iter_value)
+      procedure :: at => __MANGLE(iter_at)
       procedure :: next => __MANGLE(iter_next)
       procedure :: prev => __MANGLE(iter_prev)
    end type __set_iterator

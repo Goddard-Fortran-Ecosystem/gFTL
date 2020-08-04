@@ -15,7 +15,7 @@
 
    contains
 
-      procedure :: previous => __MANGLE(iter_previous)
+      procedure :: prev => __MANGLE(iter_prev)
       procedure :: next => __MANGLE(iter_next)
 
 !!$      procedure :: back_inserter => __MANGLE(back_inserter)
@@ -23,7 +23,6 @@
 !!$      procedure :: inserter => __MANGLE(inserter)
 !!$      procedure :: make_move_iterator => __MANGLE(make_move_iterator)
 
-      procedure :: get => __MANGLE(iter_get)
       procedure :: __MANGLE(iter_at)
       procedure :: __MANGLE(iter_at_offset_size_kind)
       procedure :: __MANGLE(iter_at_offset_default)
@@ -106,6 +105,6 @@
    interface next
       module procedure __MANGLE(iter_next_f)
    end interface next
-   interface previous
-      module procedure __MANGLE(iter_previous_f)
-   end interface previous
+   interface prev
+      module procedure __MANGLE(iter_prev_f)
+   end interface prev

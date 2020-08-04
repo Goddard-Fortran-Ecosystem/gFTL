@@ -11,6 +11,8 @@ define(`cpp_undef',`
 #    undef __T()
 #endif
 
+cpp_undef(name)
+
 cpp_undef(is_intrinsic)
 cpp_undef(string)
 
