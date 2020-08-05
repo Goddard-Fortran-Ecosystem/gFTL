@@ -32,15 +32,16 @@
       generic :: at => __MANGLE(iter_at_offset_size_kind)
 #endif
 
+      ! Anolog of STL "+=" and "-=" operators
       procedure :: __MANGLE(iter_add_n_size_kind)
       procedure :: __MANGLE(iter_sub_n_size_kind)
       procedure :: __MANGLE(iter_add_n_default)
       procedure :: __MANGLE(iter_sub_n_default)
-      generic :: add_n => __MANGLE(iter_add_n_default)
-      generic :: sub_n => __MANGLE(iter_sub_n_default)
+      generic :: add => __MANGLE(iter_add_n_default)
+      generic :: sub => __MANGLE(iter_sub_n_default)
 #ifndef  __gftl_disable_index_kind_overload
-      generic :: add_n => __MANGLE(iter_add_n_size_kind)
-      generic :: sub_n => __MANGLE(iter_sub_n_size_kind)
+      generic :: add => __MANGLE(iter_add_n_size_kind)
+      generic :: sub => __MANGLE(iter_sub_n_size_kind)
 #endif
 
    end type __vector_iterator
@@ -70,6 +71,7 @@
    interface operator(==)
       module procedure __MANGLE(iter_equal)
    end interface operator(==)
+
    interface operator(/=)
       module procedure __MANGLE(iter_not_equal)
    end interface operator(/=)
@@ -77,12 +79,15 @@
    interface operator (<)
       module procedure __MANGLE(iter_less)
    end interface operator (<)
+
    interface operator (<=)
       module procedure __MANGLE(iter_less_equal)
    end interface operator (<=)
+
    interface operator (>)
       module procedure __MANGLE(iter_greater)
    end interface operator (>)
+
    interface operator (>=)
       module procedure __MANGLE(iter_greater_equal)
    end interface operator (>=)
@@ -93,18 +98,29 @@
 #endif
       module procedure __MANGLE(iter_advance_default)
    end interface advance
+
    interface begin
       module procedure __MANGLE(iter_begin)
    end interface begin
+
    interface distance
       module procedure __MANGLE(iter_distance)
    end interface distance
+
    interface end
       module procedure __MANGLE(iter_end)
    end interface end
+
    interface next
-      module procedure __MANGLE(iter_next_f)
+#ifndef  __gftl_disable_index_kind_overload
+      module procedure __MANGLE(iter_next_n_size_kind)
+#endif
+      module procedure __MANGLE(iter_next_n_default)
    end interface next
+
    interface prev
-      module procedure __MANGLE(iter_prev_f)
+#ifndef __gftl_disable_index_kind_overload
+      module procedure __MANGLE(iter_prev_n_size_kind)
+#endif
+      module procedure __MANGLE(iter_prev_n_default)
    end interface prev

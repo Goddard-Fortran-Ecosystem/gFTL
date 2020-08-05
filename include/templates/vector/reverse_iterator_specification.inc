@@ -35,15 +35,16 @@
 #endif
 
 
+      ! Anolog of STL "+=" and "-=" operators
       procedure :: __MANGLE(riter_add_n_size_kind)
       procedure :: __MANGLE(riter_sub_n_size_kind)
       procedure :: __MANGLE(riter_add_n_default)
       procedure :: __MANGLE(riter_sub_n_default)
-      generic :: add_n => __MANGLE(riter_add_n_default)
-      generic :: sub_n => __MANGLE(riter_sub_n_default)
+      generic :: add => __MANGLE(riter_add_n_default)
+      generic :: sub => __MANGLE(riter_sub_n_default)
 #ifndef  __gftl_disable_index_kind_overload
-      generic :: add_n => __MANGLE(riter_add_n_size_kind)
-      generic :: sub_n => __MANGLE(riter_sub_n_size_kind)
+      generic :: add => __MANGLE(riter_add_n_size_kind)
+      generic :: sub => __MANGLE(riter_sub_n_size_kind)
 #endif
 
    end type __vector_riterator
@@ -71,6 +72,7 @@
    interface operator(==)
       module procedure __MANGLE(riter_equal)
    end interface operator(==)
+
    interface operator(/=)
       module procedure __MANGLE(riter_not_equal)
    end interface operator(/=)
@@ -78,12 +80,15 @@
    interface operator (<)
       module procedure __MANGLE(riter_less)
    end interface operator (<)
+
    interface operator (<=)
       module procedure __MANGLE(riter_less_equal)
    end interface operator (<=)
+
    interface operator (>)
       module procedure __MANGLE(riter_greater)
    end interface operator (>)
+
    interface operator (>=)
       module procedure __MANGLE(riter_greater_equal)
    end interface operator (>=)
@@ -94,12 +99,21 @@
 #endif
       module procedure __MANGLE(riter_advance_default)
    end interface advance
+
    interface distance
       module procedure __MANGLE(riter_distance)
    end interface distance
+
    interface next
-      module procedure __MANGLE(riter_next_f)
+#ifndef  __gftl_disable_index_kind_overload
+      module procedure __MANGLE(riter_next_n_size_kind)
+#endif
+      module procedure __MANGLE(riter_next_n_default)
    end interface next
+
    interface prev
-      module procedure __MANGLE(riter_prev_f)
+#ifndef  __gftl_disable_index_kind_overload
+      module procedure __MANGLE(riter_prev_n_size_kind)
+#endif
+      module procedure __MANGLE(riter_prev_n_default)
    end interface prev

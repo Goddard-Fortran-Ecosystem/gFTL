@@ -22,7 +22,7 @@
    public :: distance
    public :: end
    public :: next
-   public :: previous
+   public :: prev
    public :: operator(+)
    public :: operator(-)
 

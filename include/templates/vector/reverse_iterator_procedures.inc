@@ -98,7 +98,7 @@
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_iter = a
-         call new_iter%add_n(n)
+         call new_iter%add(n)
 
       end function __MANGLE(riter_a_plus_n_size_kind)
 
@@ -108,7 +108,7 @@
          type(__vector_riterator), intent(in) :: a
 
          new_iter = a
-         call new_iter%add_n(n)
+         call new_iter%add(n)
 
       end function __MANGLE(riter_n_plus_a_size_kind)
 
@@ -118,7 +118,7 @@
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_iter = a
-         call new_iter%sub_n(n)
+         call new_iter%sub(n)
 
       end function __MANGLE(riter_a_minus_n_size_kind)
 
@@ -128,7 +128,7 @@
          integer, intent(in) :: n
 
          new_iter = a
-         call new_iter%add_n(n)
+         call new_iter%add(n)
 
       end function __MANGLE(riter_a_plus_n_default)
 
@@ -138,7 +138,7 @@
          type (__vector_riterator), intent(in) :: a
 
          new_iter = a
-         call new_iter%add_n(n)
+         call new_iter%add(n)
 
       end function __MANGLE(riter_n_plus_a_default)
 
@@ -148,7 +148,7 @@
          integer, intent(in) :: n
 
          new_iter = a
-         call new_iter%sub_n(n)
+         call new_iter%sub(n)
 
       end function __MANGLE(riter_a_minus_n_default)
 
@@ -216,7 +216,7 @@
          type(__vector_riterator), intent(inout) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
 
-         call it%add_n(n)
+         call it%add(n)
 
          return
       end subroutine __MANGLE(riter_advance_size_kind)
@@ -225,7 +225,7 @@
          type(__vector_riterator), intent(inout) :: it
          integer, intent(in) :: n
 
-         call it%add_n(n)
+         call it%add(n)
 
          return
       end subroutine __MANGLE(riter_advance_default)
@@ -241,23 +241,51 @@
       end function __MANGLE(riter_distance)
 
 
-      function __MANGLE(riter_next_f)(it) result(new_it)
+      function __MANGLE(riter_next_n_size_kind)(it, n) result(new_it)
          type(__vector_riterator) :: new_it
          type(__vector_riterator), intent(in) :: it
+         integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_it = it
-         call new_it%next()
-         
-      end function __MANGLE(riter_next_f)
+         call new_it%add(n)
 
-      function __MANGLE(riter_prev_f)(it) result(new_it)
+         return
+      end function __MANGLE(riter_next_n_size_kind)
+
+      function __MANGLE(riter_next_n_default)(it, n) result(new_it)
          type(__vector_riterator) :: new_it
          type(__vector_riterator), intent(in) :: it
+         integer, intent(in) :: n
 
          new_it = it
-         call new_it%prev()
-         
-      end function __MANGLE(riter_prev_f)
+         call new_it%add(n)
+
+         return
+      end function __MANGLE(riter_next_n_default)
+
+      function __MANGLE(riter_prev_n_size_kind)(it, n) result(new_it)
+         type(__vector_riterator) :: new_it
+         type(__vector_riterator), intent(in) :: it
+         integer(kind=__gftl_size_kind), intent(in) :: n
+
+         new_it = it
+         call new_it%sub(n)
+
+         return
+      end function __MANGLE(riter_prev_n_size_kind)
+
+      function __MANGLE(riter_prev_n_default)(it, n) result(new_it)
+         type(__vector_riterator) :: new_it
+         type(__vector_riterator), intent(in) :: it
+         integer, intent(in) :: n
+
+         new_it = it
+         call new_it%sub(n)
+
+         return
+      end function __MANGLE(riter_prev_n_default)
+
+
 
 
       
