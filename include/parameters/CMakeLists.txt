@@ -55,10 +55,14 @@ cpp_copy_parameter (T __vector_T T/copy_T_to_vector_T.inc)
 cpp_copy_parameter (__vector_T __T T/copy_vector_T_to_internal_T.inc)
 process_m4 (vector_T cpp_undef.m4 T/undef_vector_T.inc)
 
+
 cpp_copy_parameter (T __set_T T/copy_T_to_set_T.inc)
 cpp_copy_parameter (__set_T __T T/copy_set_T_to_internal_T.inc)
 cpp_copy_parameter (__set_T __vector_T T/copy_set_T_to_vector_T.inc)
 process_m4 (set_T cpp_undef.m4 T/undef_set_T.inc)
+
+# altset
+cpp_copy_parameter (__set_T __vector_T T/copy_set_T_to_vector_T.inc)
 
 add_subdirectory(tests)
 

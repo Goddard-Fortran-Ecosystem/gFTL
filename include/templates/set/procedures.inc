@@ -7,69 +7,35 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-#define __vector_T integer
-#define __vector_T_name "integer" 
-#define __vector_T_KINDLEN(context) (kind=__gftl_size_kind)
-#define __vector_T_kindlen_string "(kind=__gftl_size_kind)"
-
-#define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(I_)
-#define __vector __IDENTITY(__set_guard)__IDENTITY(I_Vector)
-#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(I_VectorIterator)
-#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(I_VectorRIterator)
-
-#include "templates/vector/procedures.inc"
-
-#undef __vector
-#undef __vector_iterator
-#undef __vector_riterator
-#undef __vector_guard
-#include "parameters/T/undef_vector_T.inc"
-
-#include "parameters/T/copy_set_T_to_vector_T.inc"
-#define __vector_guard __IDENTITY(__set_guard)__IDENTITY(T_)
-#define __vector __IDENTITY(__set_guard)__IDENTITY(T_Vector)
-#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(T_VectorIterator)
-#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(T_VectorRIterator)
-
-#include "templates/vector/procedures.inc"
-
-#undef __vector
-#undef __vector_iterator
-#undef __vector_riterator
-#undef __vector_guard
-#include "parameters/T/undef_vector_T.inc"
-
-
 
 #define __guard __set_guard
 #include "parameters/T/copy_set_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
-#define __UNINITIALIZED int(-1,kind=__gftl_size_kind)
-#define __LEFT 0
-#define __RIGHT 1
 
 #include "parameters/T/define_derived_macros.inc"
 #define __guard __set_guard
 
+#define __LEFT 0
+#define __RIGHT 1
+
+#define __set_node __MANGLE(Node)
+
+#include "templates/set/node_procedures.inc"
 
    ! Constructors
    function __MANGLE(new_set_empty)() result(s)
       type(__set) :: s
-      s%items = __MANGLE(T_Vector)()
-      s%parents = __MANGLE(I_Vector)()
-      s%lefts = __MANGLE(I_Vector)()
-      s%rights = __MANGLE(I_Vector)()
-      s%heights = __MANGLE(I_Vector)()
+
       s%tsize = 0
-      s%root = __UNINITIALIZED
-      s%next_free = 0
+      s%root => null()
    end function __MANGLE(new_set_empty)
 
 
    function __MANGLE(new_set_copy)(x) result(s)
       type(__set) :: s
-      type(__set) :: x
+      type(__set), intent(in) :: x
+
       s = x
    end function __MANGLE(new_set_copy)
 
@@ -88,120 +54,13 @@
    end function __MANGLE(new_set_initializer_list)
 #endif
 
-
-   ! Type-bound procedures
-
    ! =======================
-   !  exists - a helper function
-   ! =======================
-   logical function __MANGLE(exists)(pos) result(exists)
-      integer(kind=__gftl_size_kind), intent(in) :: pos
-      exists = (pos /= __UNINITIALIZED)
-   end function __MANGLE(exists)
-
-
-   ! =======================
-   !  opposite - a helper function
-   ! =======================
-   integer function __MANGLE(opposite)(dir) result(opposite)
-      integer, intent(in) :: dir
-
-      opposite = (1 - dir)
-
-   end function __MANGLE(opposite)
-
-
-   ! =======================
-   !  child
-   ! =======================
-   function __MANGLE(get_child)(this, pos, dir) result(child)
-      integer(kind=__gftl_size_kind) :: child
-      class(__set), intent(in) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: pos
-      integer, intent(in) :: dir
-
-      select case (dir)
-      case (__LEFT)
-         child = this%lefts%at(pos)
-      case (__RIGHT)
-         child = this%rights%at(pos)
-      end select
-
-   end function __MANGLE(get_child)
-
-   ! =======================
-   !  set_child
-   ! =======================
-   subroutine __MANGLE(set_child)(this, pos, dir, child)
-      class(__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: pos
-      integer, intent(in) :: dir
-      integer(kind=__gftl_size_kind), intent(in) :: child
-
-      select case (dir)
-      case (__LEFT)
-         if (child == 0) then
-         end if
-         call this%lefts%set(pos, child)
-      case (__RIGHT)
-         call this%rights%set(pos, child)
-      end select
-
-   end subroutine __MANGLE(set_child)
-
-   ! =======================
-   !  set_parent_child
-   ! =======================
-   subroutine __MANGLE(set_parent_child)(this, parent, pos, other)
-      class(__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: parent
-      integer(kind=__gftl_size_kind), intent(in) :: pos
-      integer(kind=__gftl_size_kind), intent(in) :: other
-
-      if (this%lefts%at(parent) == pos) then
-         call this%set_child(parent, __LEFT, other)
-      else
-         call this%set_child(parent, __RIGHT, other)
-      end if
-
-   end subroutine __MANGLE(set_parent_child)
-
-   ! =======================
-   !  update_height
-   ! =======================
-   subroutine __MANGLE(update_height)(this, pos) 
-      class (__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: pos
-
-      integer(kind=__gftl_size_kind) :: idx
-      integer(kind=__gftl_size_kind) :: new_height
-
-      new_height = 0
-
-      idx = this%lefts%at(pos)
-      if (this%exists(idx)) then
-         new_height = this%heights%at(idx)
-      end if
-
-      idx = this%rights%at(pos)
-      if (this%exists(idx)) then
-         new_height = max(new_height, this%heights%at(idx))
-      end if
-
-      new_height = new_height + 1
-      call this%heights%set(pos, new_height)
-
-   end subroutine __MANGLE(update_height)
-
-   !=========================================================================
-
-   ! =======================
-   !  empty
+   !  empty()
    ! =======================
    logical function __MANGLE(empty)(this) result(empty)
       class(__set), intent(in) :: this
 
-      empty = (.not. this%exists(this%root))
+      empty = .not. associated(this%root)
 
    end function __MANGLE(empty)
 
@@ -217,19 +76,6 @@
    end function __MANGLE(size)
 
    ! =======================
-   !  max_size()
-   ! =======================
-   pure function __MANGLE(max_size)() result(res)
-      integer(kind=__gftl_size_kind) :: res
-
-      integer(kind=__gftl_size_kind) :: index
-
-      res = huge(index)
-
-      return
-   end function __MANGLE(max_size)
-
-   ! =======================
    !  find
    ! =======================
    function __MANGLE(find)(this, value) result(find)
@@ -237,18 +83,16 @@
       __T_declare_dummy__, intent(in) :: value
       type(__set_iterator) :: find
 
-      find%reference => this
-      associate (c => find%current)
-        c = this%find_index(value, .false.)
+      find%tree => this
+      find%node => this%find_node(value, .false.)
 
-        if (this%exists(c)) then
-           if (.not. __MANGLE(order_eq)(this%items%at(c),value)) then
-              c = __UNINITIALIZED
-           end if
-        end if
+      if (associated(find%node)) then
+         if (.not. __MANGLE(order_eq)(find%node%value,value)) then
+            find%node => null()
+         end if
+      end if
 
-      end associate
-
+      return
    end function __MANGLE(find)
 
 
@@ -256,8 +100,7 @@
       __T_declare_dummy__, intent(in) :: x
       __T_declare_dummy__, intent(in) :: y
 
-      equal = .not. __MANGLE(lessThan)(x,y) .and.                            &
-           &           .not. __MANGLE(lessThan)(y,x)
+      equal = .not. __MANGLE(lessThan)(x,y) .and. .not. __MANGLE(lessThan)(y,x)
    end function __MANGLE(order_eq)
 
 
@@ -273,10 +116,10 @@
 
       i = this%find(value)
 
-      if (.not. this%exists(i%current)) then
-         count = 0
-      else 
+      if (associated(i%node)) then
          count = 1
+      else 
+         count = 0
       end if
 
    end function __MANGLE(count)
@@ -287,55 +130,38 @@
    subroutine __MANGLE(clear)(this)
       class(__set), intent(inout) :: this
 
-      call this%items%clear()
-      call this%parents%clear()
-      call this%lefts%clear()
-      call this%rights%clear()
-      call this%heights%clear()
-
-      this%root = __UNINITIALIZED
+      if (associated(this%root)) deallocate(this%root)
       this%tsize=0
-
+      return
    end subroutine __MANGLE(clear)
 
    ! =======================
-   !  insert
+   !  insert_single()
    ! =======================
    subroutine __MANGLE(insert_single)(this, value, unused, isNew, ref)
       class(__set), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: isNew
+      type(__set_node), pointer, optional, intent(out) :: ref
+      type(__set_node), pointer :: new
+      type(__set_node), pointer :: parent
 
-      integer(kind=__gftl_size_kind), optional, intent(out) :: ref
+      type(__set_node), pointer :: r
 
-      integer(kind=__gftl_size_kind) :: new
-      integer(kind=__gftl_size_kind) :: parent
-      logical :: eq
-
-#if (defined(__vector_debug) && defined(_DEBUG___))
-      print*,__FILE__,__LINE__
-#endif
       if (present(unused)) print*,shape(unused)
 
-      if (this%exists(this%root)) then
-#ifdef _multi
-         parent = this%find_index(value, .true.)
+      if (associated(this%root)) then
+#ifdef __set_multi
+         parent => this%find_node(value, .true.)
 #else
-         parent = this%find_index(value, .false.)
-
-
-         if (this%exists(parent)) then
-            eq = __MANGLE(order_eq)(this%items%at(parent), value)
-         else
-            eq = .false.
-         end if
-
-         if (eq) then
+         parent => this%find_node(value, .false.)
+         if (__MANGLE(order_eq)(parent%value, value)) then
             if (present(ref)) then
-               ref = parent
+               ref => parent
             else
-               call this%items%set(parent, value)
+               __T_FREE__(parent%value)
+               __T_COPY__(parent%value, value)
             endif
             if (present(isNew)) then
                isNew = .false.
@@ -347,77 +173,47 @@
             isNew = .true.
          end if
 
-#if (defined(__vector_debug) && defined(_DEBUG___))
-         print*,__FILE__,__LINE__, this%next_free
-#endif
-         if (this%next_free == 0) then
-#if (defined(__vector_debug) && defined(_DEBUG___))
-            print*,__FILE__,__LINE__
-#endif
-            call this%items%push_back(value)
-            new = this%items%size()
-            call this%heights%push_back(int(1,kind=__gftl_size_kind))
-            call this%lefts%push_back(__UNINITIALIZED)
-            call this%rights%push_back(__UNINITIALIZED)
-            call this%parents%push_back(parent)
-         else
-            new = this%next_free
-            this%next_free = this%parents%at(new)
-            call this%items%set(new, value)
-            call this%heights%set(new, int(1,kind=__gftl_size_kind))
-            call this%lefts%set(new, __UNINITIALIZED)
-            call this%rights%set(new, __UNINITIALIZED)
-            call this%parents%set(new, parent)
-         end if
-
-         if (present(ref)) ref=new
-
-#if (defined(__vector_debug) && defined(_DEBUG___))
-         print*,__FILE__,__LINE__
-#endif
-         if (__MANGLE(lessThan)(value, this%items%at(parent))) then
-            call this%lefts%set(parent, new)
-         else
-            call this%rights%set(parent,new)
-         end if
-
+         allocate(new)
+         if (present(ref)) ref => new
+         new%parent => parent
+         __T_COPY__(new%value, value)
+         call parent%set_child(merge(0, 1,                                        &
+              &       __MANGLE(lessThan)(value, parent%value)),new)
          call this%rebalance(parent, .true.)
-
-      else ! new root
-
-#if (defined(__vector_debug) && defined(_DEBUG___))
-         print*,__FILE__,__LINE__, this%next_free
-#endif
-         if (this%next_free == 0) then
-            call this%items%push_back(value)
-            new = this%items%size()
-            call this%heights%push_back(int(1,kind=__gftl_size_kind))
-            call this%lefts%push_back(__UNINITIALIZED)
-            call this%rights%push_back(__UNINITIALIZED)
-            call this%parents%push_back(__UNINITIALIZED)
-         else
-            new = this%next_free
-            this%next_free = this%parents%at(new)
-            call this%items%set(new, value)
-            call this%heights%set(new, int(1,kind=__gftl_size_kind))
-            call this%lefts%set(new, __UNINITIALIZED)
-            call this%rights%set(new, __UNINITIALIZED)
-            call this%parents%set(new, __UNINITIALIZED)
-         end if
-         this%root = new
-
-         if (present(ref)) ref = this%root
+      else
+         allocate(this%root)
+         if (present(ref)) ref => this%root
+         r => this%root
+         __T_COPY__(r%value, value)
          if (present(isNew)) then
             isNew = .true.
          end if
-
       endif
-
       this%tsize = this%tsize + 1
-
+      return
    end subroutine __MANGLE(insert_single)
 
 
+#ifdef __T_listable__
+   ! =======================
+   !  insert_initializer_list()
+   ! =======================
+   subroutine __MANGLE(insert_initializer_list)(this, values)
+      class(__set), intent(inout) :: this
+      __T_declare_dummy__, intent(in) :: values(:)
+      integer :: i
+
+      do i = 1, size(values)
+         call this%insert(values(i))
+      end do
+
+   end subroutine __MANGLE(insert_initializer_list)
+#endif
+
+   
+   ! =======================
+   !  insert_range()
+   ! =======================
    subroutine __MANGLE(insert_range)(this, first, last)
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(in) :: first
@@ -428,25 +224,9 @@
       iter = first
       do while (iter /= last)
          call this%insert(iter%at())
-         call iter%next()
       end do
-      
+
    end subroutine __MANGLE(insert_range)
-
-
-#ifdef __T_listable__
-   subroutine __MANGLE(insert_initializer_list)(this, il)
-      class(__set), intent(inout) :: this
-      __T_declare_component__, intent(in) :: il(:)
-
-      integer :: iter
-
-      do iter = 1, size(il)
-         call this%insert(il(iter))
-      end do
-      
-   end subroutine __MANGLE(insert_initializer_list)
-#endif
 
    logical function __MANGLE(lessThan)(x, y) result(less)
       __T_declare_dummy__, intent(in) :: x
@@ -478,29 +258,23 @@
 #  if !defined(__compare_type)
 #    define __compare_declare_dummy __T_declare_dummy__
 #    define __compare_declare_component __T_declare_component__
-#    define __COMPARE_COPY__(x,y) __T_COPY__(x,y)
-#    define __COMPARE_FREE__(x) __T_FREE__(x)
+#    define __COMPARE_COPY(x,y) __T_COPY__(x,y)
+#    define __COMPARE_FREE(x) __T_FREE__(x)
 #  endif
 
       logical function defaultLessThan(x, y) result(less)
          __compare_declare_dummy, intent(in) :: x
          __compare_declare_dummy, intent(in) :: y
 
-#    define __xx x
-#    define __yy y
-
-         associate( wx => transfer(__xx,[1]),                                &
-              &                 wy => transfer(__yy,[1]) )
+         associate( wx => transfer(x,[1]), wy => transfer(y,[1]) )
            less = dictionaryLessThan1d(wx, wy)
          end associate
 
-#  undef __xx
-#  undef __yy
 #  if !defined(__compare_type)
 #    undef __compare_declare_dummy
 #    undef __compare_declare_component
-#    undef __COMPARE_COPY__
-#    undef __COMPARE_FREE__
+#    undef __COMPARE_COPY
+#    undef __COMPARE_FREE
 #  endif
       end function defaultLessThan
 #endif
@@ -535,38 +309,29 @@
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(inout) :: first
       type(__set_iterator), intent(in) :: last
-
-      integer(kind=__gftl_size_kind) :: parent
-      integer(kind=__gftl_size_kind) :: pos
+      type(__set_node), pointer :: pos, parent
 
       type (__set_iterator) :: iter
 
       iter = first
-
       do while (iter /= last)
-
-         pos = iter%current
+         pos => iter%node
          call iter%next()
-
-         if (this%exists(this%rights%at(pos))) then
+         if (associated(pos%right)) then
             call this%erase_nonleaf(pos, 1)
-         else if (this%exists(this%lefts%at(pos))) then
+         else if (associated(pos%left)) then
             call this%erase_nonleaf(pos, 0)
          else
-            parent = this%parents%at(pos)
-            if (this%exists(parent)) then
-               call this%set_parent_child(parent, pos, __UNINITIALIZED)
+            parent => pos%parent
+            if (associated(parent)) then
+               call parent%set_child(parent%which_child(pos), null())
                call this%rebalance(parent, .false.)
             else
-               this%root = __UNINITIALIZED
+               this%root => null()
             endif
-
-            ! declare this space available
-            call this%parents%set(pos, this%next_free)
-            this%next_free = pos
-
+            deallocate(pos)
          endif
-         this%tsize = this%tsize - 1
+         this%tsize=this%tsize-1
       end do
       first = last
 
@@ -583,7 +348,7 @@
 
       it=this%find(value)
       if (it/=this%end()) call this%erase(it)
-
+      return
    end subroutine __MANGLE(remove)
 
    ! =======================
@@ -593,169 +358,153 @@
       class(__set), target, intent(in) :: this
       type(__set_iterator) :: begin
 
-      begin%reference=>this
+      begin%tree => this
       call begin%next()
-
+      return
    end function __MANGLE(begin)
 
    ! =======================
-   !  end()
+   !  end
    ! =======================
-   ! Note - some early versions of gfortran did not like function
-   ! results to be called "end"
    function __MANGLE(end)(this) result(end_)
       class(__set), target, intent(in) :: this
       type(__set_iterator) :: end_
 
-      end_%reference=>this
-
+      end_%tree => this
+      return
    end function __MANGLE(end)
 
-
    ! =======================
-   !  lower_bound()
+   !  lower_bound
    ! =======================
-   function __MANGLE(lower_bound)(this, val) result(lower_bound)
-      type(__set_iterator) :: lower_bound
+   function __MANGLE(lower_bound)(this, value) result(lb)
+      type(__set_iterator) :: lb
       class(__set), target, intent(in) :: this
-      __T_declare_dummy__ :: val
+      __T_declare_dummy__, intent(in) :: value
+      __T_declare_result__, pointer :: p
 
-      lower_bound%reference => this
-      lower_bound%current = this%find_index(val, .false.)
+      lb = this%begin()
+      do while (lb /= this%end())
+         p => lb%at()
+         if (.not. __T_LT__(p, value)) exit
+      end do
 
+      return
    end function __MANGLE(lower_bound)
 
    ! =======================
-   !  upper_bound()
+   !  upper_bound
    ! =======================
-   ! NOTE: This implementation is O(N).   A Log(N) implementation should be produced.
-   function __MANGLE(upper_bound)(this, val) result(upper_bound)
-      type(__set_iterator) :: upper_bound
+   function __MANGLE(upper_bound)(this, value) result(ub)
+      type(__set_iterator) :: ub
       class(__set), target, intent(in) :: this
-      __T_declare_dummy__ :: val
+      __T_declare_dummy__, intent(in) :: value
 
-      upper_bound = this%end()
-      call upper_bound%prev()
-      do while (.not. __T_LT__(upper_bound%at(), val))
-         call upper_bound%prev()
+      __T_declare_result__, pointer :: p
+      
+      ub = this%end()
+      do while (ub /= this%begin())
+         call ub%prev()
+         p => ub%at()
+         if (.not. __T_LT__(value, p)) exit
       end do
-
+            
+      return
    end function __MANGLE(upper_bound)
 
 
+!!$   ! =======================
+!!$   !  write_formatted
+!!$   ! =======================
+!!$   recursive subroutine __MANGLE(write_formatted)(this, pos)
+!!$      class(__set), intent(in) :: this
+!!$      type(__set_node), pointer, intent(in), optional :: pos
+!!$
+!!$      if (present(pos)) then
+!!$         if (associated(pos%left)) call this%write_formatted(pos%left)
+!!$         write(*, *)pos%value, loc(pos), loc(pos%parent), loc(pos%left),  &
+!!$              &       loc(pos%right), pos%height
+!!$         if (associated(pos%right)) call this%write_formatted(pos%right)
+!!$      else
+!!$         write(*, *)'size=',this%getsize()
+!!$         write(*, *)'root=',loc(this%root)
+!!$         call this%write_formatted(this%root)
+!!$      endif
+!!$      return
+!!$   end subroutine __MANGLE(write_formatted)
+!!$
    ! =======================
-   !  dump
+   !  find_node
    ! =======================
-   recursive subroutine __MANGLE(dump)(this)
-      class(__set), intent(in) :: this
-
-      integer(kind=__gftl_size_kind) :: i
-
-#ifdef _DEBUG
-      write(*,'(2x,6(1x,a3,2x))') ' # ','val','par','lft','rht',' at '
-#else
-      write(*,'(2x,5(1x,a3,2x))') ' # ', 'par', 'lft', 'rht', ' at '
-#endif
-
-      do i = 1, this%items%size()
-#ifdef _DEBUG
-         write(*,'(6(i5,1x))') i,                                              &
-              &             this%items%at(i),                                           &
-              &             this%parents%at(i),                                         &
-              &             this%lefts%at(i), this%rights%at(i),                        &
-              &             this%heights%at(i)
-#else
-         write(*,'(5(i5,1x))') i,                                              &
-              &             this%parents%at(i),                                         &
-              &             this%lefts%at(i), this%rights%at(i),                        &
-              &             this%heights%at(i)
-#endif
-      end do
-
-   end subroutine __MANGLE(dump)
-
-   ! =======================
-   !  find_index
-   ! =======================
-   function __MANGLE(find_index)(this, value, last) result(idx)
-      integer(kind=__gftl_size_kind) :: idx
+   function __MANGLE(find_node)(this, value, last) result(find_node)
+      type(__set_node), pointer :: find_node
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
+#ifndef _pointer
+!!$      target :: value
+#endif
       logical, intent(in) :: last
+      integer :: side
 
-      integer (kind=__gftl_size_kind) :: child
+#ifdef _pointer
+      __T_declare_result__, pointer :: p
+#endif
 
-      idx = this%root
-      if (this%exists(idx)) then
+      find_node => this%root
+      if (associated(find_node)) then
          do
-            if (.not. last .and. (__MANGLE(order_eq)(this%items%at(idx),value))) return
-
-            child = merge(this%lefts%at(idx), this%rights%at(idx), &
-                 &         __MANGLE(lessThan)(value, this%items%at(idx)))
-
-            if (.not. this%exists(child)) return
-            idx = child
-
+            if (.not. last .and. (                                           &
+                 &      (__MANGLE(order_eq)(find_node%value,value)))) return
+#ifdef _pointer
+            p => value
+            side=merge(0, 1, __MANGLE(lessThan)(p, find_node%value))
+#else
+            side=merge(0, 1, __MANGLE(lessThan)(value, find_node%value))
+#endif
+            if (.not.associated(find_node%child(side))) return
+            find_node => find_node%child(side)
          end do
       end if
 
-   end function __MANGLE(find_index)
+      return
+   end function __MANGLE(find_node)
 
    ! =======================
    !  rebalance
    ! =======================
    subroutine __MANGLE(rebalance)(this, pos, once)
       class(__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: pos
+      type(__set_node), pointer, intent(in) :: pos
       logical, intent(in) :: once
-
-      integer(kind=__gftl_size_kind) :: curr, child
-
+      type(__set_node), pointer :: curr, child
       integer :: hl, hr, chl, chr, side, childside
       logical :: unbalanced
 
-      integer(kind=__gftl_size_kind), pointer :: pLeft, pRight
-
-      curr = pos
-
-      do while (this%exists(curr))
-         hl = 0
-         hr = 0
-         pLeft => this%lefts%at(curr)
-         if (this%exists(pLeft)) hl = this%heights%at(pLeft)
-         pRight => this%rights%at(curr)
-         if (this%exists(pRight)) hr = this%heights%at(pRight)
-
-         unbalanced = (abs(hl-hr) > 1)
-
+      curr => pos
+      do while (associated(curr))
+         hl=0
+         hr=0
+         if (associated(curr%left)) hl=curr%left%height
+         if (associated(curr%right)) hr=curr%right%height
+         unbalanced=abs(hl-hr)>1
          if (unbalanced) then
-            side = merge(__LEFT, __RIGHT, hl>hr)
-            child = this%get_child(curr, side)
-
+            side=merge(0, 1, hl>hr)
+            child => curr%child(side)
             chl=0
             chr=0
-
-            pLeft => this%lefts%at(child)
-            if (this%exists(pLeft)) chl = this%heights%at(pLeft)
-            pRight => this%rights%at(child)
-            if (this%exists(pRight)) chr = this%heights%at(pRight)
-
-            if (chr /= chl) then
+            if (associated(child%left)) chl=child%left%height
+            if (associated(child%right)) chr=child%right%height
+            if (chr/=chl) then
                childside=merge(0, 1, chl>chr)
-               if (side/=childside)                                                &
-                    &            call this%rot(child,__MANGLE(opposite)(childside))
-               call this%rot(curr, __MANGLE(opposite)(side))
+               if (side/=childside) call this%rot(child, 1-childside)
+               call this%rot(curr, 1-side)
             endif
          endif
-         call this%update_height(curr)
-
-
-         if (unbalanced.and.once) exit
-
-         curr = this%parents%at(curr)
-
+         call curr%update_height()
+         if (unbalanced.and.once) return
+         curr => curr%parent
       end do
-
+      return
    end subroutine __MANGLE(rebalance)
 
    ! =======================
@@ -763,53 +512,39 @@
    ! =======================
    subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(inout) :: pos
+      type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: side
+      type(__set_node), pointer :: parent, other, child0, child1
+      type(__set_node), pointer :: otherchild, otherparent
 
-      integer(kind=__gftl_size_kind) :: parent, other, child0, child1,           &
-           &      otherchild, otherparent
-
-      parent = this%parents%at(pos)
-      other = pos
+      parent => pos%parent
+      other => pos
       call this%advpos(other, side)
-
-      if (side == 0) then
-         child0 = this%lefts%at(pos)
-         child1 = this%rights%at(pos)
-         otherchild = this%lefts%at(other)
+      child0 => pos%child(side)
+      child1 => pos%child(1-side)
+      otherchild => other%child(side)
+      otherparent => other%parent
+      other%parent => parent
+      if (associated(parent)) then
+         call parent%set_child(parent%which_child(pos), other)
       else
-         child0 = this%rights%at(pos)
-         child1 = this%lefts%at(pos)
-         otherchild = this%rights%at(other)
-      end if
-      otherparent = this%parents%at(other)
-      call this%parents%set(other, parent)
-
-      if (this%exists(parent)) then
-         call this%set_parent_child(parent, pos, other)
-      else
-         this%root = other
+         this%root => other
       endif
-      call this%set_child(other, 1-side, child1)
-      if (this%exists(child1)) call this%parents%set(child1, other)
-      if (other == child0) then
+      call other%set_child(1-side, child1)
+      if (associated(child1)) child1%parent => other
+      if (associated(other, target=child0)) then
          call this%rebalance(other, .false.)
       else
-         call this%set_child(other, side, child0)
-         call this%parents%set(child0, other)
-         call this%set_child(otherparent, 1-side, otherchild)
-         if (this%exists(otherchild)) then
-            call this%parents%set(otherchild, otherparent)
-         end if
+         call other%set_child(side, child0)
+         child0%parent => other
+         call otherparent%set_child(1-side, otherchild)
+         if (associated(otherchild)) otherchild%parent => otherparent
          call this%rebalance(otherparent, .false.)
       endif
-
-      ! declare this space available
-      call this%parents%set(pos, this%next_free)
-      this%next_free = pos
-
-      pos = __UNINITIALIZED
-
+      pos%left => null()
+      pos%right => null()
+      deallocate(pos)
+      return
    end subroutine __MANGLE(erase_nonleaf)
 
    ! =======================
@@ -817,182 +552,61 @@
    ! =======================
    subroutine __MANGLE(advpos)(this, pos, dir)
       class(__set), target, intent(in) :: this
-      integer(kind=__gftl_size_kind), intent(inout) :: pos
+      type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: dir   ! dir=1 forward, dir=0 backward
+      type(__set_node), pointer :: prev
 
-      integer(kind=__gftl_size_kind) :: prev
-      integer(kind=__gftl_size_kind) :: child
-
-      if (.not. this%exists(pos)) then
-         if (.not. this%exists(this%root)) then
-            return
-         else
-            pos = this%root
-            do 
-               child = this%get_child(pos, 1-dir)
-               if (this%exists(child)) then
-                  pos = child
-               else
-                  exit
-               end if
-            end do
-         end if
+      if (.not.associated(pos)) then
+         if (.not.associated(this%root)) return
+         pos => this%root
+         do while (associated(pos%child(1-dir)))
+            pos => pos%child(1-dir)
+         end do
+      else if (associated(pos%child(dir))) then
+         pos => pos%child(dir)
+         do while (associated(pos%child(1-dir)))
+            pos => pos%child(1-dir)
+         end do
       else
-         child = this%get_child(pos, dir)
-         if (this%exists(child)) then
-            pos = child
-            do 
-               child = this%get_child(pos, __MANGLE(opposite)(dir))
-               if (this%exists(child)) then
-                  pos = child
-               else
-                  exit
-               end if
-            end do
-         else
-            prev = pos
-            pos = this%parents%at(pos)
-
-            do while (this%exists(pos))
-               child = this%get_child(pos, dir)
-               if (child /= prev) exit
-               prev = pos
-               pos = this%parents%at(pos)
-            end do
-         endif
-      end if
-
+         prev => pos
+         pos => pos%parent
+         do while (associated(pos))
+            if (.not.associated(pos%child(dir), prev)) exit
+            prev => pos
+            pos => pos%parent
+         end do
+      endif
+      return
    end subroutine __MANGLE(advpos)
 
    ! =======================
-   !  rot - swap pos with one of its children
+   !  rot
    ! =======================
    subroutine __MANGLE(rot)(this, pos, dir)
       class(__set), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: pos
+      type(__set_node), pointer, intent(in) :: pos
       integer, intent(in) :: dir
+      type(__set_node), pointer :: parent, child, grandchild => null()
 
-      integer(kind=__gftl_size_kind) :: parent, child, grandchild
-
-      parent = this%parents%at(pos)
-      child = this%get_child(pos, __MANGLE(opposite)(dir))
-
-      if (this%exists(child)) then
-         grandchild = this%get_child(child, dir)
+      parent => pos%parent
+      child => pos%child(1-dir)
+      if (associated(child)) grandchild => child%child(dir)
+      if (associated(parent)) then
+         call parent%set_child(parent%which_child(pos), child)
       else
-         grandchild = __UNINITIALIZED
-      end if
-
-      if (this%exists(parent)) then
-         call this%set_parent_child(parent, pos, child)
-      else ! pos must be root; make the child root instead
-         this%root = child
+         this%root => child
       endif
-
-      ! 'child' is now my parent
-      call this%parents%set(pos, child)
-
-      ! 'grandchild' becomes now my child
-      call this%set_child(pos, __MANGLE(opposite)(dir), grandchild)
-
-      ! fix up child
-      if (this%exists(child)) then
-         call this%parents%set(child, parent)
-         call this%set_child(child, dir, pos)
-         ! and fix up grandchild
-         if (this%exists(grandchild)) then
-            call this%parents%set(grandchild, pos)
-         end if
-      end if
-
-      call this%update_height(pos)
-
-      if (this%exists(child)) call this%update_height(child)
-
-   end subroutine __MANGLE(rot)
-
-   !=========================================================================
-
-
-   ! =======================
-   !  value
-   ! =======================
-   function __MANGLE(value)(this) result(value)
-      class(__set_iterator), target, intent(in) :: this
-      __T_declare_result__, pointer :: value
-
-      if (this%current == __UNINITIALIZED) then
-         value => null()
-      else
-         value=>this%reference%items%at(this%current)
-      end if
-
-   end function __MANGLE(value)
-
-   ! =======================
-   !  next
-   ! =======================
-   subroutine __MANGLE(next)(this)
-      class(__set_iterator), intent(inout) :: this
-
-      call this%reference%advpos(this%current, 1)
-
-   end subroutine __MANGLE(next)
-
-   ! =======================
-   !  prev
-   ! =======================
-   subroutine __MANGLE(prev)(this)
-      class(__set_iterator), intent(inout) :: this
-
-      call this%reference%advpos(this%current,0)
-
-   end subroutine __MANGLE(prev)
-
-   ! =======================
-   !  equalIters
-   ! =======================
-   logical function __MANGLE(equalIters)(this, other)
-      class(__set_iterator), intent(in) :: this, other
-
-      __MANGLE(equalIters) = this%current == other%current
-
-   end function __MANGLE(equalIters)
-
-   ! =======================
-   !  nequal
-   ! =======================
-   logical function __MANGLE(notEqualIters)(this, other)
-      implicit none
-      class(__set_iterator), intent(in) :: this, other
-
-      __MANGLE(notEqualIters) = .not. (this == other)
-
-   end function __MANGLE(notEqualIters)
-
-
-   ! =======================
-   !   deepCopy (assignment)
-   ! =======================
-   subroutine __MANGLE(deepCopy)(this, other)
-      class (__set), target, intent(out) :: this
-      class (__set), target, intent(in) :: other
-
-      type (__set_iterator) :: iter
-      __T_declare_result__, pointer :: ptr
-
-      iter = other%begin()
-      do while (iter /= other%end())
-         ptr => iter%at()
-         call this%insert(ptr)
-         call iter%next()
-      end do
-
-      this%tsize = other%tsize
-
+      pos%parent => child
+      call pos%set_child(1-dir, grandchild)
+      if (associated(child)) then
+         child%parent => parent
+         call child%set_child(dir, pos)
+         if (associated(grandchild)) grandchild%parent => pos
+      endif
+      call pos%update_height()
+      if (associated(child)) call child%update_height()
       return
-   end subroutine __MANGLE(deepCopy)
-
+   end subroutine __MANGLE(rot)
 
    logical function __MANGLE(value_compare)(this, x, y) result(value_compare)
       class(__set), intent(in) :: this
@@ -1006,76 +620,104 @@
    end function __MANGLE(value_compare)
 
 
-   ! Non type-bound procedures
-
    ! =======================
    !  equal
    ! =======================
-   logical function __MANGLE(equal)(lhs, rhs) result(eq)
-      type(__set), target, intent(in) :: lhs
-      type(__set), target, intent(in) :: rhs
+   logical function __MANGLE(equal)(a, b) result(equal)
+      type(__set), target, intent(in) :: a
+      type(__set), target, intent(in) :: b
 
       type (__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
 
-      eq = .false. ! unless
-      if (lhs%size() /= rhs%size()) return
+      equal = .false. ! unless
+#if  !defined(__INTEL_COMPILER) | !(defined(_string) & !defined(_string_deferred))
+      if (a%size() /= b%size()) return
 
-      iter = lhs%begin()
-      do while (iter /= lhs%end())
+      iter = a%begin()
+      do while (iter /= a%end())
          ptr => iter%at()
-         if (rhs%count(ptr) == 0) then
+         if (b%count(ptr) == 0) then
             return
          end if
          call iter%next()
       end do
 
-      eq = .true.
-
+      equal = .true.
+#endif
    end function __MANGLE(equal)
 
 
    ! =======================
    !  not_equal
    ! =======================
-   logical function __MANGLE(not_equal)(lhs, rhs) result(ne)
-      type(__set), intent(in) :: lhs
-      type(__set), intent(in) :: rhs
+   logical function __MANGLE(not_equal)(a, b) result(not_equal)
+      type(__set), intent(in) :: a
+      type(__set), intent(in) :: b
 
-      ne = .not. (lhs == rhs)
+      not_equal = .not. (a == b)
 
    end function __MANGLE(not_equal)
 
 
-   ! Suboptimal initial implementation.
-   subroutine __MANGLE(merge)(this, other)
-      class(__set), intent(inout) :: this
-      type(__set), intent(inout) :: other
+   ! =======================
+   !   deep_copy (assignment)
+   ! =======================
+   subroutine __MANGLE(deep_copy)(this, other)
+      class(__set), target, intent(out) :: this
+      class(__set), target, intent(in) :: other
 
       type(__set_iterator) :: iter
-      __T_declare_result__, pointer :: item
+      __T_declare_result__, pointer :: ptr
 
+#if  !defined(__INTEL_COMPILER) | !(defined(_string) & !defined(_string_deferred))
       iter = other%begin()
       do while (iter /= other%end())
-         item => iter%at()
-         if (this%count(item) == 0) then
-            call this%insert(item)
-            call iter%next()
-            call other%erase(iter)
-         end if
+         ptr => iter%at()
+         call this%insert(ptr)
+         call iter%next()
       end do
-      
+#endif
+      this%tsize = other%tsize
+
+   end subroutine __MANGLE(deep_copy)
+
+   ! =======================
+   !  finalize_set()
+   ! =======================
+   recursive subroutine __MANGLE(finalize_set)(this)
+      type(__set), intent(inout) :: this
+
+      if (associated(this%root)) deallocate(this%root)
+
+      return
+   end subroutine __MANGLE(finalize_set)
+
+
+   subroutine __MANGLE(merge)(this, source)
+      class(__set), intent(inout) :: this
+      type(__set), intent(in) :: source
+
+      type(__set_iterator) :: iter
+
+      iter = source%begin()
+      do while (iter /= source%end())
+         
+         if (this%count(iter%at()) == 0) then
+         end if
+         call iter%next()
+      end do
    end subroutine __MANGLE(merge)
 
 #include "templates/set/iterator_procedures.inc"
-   !#include "templates/set/reverse_iterator_procedures.inc"
 
-#undef __UNINITIALIZED
-#undef __LEFT
-#undef __RIGHT
 
-! undef derived template parameters
+#undef __LEFT 0
+#undef __RIGHT 1
+#undef __set_node
+
+   ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
-! undef internal template parameters
+   ! undef internal template parameters
 #undef __guard
 #include "parameters/T/undef_internal.inc"

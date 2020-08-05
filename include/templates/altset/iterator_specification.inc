@@ -2,8 +2,8 @@
 
    type :: __set_iterator
       private
-      type(__set), pointer :: tree => null()
-      type(__MANGLE(node)), pointer :: node => null()
+      type (__set), pointer :: reference => null()
+      integer(kind=__gftl_size_kind) :: current = __UNINITIALIZED
    contains
       procedure :: at => __MANGLE(iter_at)
       procedure :: next => __MANGLE(iter_next)
