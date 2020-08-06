@@ -131,7 +131,7 @@
       class(__set), intent(inout) :: this
 
       if (associated(this%root)) deallocate(this%root)
-      this%tsize=0
+      this%tsize = 0
       return
    end subroutine __MANGLE(clear)
 
@@ -177,8 +177,7 @@
          if (present(ref)) ref => new
          new%parent => parent
          __T_COPY__(new%value, value)
-         call parent%set_child(merge(0, 1,                                        &
-              &       __MANGLE(lessThan)(value, parent%value)),new)
+         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%value)),new)
          call this%rebalance(parent, .true.)
       else
          allocate(this%root)
@@ -289,23 +288,43 @@
    ! =======================
    !  erase
    ! =======================
-   subroutine __MANGLE(erase_one)(this, iter)
-      class(__set), intent(inout) :: this
+   function __MANGLE(erase_iter)(this, iter) result(next_iter)
+      type(__set_iterator) :: next_iter
+      class(__set), target, intent(inout) :: this
       type(__set_iterator), intent(inout) :: iter
 
       type (__set_iterator) :: last
 
       last = iter
       call last%next()
-      call this%erase(iter, last)
+      next_iter = this%erase(iter, last)
 
-   end subroutine __MANGLE(erase_one)
+   end function __MANGLE(erase_iter)
 
+
+   function __MANGLE(erase_value)(this, value) result(n)
+      integer(kind=__gftl_size_kind) :: n
+      class(__set), target, intent(inout) :: this
+      __T_declare_dummy__, intent(in) :: value
+
+      type(__set_iterator) :: iter
+
+      iter = this%find(value)
+      if (iter /= this%end()) then
+         iter = this%erase(iter)
+#ifdef __set_multi
+         error - unhandled case for multiset
+#else
+         n = 1
+#endif
+      end if
+   end function __MANGLE(erase_value)
 
    ! =======================
    !  erase_multi
    ! =======================
-   subroutine __MANGLE(erase_multi)(this, first, last)
+   function __MANGLE(erase_range)(this, first, last) result(next_iter)
+      type(__set_iterator) :: next_iter
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(inout) :: first
       type(__set_iterator), intent(in) :: last
@@ -313,14 +332,16 @@
 
       type (__set_iterator) :: iter
 
+      next_iter = last
+
       iter = first
       do while (iter /= last)
          pos => iter%node
          call iter%next()
          if (associated(pos%right)) then
-            call this%erase_nonleaf(pos, 1)
+            call this%erase_nonleaf(pos, __RIGHT)
          else if (associated(pos%left)) then
-            call this%erase_nonleaf(pos, 0)
+            call this%erase_nonleaf(pos, __LEFT)
          else
             parent => pos%parent
             if (associated(parent)) then
@@ -336,20 +357,7 @@
       first = last
 
       return
-   end subroutine __MANGLE(erase_multi)
-
-   ! =======================
-   !  remove
-   ! =======================
-   subroutine __MANGLE(remove)(this, value)
-      class(__set), target, intent(inout) :: this
-      __T_declare_dummy__, intent(in) :: value
-      type(__set_iterator) :: it
-
-      it=this%find(value)
-      if (it/=this%end()) call this%erase(it)
-      return
-   end subroutine __MANGLE(remove)
+   end function __MANGLE(erase_range)
 
    ! =======================
    !  begin
@@ -381,13 +389,16 @@
       type(__set_iterator) :: lb
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
-      __T_declare_result__, pointer :: p
 
-      lb = this%begin()
-      do while (lb /= this%end())
-         p => lb%at()
-         if (.not. __T_LT__(p, value)) exit
-      end do
+      type(__set_node), pointer :: node
+
+      lb%tree => this
+      node => this%find_node(value, .false.)
+      lb%node => node
+
+      if (__T_LT__(node%value, value)) then
+         if (lb /= this%end()) call lb%next()
+      end if
 
       return
    end function __MANGLE(lower_bound)
@@ -400,14 +411,15 @@
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
 
-      __T_declare_result__, pointer :: p
-      
-      ub = this%end()
-      do while (ub /= this%begin())
-         call ub%prev()
-         p => ub%at()
-         if (.not. __T_LT__(value, p)) exit
-      end do
+      type(__set_node), pointer :: node
+
+      ub%tree => this
+      node => this%find_node(value, .false.)
+      ub%node => node
+
+      if (.not. (__T_LT__(value, node%value))) then
+         if (ub /= this%end()) call ub%next()
+      end if
             
       return
    end function __MANGLE(upper_bound)
@@ -440,27 +452,15 @@
       type(__set_node), pointer :: find_node
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
-#ifndef _pointer
-!!$      target :: value
-#endif
       logical, intent(in) :: last
       integer :: side
-
-#ifdef _pointer
-      __T_declare_result__, pointer :: p
-#endif
 
       find_node => this%root
       if (associated(find_node)) then
          do
             if (.not. last .and. (                                           &
-                 &      (__MANGLE(order_eq)(find_node%value,value)))) return
-#ifdef _pointer
-            p => value
-            side=merge(0, 1, __MANGLE(lessThan)(p, find_node%value))
-#else
-            side=merge(0, 1, __MANGLE(lessThan)(value, find_node%value))
-#endif
+                 &     (__MANGLE(order_eq)(find_node%value,value)))) return
+            side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%value))
             if (.not.associated(find_node%child(side))) return
             find_node => find_node%child(side)
          end do
@@ -488,14 +488,14 @@
          if (associated(curr%right)) hr=curr%right%height
          unbalanced=abs(hl-hr)>1
          if (unbalanced) then
-            side=merge(0, 1, hl>hr)
+            side=merge(__LEFT, __RIGHT, hl > hr)
             child => curr%child(side)
             chl=0
             chr=0
             if (associated(child%left)) chl=child%left%height
             if (associated(child%right)) chr=child%right%height
             if (chr/=chl) then
-               childside=merge(0, 1, chl>chr)
+               childside=merge(__LEFT, __RIGHT, chl>chr)
                if (side/=childside) call this%rot(child, 1-childside)
                call this%rot(curr, 1-side)
             endif
@@ -682,38 +682,53 @@
 
    end subroutine __MANGLE(deep_copy)
 
+   subroutine __MANGLE(copy_list)(this, il)
+      class(__set), intent(out) :: this
+      __T_declare_dummy__, intent(in) :: il(:)
+
+      this = Set()
+      call this%insert(il)
+
+   end subroutine __MANGLE(copy_list)
+
    ! =======================
    !  finalize_set()
    ! =======================
    recursive subroutine __MANGLE(finalize_set)(this)
       type(__set), intent(inout) :: this
 
+      print*,'final: set'
       if (associated(this%root)) deallocate(this%root)
 
       return
    end subroutine __MANGLE(finalize_set)
 
 
+   ! Suboptimal implementation
    subroutine __MANGLE(merge)(this, source)
       class(__set), intent(inout) :: this
-      type(__set), intent(in) :: source
+      type(__set), target, intent(inout) :: source
 
       type(__set_iterator) :: iter
+!!$      type(__set_node), pointer :: parent
 
       iter = source%begin()
       do while (iter /= source%end())
-         
          if (this%count(iter%at()) == 0) then
+            call this%insert(iter%at())
+            iter = source%erase(iter)
+         else
+            print*,'already had it', iter%at()
+            call iter%next()
          end if
-         call iter%next()
       end do
    end subroutine __MANGLE(merge)
 
 #include "templates/set/iterator_procedures.inc"
 
 
-#undef __LEFT 0
-#undef __RIGHT 1
+#undef __LEFT
+#undef __RIGHT
 #undef __set_node
 
    ! undef derived template parameters

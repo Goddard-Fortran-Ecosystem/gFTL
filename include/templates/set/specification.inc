@@ -65,10 +65,10 @@
       generic :: insert => insert_initializer_list
 #endif
 
-      procedure :: erase_one => __MANGLE(erase_one)
-      procedure :: erase_multi => __MANGLE(erase_multi)
-      generic :: erase => erase_one, erase_multi
-      procedure :: remove => __MANGLE(remove)
+      procedure :: erase_iter => __MANGLE(erase_iter)
+      procedure :: erase_value => __MANGLE(erase_value)
+      procedure :: erase_range => __MANGLE(erase_range)
+      generic :: erase => erase_iter, erase_value, erase_range
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
       procedure :: lower_bound => __MANGLE(lower_bound)
@@ -78,6 +78,10 @@
 
       procedure :: deep_copy => __MANGLE(deep_copy)
       generic :: assignment(=) => deep_copy
+#ifdef __T_listable__
+      procedure :: copy_list => __MANGLE(copy_list)
+      generic :: assignment(=) => copy_list
+#endif
 
       procedure, private :: find_node => __MANGLE(find_node)
       procedure, private :: rebalance=> __MANGLE(rebalance)
