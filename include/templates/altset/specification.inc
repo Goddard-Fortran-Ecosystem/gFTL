@@ -134,8 +134,8 @@
    end interface operator(/=)
 
 
-#include "templates/set/iterator_specification.inc"
-   !#include "templates/set/reverse_iterator_specification.inc"
+#include "templates/altset/iterator_specification.inc"
+   !#include "templates/altset/reverse_iterator_specification.inc"
 
 
 #undef __UNINITIALIZED -1

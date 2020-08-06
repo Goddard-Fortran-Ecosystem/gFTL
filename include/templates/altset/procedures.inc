@@ -1067,8 +1067,8 @@
       
    end subroutine __MANGLE(merge)
 
-#include "templates/set/iterator_procedures.inc"
-   !#include "templates/set/reverse_iterator_procedures.inc"
+#include "templates/altset/iterator_procedures.inc"
+   !#include "templates/altset/reverse_iterator_procedures.inc"
 
 #undef __UNINITIALIZED
 #undef __LEFT
