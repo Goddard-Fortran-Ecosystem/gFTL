@@ -36,7 +36,7 @@
 
    function __MANGLE(new_vector_fill_size_kind)(n, val) result(v)
       type (__vector) :: v
-      integer(kind=__gftl_size_kind), intent(in) :: n
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: n
       __T_declare_dummy__, optional, intent(in) :: val
 
       call v%resize(n, val)
@@ -108,7 +108,7 @@
    ! =======================
    pure function __MANGLE(size)(this) result(res)
       class(__vector), intent(in) :: this
-      integer(kind=__gftl_size_kind) :: res
+      integer(kind=GFTL_SIZE_KIND) :: res
 
       res=this%vsize
 
@@ -119,9 +119,9 @@
    !  max_size()
    ! =======================
    pure function __MANGLE(max_size)() result(res)
-      integer(kind=__gftl_size_kind) :: res
+      integer(kind=GFTL_SIZE_KIND) :: res
 
-      integer(kind=__gftl_size_kind) :: index
+      integer(kind=GFTL_SIZE_KIND) :: index
       
       res = huge(index)
 
@@ -132,7 +132,7 @@
    !  capacity - size of internal arrays; >= size()
    ! =======================
    pure function __MANGLE(capacity)(this) result(capacity)
-      integer(kind=__gftl_size_kind) :: capacity
+      integer(kind=GFTL_SIZE_KIND) :: capacity
       class (__vector), intent(in) :: this
 
       if (allocated(this%elements)) then
@@ -164,7 +164,7 @@
    ! =======================
    function __MANGLE(at_size_kind)(this, i, rc) result(res)
       class(__vector), target, intent(in) :: this
-      integer(KIND=__gftl_size_kind), intent(in) :: i
+      integer(KIND=GFTL_SIZE_KIND), intent(in) :: i
       integer, intent(out) :: rc
       __T_declare_result__, pointer :: res
 
@@ -193,7 +193,7 @@
       ! Cannot directly invoke at_sizek_kind() because result
       ! is undefined for out-of-bound indices
       
-      idx = merge(int(i,kind=__gftl_size_kind), this%vsize+i, i > 0)
+      idx = merge(int(i,kind=GFTL_SIZE_KIND), this%vsize+i, i > 0)
 
       if ((idx <= 0).or.(idx > this%vsize)) then
          rc = OUT_OF_RANGE
@@ -211,7 +211,7 @@
    ! =======================
    function __MANGLE(of_size_kind)(this, i) result(res)
       class(__vector), target, intent(in) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: i
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: i
       __T_declare_result__, pointer :: res
 
       res => this%elements(i)%item
@@ -277,10 +277,10 @@
    ! =======================
    subroutine __MANGLE(set_size_kind)(this, i, value)
       class(__vector), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: i
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: i
       __T_declare_dummy__, intent(in) :: value
 
-      integer(kind=__gftl_size_kind) :: idx
+      integer(kind=GFTL_SIZE_KIND) :: idx
 
       idx = merge(i, this%vsize+i, i > 0)
 
@@ -296,7 +296,7 @@
       integer, intent(in) :: i
       __T_declare_dummy__, intent(in) :: value
 
-      call this%set(int(i,kind=__gftl_size_kind), value)
+      call this%set(int(i,kind=GFTL_SIZE_KIND), value)
 
    end subroutine __MANGLE(set_default)
 
@@ -322,7 +322,7 @@
       class(__vector), intent(inout) :: this
       __T_declare_component__, intent(in) :: array(:)
 
-      integer(kind=__gftl_size_kind) :: n
+      integer(kind=GFTL_SIZE_KIND) :: n
 
       n = size(array)
 
@@ -335,7 +335,7 @@
 #endif
 
 
-#ifdef __T_EQ__
+#if defined(__T_EQ__) || defined(__T_LT__)
    ! =======================
    !  equal
    ! =======================
@@ -351,15 +351,25 @@
       if (equal) then ! Same elements?
 
          do i = 1, lhs%vsize
+#ifdef __T_EQ__
             if (.not. (__T_EQ__(lhs%elements(i)%item,rhs%elements(i)%item))) then
                equal = .false.
-               return
             end if
+#else
+            if ((__T_LT__(lhs%elements(i)%item,rhs%elements(i)%item))) then
+               equal = .false.
+            elseif ((__T_LT__(rhs%elements(i)%item,lhs%elements(i)%item))) then
+               equal = .false.
+            end if
+#endif
+            return
          end do
+
          ! all elements equal
-         equal = .true.
+         equal = .true. ! redundant
       endif
 
+      return
    end function __MANGLE(equal)
 
    ! =======================
@@ -488,14 +498,14 @@
         &   this, index, value, unused, rc)
       class(__vector), target, intent(inout) :: this
 
-      integer(kind=__gftl_size_kind), intent(in) :: index
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: index
 
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional, intent(in) :: unused
       integer, optional, intent(out) :: rc
 
       __T_declare_component__ :: temp
-      integer(kind=__gftl_size_kind) :: i, n
+      integer(kind=GFTL_SIZE_KIND) :: i, n
 
       __UNUSED_DUMMY(unused)
 
@@ -524,7 +534,7 @@
       integer, intent(in) :: index
       __T_declare_dummy__, intent(in) :: value
 
-      call this%insert(int(index,kind=__gftl_size_kind), value)
+      call this%insert(int(index,kind=GFTL_SIZE_KIND), value)
    end subroutine __MANGLE(insert_default)
 
 
@@ -533,13 +543,13 @@
    ! =======================
    subroutine __MANGLE(resize_size_kind)(this, newsize, value, unused, rc)
       class(__vector), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: newsize
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize
       __T_declare_dummy__, optional, intent(in) :: value
       type (KeywordEnforcer), optional, intent(in) :: unused
       integer, optional, intent(out) :: rc
 
-      integer(kind=__gftl_size_kind) :: oldSize
-      integer(kind=__gftl_size_kind) :: i
+      integer(kind=GFTL_SIZE_KIND) :: oldSize
+      integer(kind=GFTL_SIZE_KIND) :: i
       integer :: status
 
       __UNUSED_DUMMY(unused)
@@ -582,7 +592,7 @@
 
       __UNUSED_DUMMY(unused)
 
-      call this%resize(int(newsize,kind=__gftl_size_kind), value, rc=rc)
+      call this%resize(int(newsize,kind=GFTL_SIZE_KIND), value, rc=rc)
 
    end subroutine __MANGLE(resize_default)
 
@@ -592,8 +602,8 @@
    ! =======================
    subroutine __MANGLE(downsize)(this, newsize)
       class(__vector), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: newsize  ! assumes newsize<=size()
-      integer(kind=__gftl_size_kind) :: i
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize  ! assumes newsize<=size()
+      integer(kind=GFTL_SIZE_KIND) :: i
 
       if (newsize<this%vsize) then
          do i=newsize+1, this%vsize
@@ -612,7 +622,7 @@
    subroutine __MANGLE(clear)(this)
       class(__vector), intent(inout) :: this
 
-      call this%downsize(int(0,kind=__gftl_size_kind))
+      call this%downsize(0_GFTL_SIZE_KIND))
 
       return
    end subroutine __MANGLE(clear)
@@ -674,7 +684,7 @@
    ! =======================
    subroutine __MANGLE(reserve_size_kind)(this, capacity, unused, rc)
       class(__vector), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: capacity
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: capacity
       class(KeywordEnforcer), optional, intent(in) :: unused
       integer, optional, intent(out) :: rc
 
@@ -713,7 +723,7 @@
          end if
       end if
 
-      call this%reserve(int(capacity,kind=__gftl_size_kind))
+      call this%reserve(int(capacity,kind=GFTL_SIZE_KIND))
       return
    end subroutine __MANGLE(reserve_default)
 
@@ -723,9 +733,9 @@
    ! =======================
    subroutine __MANGLE(set_capacity)(this, capacity)
       class(__vector), target, intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: capacity  ! capacity must be >=0
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: capacity  ! capacity must be >=0
       type(__MANGLE(wrapper)), dimension(:), allocatable :: temp
-      integer(kind=__gftl_size_kind) :: i
+      integer(kind=GFTL_SIZE_KIND) :: i
 
       if (capacity>0) then                     ! capacity>0
          if (.not.allocated(this%elements)) then   ! not allocated
@@ -751,7 +761,7 @@
    ! =======================
    subroutine __MANGLE(grow_to)(this, capacity)
       class(__vector), intent(inout) :: this
-      integer(kind=__gftl_size_kind), intent(in) :: capacity
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: capacity
 
       if (capacity>this%capacity()) then
          call this%set_capacity(max(2*this%vsize, capacity)) ! gives O(n) algorithm for growing vector with push.
@@ -790,7 +800,7 @@
          class(__vector), target, intent(in) :: this
          __T_declare_dummy__, intent(in) :: value
 
-         integer(kind=__gftl_size_kind) :: i
+         integer(kind=GFTL_SIZE_KIND) :: i
          
          do i=1, this%vsize
             if (__T_EQ__(this%elements(i)%item, value)) return

@@ -46,7 +46,7 @@
 
    type :: __set
       type(__set_node), pointer :: root => null()
-      integer(kind=__gftl_size_kind) :: tsize=0
+      integer(kind=GFTL_SIZE_KIND) :: tsize = 0
    contains
       procedure :: empty => __MANGLE(empty)
       procedure :: size => __MANGLE(size)
@@ -103,6 +103,18 @@
    interface operator(/=)
       module procedure __MANGLE(not_equal)
    end interface operator(/=)
+   interface operator(<)
+      module procedure __MANGLE(less_than)
+   end interface operator(<)
+   interface operator(<=)
+      module procedure __MANGLE(less_than_or_equal)
+   end interface operator(<=)
+   interface operator(>)
+      module procedure __MANGLE(greater_than)
+   end interface operator(>)
+   interface operator(>=)
+      module procedure __MANGLE(greater_than_or_equal)
+   end interface operator(>=)
 
 
 #include "templates/set/iterator_specification.inc"

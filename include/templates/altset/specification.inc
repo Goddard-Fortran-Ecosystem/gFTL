@@ -13,9 +13,9 @@
 #define __vector_T_kindlen_string "(kind=__gftl_size_kind)"
 
 #define __vector_guard  __IDENTITY(__set_guard)__IDENTITY(I_)
-#define __vector __IDENTITY(__set_guard)__IDENTITY(I_Vector)
-#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(I_VectorIterator)
-#define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(I_VectorRIterator)
+#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
+#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
+#define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(VectorRIterator)
 
 #include "templates/vector/specification.inc"
 
@@ -28,8 +28,8 @@
 
 #include "parameters/T/copy_set_T_to_vector_T.inc"
 #define __vector_guard __IDENTITY(__set_guard)__IDENTITY(T_)
-#define __vector __IDENTITY(__set_guard)__IDENTITY(T_Vector)
-#define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(T_VectorIterator)
+#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
+#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
 #define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(T_VectorRIterator)
 
 #include "templates/vector/specification.inc"

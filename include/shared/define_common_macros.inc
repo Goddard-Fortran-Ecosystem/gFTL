@@ -80,5 +80,7 @@
 
 #    define __UNUSED_DUMMY(x) if (.false.) print*,shape(x)
 
+   integer, parameter :: GFTL_SIZE_KIND = __gftl_size_kind
+
 #endif
 

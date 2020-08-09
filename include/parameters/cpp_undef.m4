@@ -34,3 +34,6 @@ cpp_undef(extents)
 cpp_undef(FREE)
 cpp_undef(COPY)
 cpp_undef(MOVE)
+
+cpp_undef(LT,lhs,rhs)
+cpp_undef(EQ,lhs,rhs)

@@ -33,10 +33,32 @@
       procedure :: get_second => __MANGLE(get_second)
    end type __pair
 
-
+#if (defined(__T1_LT__) || defined(__T1_EQ__)) && (defined(__T2_LT__) || defined(__T2_EQ__))
+   interface operator(==)
+      module procedure __MANGLE(equal)
+   end interface operator(==)
+   interface operator(/=)
+      module procedure __MANGLE(not_equal)
+   end interface operator(/=)
+#endif
+#if defined(__T1_LT__) && defined(__T2_LT__)
+   interface operator(<)
+      module procedure __MANGLE(less_than)
+   end interface operator(<)
+   interface operator(<=)
+      module procedure __MANGLE(less_than_or_equal)
+   end interface operator(<=)
+   interface operator(>)
+      module procedure __MANGLE(greater_than)
+   end interface operator(>)
+   interface operator(>=)
+      module procedure __MANGLE(greater_than_or_equal)
+   end interface operator(>=)
+#endif
    interface swap
       module procedure __MANGLE(swap)
    end interface swap
+
 
 ! undef derived template parameters
 #include "parameters/T1/undef_derived_macros.inc"

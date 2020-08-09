@@ -39,3 +39,5 @@ cpp_copy(FREE,x)
 cpp_copy(COPY,lhs,rhs)
 cpp_copy(MOVE,lhs,rhs)
 
+cpp_copy(LT,lhs,rhs)
+cpp_copy(EQ,lhs,rhs)

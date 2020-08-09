@@ -12,8 +12,6 @@
 #include "parameters/T/copy_set_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
-
-#include "parameters/T/define_derived_macros.inc"
 #define __guard __set_guard
 
 #define __LEFT 0
@@ -68,7 +66,7 @@
    !  size
    ! =======================
    function __MANGLE(size)(this) result(size)
-      integer(kind=__gftl_size_kind) :: size
+      integer(kind=GFTL_SIZE_KIND) :: size
       class(__set), intent(in) :: this
 
       size = this%tsize
@@ -79,9 +77,9 @@
    !  find
    ! =======================
    function __MANGLE(find)(this, value) result(find)
+      type(__set_iterator) :: find
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
-      type(__set_iterator) :: find
 
       find%tree => this
       find%node => this%find_node(value, .false.)
@@ -108,7 +106,7 @@
    !  count
    ! =======================
    function __MANGLE(count)(this, value) result(count)
-      integer(kind=__gftl_size_kind) :: count
+      integer(kind=GFTL_SIZE_KIND) :: count
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
 
@@ -138,12 +136,12 @@
    ! =======================
    !  insert_single()
    ! =======================
-   subroutine __MANGLE(insert_single)(this, value, unused, isNew, ref)
-      class(__set), intent(inout) :: this
+   subroutine __MANGLE(insert_single)(this, value, unused, isNew, iter)
+      class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: isNew
-      type(__set_node), pointer, optional, intent(out) :: ref
+      type(__set_iterator), optional, intent(out) :: iter
       type(__set_node), pointer :: new
       type(__set_node), pointer :: parent
 
@@ -151,14 +149,16 @@
 
       if (present(unused)) print*,shape(unused)
 
+      if (present(iter)) iter%tree => this
+
       if (associated(this%root)) then
 #ifdef __set_multi
          parent => this%find_node(value, .true.)
 #else
          parent => this%find_node(value, .false.)
          if (__MANGLE(order_eq)(parent%value, value)) then
-            if (present(ref)) then
-               ref => parent
+            if (present(iter)) then
+               iter%node => parent
             else
                __T_FREE__(parent%value)
                __T_COPY__(parent%value, value)
@@ -174,14 +174,14 @@
          end if
 
          allocate(new)
-         if (present(ref)) ref => new
+         if (present(iter)) iter%node => new
          new%parent => parent
          __T_COPY__(new%value, value)
          call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%value)),new)
          call this%rebalance(parent, .true.)
       else
          allocate(this%root)
-         if (present(ref)) ref => this%root
+         if (present(iter)) iter%node => this%root
          r => this%root
          __T_COPY__(r%value, value)
          if (present(isNew)) then
@@ -240,7 +240,7 @@
          integer, intent(in) :: x(:)
          integer, intent(in) :: y(:)
 
-         integer(kind=__gftl_size_kind) :: i, n
+         integer(kind=GFTL_SIZE_KIND) :: i, n
 
          n = min(size(x),size(y))
 
@@ -303,7 +303,7 @@
 
 
    function __MANGLE(erase_value)(this, value) result(n)
-      integer(kind=__gftl_size_kind) :: n
+      integer(kind=GFTL_SIZE_KIND) :: n
       class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
 
@@ -627,24 +627,28 @@
       type(__set), target, intent(in) :: a
       type(__set), target, intent(in) :: b
 
-      type (__set_iterator) :: iter
-      __T_declare_result__, pointer :: ptr
+      type (__set_iterator) :: iter_a
+      type (__set_iterator) :: iter_b
+      __T_declare_result__, pointer :: ptr_a
+      __T_declare_result__, pointer :: ptr_b
 
       equal = .false. ! unless
-#if  !defined(__INTEL_COMPILER) | !(defined(_string) & !defined(_string_deferred))
       if (a%size() /= b%size()) return
 
-      iter = a%begin()
-      do while (iter /= a%end())
-         ptr => iter%at()
-         if (b%count(ptr) == 0) then
-            return
-         end if
-         call iter%next()
+      iter_a = a%begin()
+      iter_b = b%begin()
+      do while (iter_a /= a%end())
+         ptr_a => iter_a%at()
+         ptr_b => iter_b%at()
+
+         if (.not. __MANGLE(order_eq)(ptr_a,ptr_b)) return
+
+         call iter_a%next()
+         call iter_b%next()
       end do
 
       equal = .true.
-#endif
+
    end function __MANGLE(equal)
 
 
@@ -659,6 +663,76 @@
 
    end function __MANGLE(not_equal)
 
+   ! ======================
+   !  operator(<) less_than()
+   ! ======================
+   logical function __MANGLE(less_than)(a,b) result(lt)
+      type(__set), intent(in) :: a
+      type(__set), intent(in) :: b
+
+      type (__set_iterator) :: iter_a
+      type (__set_iterator) :: iter_b
+      __T_declare_result__, pointer :: ptr_a
+      __T_declare_result__, pointer :: ptr_b
+
+      iter_a = a%begin()
+      iter_b = b%begin()
+      do while (iter_a /= a%end() .and. iter_b /= b%end())
+         ptr_a => iter_a%at()
+         ptr_b => iter_b%at()
+
+         ! a < b ?
+         lt = __T_LT__(ptr_a, ptr_b)
+         if (lt) return
+
+         ! b < a ?
+         lt = __T_LT__(ptr_b, ptr_a)
+         if (lt) return
+         
+         ! items equal so continue
+
+         call iter_a%next()
+         call iter_b%next()
+      end do
+
+      lt = (a%size() < b%size())
+      
+      return
+   end function __MANGLE(less_than)
+
+
+   ! ======================
+   !  operator(<=) - less_than_or_equal() 
+   ! ======================
+   logical function __MANGLE(less_than_or_equal)(a,b) result(le)
+      type(__set), intent(in) :: a
+      type(__set), intent(in) :: b
+
+      le = .not. (b < a)
+      return
+   end function __MANGLE(less_than_or_equal)
+
+   ! ======================
+   !  operator(>) - greater_than()
+   ! ======================
+   logical function __MANGLE(greater_than)(a,b) result(gt)
+      type(__set), intent(in) :: a
+      type(__set), intent(in) :: b
+
+      gt = (b < a)
+      return
+   end function __MANGLE(greater_than)
+
+   ! ======================
+   !  operator(>=) - greater_than_or_equal() 
+   ! ======================
+   logical function __MANGLE(greater_than_or_equal)(a,b) result(ge)
+      type(__set), intent(in) :: a
+      type(__set), intent(in) :: b
+
+      ge = .not. (a < b)
+      return
+   end function __MANGLE(greater_than_or_equal)
 
    ! =======================
    !   deep_copy (assignment)
@@ -670,14 +744,13 @@
       type(__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
 
-#if  !defined(__INTEL_COMPILER) | !(defined(_string) & !defined(_string_deferred))
       iter = other%begin()
       do while (iter /= other%end())
          ptr => iter%at()
          call this%insert(ptr)
          call iter%next()
       end do
-#endif
+
       this%tsize = other%tsize
 
    end subroutine __MANGLE(deep_copy)
@@ -686,7 +759,7 @@
       class(__set), intent(out) :: this
       __T_declare_dummy__, intent(in) :: il(:)
 
-      this = Set()
+      this = __set ()
       call this%insert(il)
 
    end subroutine __MANGLE(copy_list)

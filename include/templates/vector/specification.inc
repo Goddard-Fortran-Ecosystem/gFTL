@@ -48,7 +48,7 @@
    type :: __vector
       private
       type(__MANGLE(wrapper)), allocatable :: elements(:)
-      integer(kind=__gftl_size_kind) :: vsize = 0
+      integer(kind=GFTL_SIZE_KIND) :: vsize = 0
    contains
 
       procedure :: size => __MANGLE(size)
@@ -148,7 +148,7 @@
    end interface swap
 
 
-#ifdef __T_EQ__
+#if defined(__T_EQ__) || defined(__T_LT__)
    interface operator(==)
       module procedure __MANGLE(equal)
    end interface operator(==)
