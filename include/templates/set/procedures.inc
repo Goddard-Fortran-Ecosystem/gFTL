@@ -231,8 +231,12 @@
       __T_declare_dummy__, intent(in) :: x
       __T_declare_dummy__, intent(in) :: y
 
+#if defined(__set_LT)
+      less = __set_LT__(x,y)
+#else
       less = __T_LT__(x,y)
-
+#endif
+      
    contains
 
       ! TODO:  possibly this procedure should be inside some sort of #ifdef
@@ -252,6 +256,7 @@
          less = (size(x) < size(y))
 
       end function dictionaryLessThan1d
+
 
 #if defined(__type_needs_default_compare)
 #  if !defined(__compare_type)
@@ -288,16 +293,16 @@
    ! =======================
    !  erase
    ! =======================
-   function __MANGLE(erase_iter)(this, iter) result(next_iter)
-      type(__set_iterator) :: next_iter
+   function __MANGLE(erase_iter)(this, position) result(iter)
+      type(__set_iterator) :: iter
       class(__set), target, intent(inout) :: this
-      type(__set_iterator), intent(inout) :: iter
+      type(__set_iterator), intent(in) :: position
 
       type (__set_iterator) :: last
 
-      last = iter
+      last = position
       call last%next()
-      next_iter = this%erase(iter, last)
+      iter = this%erase(position, last)
 
    end function __MANGLE(erase_iter)
 
@@ -326,7 +331,7 @@
    function __MANGLE(erase_range)(this, first, last) result(next_iter)
       type(__set_iterator) :: next_iter
       class(__set), intent(inout) :: this
-      type(__set_iterator), intent(inout) :: first
+      type(__set_iterator), intent(in) :: first
       type(__set_iterator), intent(in) :: last
       type(__set_node), pointer :: pos, parent
 
@@ -354,7 +359,6 @@
          endif
          this%tsize=this%tsize-1
       end do
-      first = last
 
       return
    end function __MANGLE(erase_range)

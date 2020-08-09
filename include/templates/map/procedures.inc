@@ -22,7 +22,7 @@
 #define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
 #define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
 #define __set_T __map_pair
-#define __set_T_LT(a,b) ((a) < (b))
+#define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
 #include "templates/set/procedures.inc"
@@ -387,6 +387,15 @@
 
       end subroutine __MANGLE(deep_copy)
       
+
+      logical function __MANGLE(key_less_than)(a,b) result(less_than)
+         type(__map_pair), intent(in) :: a
+         type(__map_pair), intent(in) :: b
+
+         less_than = __Key_LT__(a%get_first(),b%get_first())
+
+         return
+      end function __MANGLE(key_less_than)
 
 #ifdef _DUMP_MAP
 ! =======================
