@@ -1,10 +1,10 @@
 os:
    - linux
-     #- osx
+   - osx
 
 dist: bionic
 
-osx_image: xcode11
+osx_image: xcode11.6
 
 language: c
 
@@ -27,9 +27,9 @@ addons:
          - cmake
    homebrew:
       packages:
-         - gcc@10
+         - gcc@9
          - cmake
-      update: true
+      update: false
 
 env:
    jobs:
