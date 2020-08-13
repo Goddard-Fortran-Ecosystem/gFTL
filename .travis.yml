@@ -27,7 +27,6 @@ addons:
          - cmake
    homebrew:
       packages:
-         - gcc@9
          - gcc@10
          - cmake
       update: true
@@ -63,11 +62,10 @@ before_script:
       else
          cmake --version
       fi
-     mpirun --version
    # Install GFE dependencies
    - |
-     ${FC} --version
-     bash ./tools/travis-install-pfunit.bash
+      ${FC} --version
+      bash ./tools/travis-install-pfunit.bash
    # Now build pFlogger
    - cd ${TRAVIS_BUILD_DIR}
    - mkdir -p build && cd build
