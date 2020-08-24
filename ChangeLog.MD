@@ -2,9 +2,15 @@
 
 ## Unreleased
 
+## [1.2.6] - 2020-08-24
+
+
 ### Fixed
 - Blocked installation of *Foo*.inc include files that are
   only used for testing.
+
+- Reintroduced workarounds for older ifort and gfortran compilers.
+  Annoyingly the workaround for one breaks the other.
   
 ## [1.2.5] - 2020-04-06
 
