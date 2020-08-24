@@ -51,7 +51,7 @@ foreach (instantiation ${instantiations})
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -Dkey=${key} -DALT -Dvalue=${value} -Dformat=${format} < ${infile} > ${outfile}
+    COMMAND ${M4} -s -Dkey=${key} -DALT -Dvalue=${value} -Dformat=${format} < ${infile} > ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -66,7 +66,7 @@ list (APPEND SRCS ${outfile} )
 
   add_custom_command (
     OUTPUT ${outfile}
-    COMMAND m4 -s -Dkey=${key} -DALT=alt -Dvalue=${value} -Dformat=${format} < ${infile} > ${outfile}
+    COMMAND ${M4} -s -Dkey=${key} -DALT=alt -Dvalue=${value} -Dformat=${format} < ${infile} > ${outfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )

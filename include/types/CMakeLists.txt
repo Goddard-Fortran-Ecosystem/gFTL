@@ -46,7 +46,7 @@ foreach (macro_file ${macro_files})
 
     add_custom_command (
       OUTPUT ${outfile}
-      COMMAND m4 -s -Dparam=${param} -I${src}/../templates < ${infile} > ${outfile}
+      COMMAND ${M4} -s -Dparam=${param} -I${src}/../templates < ${infile} > ${outfile}
       WORKING_DIRECTORY ${bin}
       DEPENDS ${infile}
       )

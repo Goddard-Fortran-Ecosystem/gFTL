@@ -44,7 +44,7 @@ Contributions of additional containers are very much welcomed.
 # Prerequisites
 
 * CMake 3.0
-* m4 (must be in path)
+* GNU m4 (must be in path as "gm4" or "m4")
 
 # Related package
 

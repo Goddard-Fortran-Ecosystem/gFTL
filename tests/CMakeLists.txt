@@ -5,7 +5,7 @@ add_subdirectory (Map)
 add_subdirectory (Set)
 add_subdirectory (altSet)
 
-# Need to exapnd intrinsic template for various types with m4
+# Need to expand intrinsic template for various types with m4
 add_subdirectory(include) 
 
 
