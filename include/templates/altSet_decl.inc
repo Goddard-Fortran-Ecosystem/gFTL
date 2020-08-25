@@ -38,9 +38,6 @@
         procedure :: end => __PROC(end)
         procedure :: dump => __PROC(dump)
         procedure :: deepCopy => __PROC(deepCopy)
-#ifdef __GFORTRAN__
-        generic :: assignment(=) => deepCopy
-#endif
         procedure :: equalSets
         generic :: operator(==) => equalSets
         procedure :: notEqualSets
