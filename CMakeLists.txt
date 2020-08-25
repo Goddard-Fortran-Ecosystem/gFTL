@@ -4,7 +4,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.2.7
+  VERSION 1.2.8
   LANGUAGES Fortran)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
