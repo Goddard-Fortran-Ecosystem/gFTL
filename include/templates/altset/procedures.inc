@@ -301,13 +301,12 @@
    ! =======================
    !  insert
    ! =======================
-   subroutine __MANGLE(insert_single)(this, value, unused, isNew, ref)
-      class(__set), intent(inout) :: this
+   subroutine __MANGLE(insert_single)(this, value, unused, isNew, iter)
+      class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: isNew
-
-      integer(kind=__gftl_size_kind), optional, intent(out) :: ref
+      type(__set_iterator), optional, intent(out) :: iter
 
       integer(kind=__gftl_size_kind) :: new
       integer(kind=__gftl_size_kind) :: parent
@@ -332,8 +331,9 @@
          end if
 
          if (eq) then
-            if (present(ref)) then
-               ref = parent
+            if (present(iter)) then
+               iter%reference => this
+               iter%current = parent
             else
                call this%items%set(parent, value)
             endif
@@ -370,7 +370,10 @@
             call this%parents%set(new, parent)
          end if
 
-         if (present(ref)) ref=new
+         if (present(iter)) then
+            iter%reference => this
+            iter%current = new
+         end if
 
 #if (defined(__vector_debug) && defined(_DEBUG___))
          print*,__FILE__,__LINE__
@@ -406,7 +409,10 @@
          end if
          this%root = new
 
-         if (present(ref)) ref = this%root
+         if (present(iter)) then
+            iter%reference => this
+            iter%current = this%root
+         end if
          if (present(isNew)) then
             isNew = .true.
          end if
@@ -515,23 +521,44 @@
    ! =======================
    !  erase
    ! =======================
-   subroutine __MANGLE(erase_one)(this, iter)
+   function __MANGLE(erase_iter)(this, position) result(iter)
+      type(__set_iterator) :: iter
       class(__set), intent(inout) :: this
-      type(__set_iterator), intent(inout) :: iter
+      type(__set_iterator), intent(in) :: position
 
       type (__set_iterator) :: last
 
       last = iter
       call last%next()
-      call this%erase(iter, last)
+      iter = this%erase(position, last)
 
-   end subroutine __MANGLE(erase_one)
+   end function __MANGLE(erase_iter)
 
+
+
+   function __MANGLE(erase_value)(this, value) result(n)
+      integer(kind=GFTL_SIZE_KIND) :: n
+      class(__set), target, intent(inout) :: this
+      __T_declare_dummy__, intent(in) :: value
+
+      type(__set_iterator) :: iter
+
+      iter = this%find(value)
+      if (iter /= this%end()) then
+         iter = this%erase(iter)
+#ifdef __set_multi
+         error - unhandled case for multiset
+#else
+         n = 1
+#endif
+      end if
+   end function __MANGLE(erase_value)
 
    ! =======================
    !  erase_multi
    ! =======================
-   subroutine __MANGLE(erase_multi)(this, first, last)
+   function __MANGLE(erase_range)(this, first, last) result(next_iter)
+      type(__set_iterator) :: next_iter
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(inout) :: first
       type(__set_iterator), intent(in) :: last
@@ -571,20 +598,7 @@
       first = last
 
       return
-   end subroutine __MANGLE(erase_multi)
-
-   ! =======================
-   !  remove
-   ! =======================
-   subroutine __MANGLE(remove)(this, value)
-      class(__set), target, intent(inout) :: this
-      __T_declare_dummy__, intent(in) :: value
-      type(__set_iterator) :: it
-
-      it=this%find(value)
-      if (it/=this%end()) call this%erase(it)
-
-   end subroutine __MANGLE(remove)
+   end function __MANGLE(erase_range)
 
    ! =======================
    !  begin
@@ -1048,23 +1062,24 @@
 
 
    ! Suboptimal initial implementation.
-   subroutine __MANGLE(merge)(this, other)
+   subroutine __MANGLE(merge)(this, source)
       class(__set), intent(inout) :: this
-      type(__set), intent(inout) :: other
+      type(__set), intent(inout) :: source
 
       type(__set_iterator) :: iter
       __T_declare_result__, pointer :: item
 
-      iter = other%begin()
-      do while (iter /= other%end())
-         item => iter%at()
-         if (this%count(item) == 0) then
-            call this%insert(item)
+      iter = source%begin()
+      do while (iter /= source%end())
+         if (this%count(iter%at()) == 0) then
+            call this%insert(iter%at())
+            iter = source%erase(iter)
+         else
+            ! already in result
             call iter%next()
-            call other%erase(iter)
          end if
       end do
-      
+
    end subroutine __MANGLE(merge)
 
 #include "templates/altset/iterator_procedures.inc"

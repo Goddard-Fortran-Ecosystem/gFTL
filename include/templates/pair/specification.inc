@@ -33,6 +33,10 @@
       procedure :: get_second => __MANGLE(get_second)
    end type __pair
 
+   interface __pair
+      module procedure __MANGLE(new_pair)
+   end interface __pair
+
 #if (defined(__T1_LT__) || defined(__T1_EQ__)) && (defined(__T2_LT__) || defined(__T2_EQ__))
    interface operator(==)
       module procedure __MANGLE(equal)

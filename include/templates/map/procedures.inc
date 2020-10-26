@@ -25,7 +25,8 @@
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-#include "templates/set/procedures.inc"
+!#include "templates/set/procedures.inc"
+#include "templates/altset/procedures.inc"
 
 #undef __set
 #undef __set_iterator

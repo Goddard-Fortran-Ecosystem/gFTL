@@ -354,15 +354,17 @@
 #ifdef __T_EQ__
             if (.not. (__T_EQ__(lhs%elements(i)%item,rhs%elements(i)%item))) then
                equal = .false.
+               return
             end if
 #else
             if ((__T_LT__(lhs%elements(i)%item,rhs%elements(i)%item))) then
                equal = .false.
+               return
             elseif ((__T_LT__(rhs%elements(i)%item,lhs%elements(i)%item))) then
                equal = .false.
+               return
             end if
 #endif
-            return
          end do
 
          ! all elements equal
@@ -622,7 +624,7 @@
    subroutine __MANGLE(clear)(this)
       class(__vector), intent(inout) :: this
 
-      call this%downsize(0_GFTL_SIZE_KIND))
+      call this%downsize(0_GFTL_SIZE_KIND)
 
       return
    end subroutine __MANGLE(clear)

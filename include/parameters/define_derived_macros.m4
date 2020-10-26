@@ -100,6 +100,15 @@ define(__T,`__`'_T()')
 #        define __T()_NE_SCALAR__(a,b) a .neqv. b
 #        define __T()_name__ "logical"
 
+#    elif __T()_type_id__ == __UNLIMITED_POLYMORPHIC__
+
+#        undef __T()_DECLARE__
+#        undef __T()_NAME__
+#        define __T()_DECLARE__(type,kindlen) __IDENTITY(class(*))
+#        define __T()_NAME__(type,kindlen) __IDENTITY(class(*))
+#        define __T()_polymorphic
+#        define __T()_type__ *
+#        define __T()_name__ "*"
 #    else
 
 !        Most intrinsics can be compared with consistent scalars

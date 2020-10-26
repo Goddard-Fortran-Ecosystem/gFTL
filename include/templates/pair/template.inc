@@ -1,5 +1,3 @@
-
-
 #include "templates/pair/header.inc"
 #include "templates/pair/public.inc"   
 #include "templates/pair/specification.inc"

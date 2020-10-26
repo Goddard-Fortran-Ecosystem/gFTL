@@ -93,11 +93,11 @@
       generic :: insert => insert_initializer_list
 #endif
 
-      procedure :: erase_one => __MANGLE(erase_one)
-      procedure :: erase_multi => __MANGLE(erase_multi)
-      generic :: erase => erase_one, erase_multi
+      procedure :: erase_iter => __MANGLE(erase_iter)
+      procedure :: erase_value => __MANGLE(erase_value)
+      procedure :: erase_range => __MANGLE(erase_range)
+      generic :: erase => erase_iter, erase_value, erase_range
 
-      procedure :: remove => __MANGLE(remove)
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
       procedure :: lower_bound => __MANGLE(lower_bound)

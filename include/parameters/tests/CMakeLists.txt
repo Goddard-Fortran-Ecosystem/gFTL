@@ -12,6 +12,7 @@ set (types
   complex
   fixed_string
   deferred_string
+  unlimited
 
 # Combos
   integer_rank_1

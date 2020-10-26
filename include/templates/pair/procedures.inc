@@ -23,6 +23,14 @@
 #include "parameters/T1/define_derived_macros.inc"
 #include "parameters/T2/define_derived_macros.inc"
 
+   function __MANGLE(new_pair)(first,second) result(p)
+      type (Pair) :: p
+      __T1_declare_dummy__, intent(in) :: first
+      __T2_declare_dummy__, intent(in) :: second
+      p%first = first
+      p%second = second
+   end function __MANGLE(new_pair)
+
    function __MANGLE(get_first)(this) result(first)
       __T1_declare_result__, pointer :: first
       class(__pair), target, intent(in) :: this

@@ -44,12 +44,19 @@ foreach (parameter ${template_parameters})
 endforeach ()
 
 # Template specific extras
+
+#pair
 cpp_copy_parameter (T1 __pair_T1  T1/copy_T1_to_pair_T1.inc)
 cpp_copy_parameter (T2 __pair_T2  T2/copy_T2_to_pair_T2.inc)
 cpp_copy_parameter (__pair_T1 __T1 T1/copy_pair_T1_to_internal_T1.inc)
 cpp_copy_parameter (__pair_T2 __T2 T2/copy_pair_T2_to_internal_T2.inc)
 process_m4 (pair_T1 cpp_undef.m4 T1/undef_pair_T1.inc)
 process_m4 (pair_T2 cpp_undef.m4 T2/undef_pair_T2.inc)
+
+#ptr
+cpp_copy_parameter (T __ptr_T  T/copy_T_to_ptr_T.inc)
+cpp_copy_parameter (__ptr_T __T T/copy_ptr_T_to_internal_T.inc)
+process_m4 (ptr_T cpp_undef.m4 T/undef_ptr_T.inc)
 
 # vector
 cpp_copy_parameter (T __vector_T T/copy_T_to_vector_T.inc)

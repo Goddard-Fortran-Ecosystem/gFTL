@@ -795,7 +795,7 @@
             call this%insert(iter%at())
             iter = source%erase(iter)
          else
-            print*,'already had it', iter%at()
+            ! already in result
             call iter%next()
          end if
       end do

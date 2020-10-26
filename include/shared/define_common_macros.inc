@@ -34,6 +34,7 @@
 #define __COMPLEX__          4
 #define __CHARACTER__        5
 #define __DOUBLE_PRECISION__ 6
+#define __UNLIMITED_POLYMORPHIC__ 7
 
 #define __LOGICAL   8
 
@@ -58,6 +59,7 @@
 #define __CHARACTER          40
 #define __CHARACTER_DEFERRED 41
 #define __DOUBLE_PRECISION   48
+#define __UNLIMITED_POLYMORPHIC 56
 
 
 ! Attributes
