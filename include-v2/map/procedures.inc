@@ -13,7 +13,7 @@
 #define __pair __map_pair
 #define __pair_guard __IDENTITY(__map_guard)__IDENTITY(p_)
    
-#include "templates/pair/procedures.inc"
+#include "pair/procedures.inc"
 
 #undef __pair
 #undef __pair_guard
@@ -25,8 +25,8 @@
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-!#include "templates/set/procedures.inc"
-#include "templates/altset/procedures.inc"
+!#include "set/procedures.inc"
+#include "altset/procedures.inc"
 
 #undef __set
 #undef __set_iterator
@@ -417,7 +417,7 @@
       end subroutine mapdump
 #endif
 
-#include "templates/map/iterator_procedures.inc"
+#include "map/iterator_procedures.inc"
 
 
 

@@ -117,8 +117,8 @@
    end interface operator(>=)
 
 
-#include "templates/set/iterator_specification.inc"
-   !#include "templates/set/reverse_iterator_specification.inc"
+#include "set/iterator_specification.inc"
+!#include "set/reverse_iterator_specification.inc"
 
 
 #undef __LEFT 0

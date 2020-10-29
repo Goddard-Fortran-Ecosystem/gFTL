@@ -168,8 +168,8 @@
 #endif
       
 
-#include "templates/vector/iterator_specification.inc"
-#include "templates/vector/reverse_iterator_specification.inc"
+#include "vector/iterator_specification.inc"
+#include "vector/reverse_iterator_specification.inc"
 
 
 ! undef derived template parameters

@@ -13,7 +13,7 @@
 #define __pair __map_pair
 #define __pair_guard __IDENTITY(__map_guard)__IDENTITY(p_)
    
-#include "templates/pair/specification.inc"
+#include "pair/specification.inc"
 
 #undef __pair
 #undef __pair_guard
@@ -30,8 +30,8 @@
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-   !#include "templates/set/specification.inc"
-#include "templates/altset/specification.inc"
+   !#include "set/specification.inc"
+#include "altset/specification.inc"
 
 #undef __set
 #undef __set_iterator
@@ -114,7 +114,7 @@
 !!$      module procedure __MANGLE(greater_than_or_equal)
 !!$   end interface operator(>=)
 
-#include "templates/map/iterator_specification.inc"
+#include "map/iterator_specification.inc"
 
 
    ! undef derived template parameters

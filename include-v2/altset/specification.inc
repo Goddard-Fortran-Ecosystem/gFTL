@@ -17,7 +17,7 @@
 #define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
 #define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(VectorRIterator)
 
-#include "templates/vector/specification.inc"
+#include "vector/specification.inc"
 
 #undef __vector
 #undef __vector_iterator
@@ -32,7 +32,7 @@
 #define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
 #define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(T_VectorRIterator)
 
-#include "templates/vector/specification.inc"
+#include "vector/specification.inc"
 
 #undef __vector
 #undef __vector_iterator
@@ -134,8 +134,8 @@
    end interface operator(/=)
 
 
-#include "templates/altset/iterator_specification.inc"
-   !#include "templates/altset/reverse_iterator_specification.inc"
+#include "altset/iterator_specification.inc"
+!#include "altset/reverse_iterator_specification.inc"
 
 
 #undef __UNINITIALIZED -1

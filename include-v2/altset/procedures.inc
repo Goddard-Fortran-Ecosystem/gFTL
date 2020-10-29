@@ -17,7 +17,7 @@
 #define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(I_VectorIterator)
 #define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(I_VectorRIterator)
 
-#include "templates/vector/procedures.inc"
+#include "vector/procedures.inc"
 
 #undef __vector
 #undef __vector_iterator
@@ -31,7 +31,7 @@
 #define __vector_iterator __IDENTITY(__set_guard)__IDENTITY(T_VectorIterator)
 #define __vector_riterator __IDENTITY(__set_guard)__IDENTITY(T_VectorRIterator)
 
-#include "templates/vector/procedures.inc"
+#include "vector/procedures.inc"
 
 #undef __vector
 #undef __vector_iterator
@@ -1082,8 +1082,8 @@
 
    end subroutine __MANGLE(merge)
 
-#include "templates/altset/iterator_procedures.inc"
-   !#include "templates/altset/reverse_iterator_procedures.inc"
+#include "altset/iterator_procedures.inc"
+!#include "altset/reverse_iterator_procedures.inc"
 
 #undef __UNINITIALIZED
 #undef __LEFT

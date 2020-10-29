@@ -25,10 +25,10 @@ enable_testing()
 
 
 # v2
-add_subdirectory (include)
+add_subdirectory (include-v2)
 
 # v1 legacy
-add_subdirectory (include-v1)
+add_subdirectory (include)
 add_subdirectory (examples)
 
 # No Fortran compiler is required to build gFTL, but the tests do

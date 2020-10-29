@@ -23,10 +23,10 @@ foreach (T ${types})
     DEPENDS ${src}/Vector.m4 ${src}/Test_Vector.m4 ${src}/Test_VectorIterator.m4 ${src}/Test_VectorRIterator.m4 ${src}/${T}.inc 
     )
 
-  message("Rule for ${test}.x")
   add_pfunit_ctest (${test}.x
     TEST_SOURCES ${bin}/${test}.pf ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
     OTHER_SOURCES ${bin}/${sut}.F90
+    LINK_LIBRARIES gftl-v2
     )
 
   add_dependencies (tests ${test}.x)

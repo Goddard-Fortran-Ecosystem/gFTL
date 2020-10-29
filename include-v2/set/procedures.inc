@@ -19,7 +19,7 @@
 
 #define __set_node __MANGLE(Node)
 
-#include "templates/set/node_procedures.inc"
+#include "set/node_procedures.inc"
 
    ! Constructors
    function __MANGLE(new_set_empty)() result(s)
@@ -801,7 +801,7 @@
       end do
    end subroutine __MANGLE(merge)
 
-#include "templates/set/iterator_procedures.inc"
+#include "set/iterator_procedures.inc"
 
 
 #undef __LEFT

@@ -87,7 +87,7 @@ add_subdirectory(tests)
 
 
 add_custom_target(m4_type_includes ALL DEPENDS ${type_incs})
-add_dependencies(gftl m4_type_includes)
+add_dependencies(gftl-v2 m4_type_includes)
 
 foreach (parameter ${template_parameters})
   install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${parameter} DESTINATION "${dest}/include/parameters"

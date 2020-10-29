@@ -41,7 +41,7 @@ foreach(type ${types})
 
   add_custom_command (
     OUTPUT ${actual}
-    COMMAND ${CPP} -I${gFTL_SOURCE_DIR}/include -I${gFTL_BINARY_DIR}/include -I${gFTL_SOURCE_DIR}/include ${source} > ${tmp}
+    COMMAND ${CPP} -I${gFTL_SOURCE_DIR}/include-v2 -I${gFTL_BINARY_DIR}/include-v2 ${source} > ${tmp}
     # Strip all empty lines and comments
     COMMAND ${FILTER} ${tmp} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

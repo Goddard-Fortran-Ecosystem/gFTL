@@ -853,8 +853,8 @@
    end function __MANGLE(rend)
 
 
-#include "templates/vector/iterator_procedures.inc"
-#include "templates/vector/reverse_iterator_procedures.inc"
+#include "vector/iterator_procedures.inc"
+#include "vector/reverse_iterator_procedures.inc"
 
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
