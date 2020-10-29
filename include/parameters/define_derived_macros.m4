@@ -262,7 +262,7 @@ define(__T,`__`'_T()')
 #        define __T()_dimension_string__ __T()_shape_string__
 #    endif
 #    define __T()_dimension_dummy__ __T()_dimension_component__
-#
+
 #else
 ! Scalar
 #    define __T()_dimension_result__
@@ -285,14 +285,13 @@ define(__T,`__`'_T()')
 #    define __T()_allocatable_string__ ""
 #endif
 
-#define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_component__)__IDENTITY(__T()_allocatable_attr__)
+#define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_component__)__T()_allocatable_attr__
 #define __T()_declare_result__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_result__)
 #define __T()_declare_dummy__ __T()_DECLARE__(__T()_type__,__T()_kindlen_dummy__)__IDENTITY(__T()_dimension_dummy__)
 
 #ifdef __T()_name__
-#    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__IDENTITY(__T()_dimension_string__)//__IDENTITY(__T()_allocatable_string__)
+#    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__T()_dimension_string__//__T()_allocatable_string__
 #endif
-
 
 #ifdef __T()_EQ
 #    define __T()_EQ__(lhs,rhs) __T()_EQ(lhs,rhs)

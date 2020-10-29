@@ -72,7 +72,7 @@
       generic :: of => of_size_kind
 #endif
 
-#ifndef __type_wrapped
+#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
       procedure :: data => __MANGLE(data)
 #endif
       procedure :: back => __MANGLE(back)
@@ -86,17 +86,11 @@
 #endif
 
 #if !defined(__T_allocatable__) && !(__T_rank__ > 0)
-      procedure :: copyFromArray => __MANGLE(copyfromarray)
-      generic :: assignment(=) => copyFromArray
+      procedure :: copy_from_array => __MANGLE(copy_from_array)
+      generic :: assignment(=) => copy_from_array
 #endif
       procedure :: push_back => __MANGLE(push_back)
       procedure :: pop_back => __MANGLE(pop_back)
-      procedure :: insert_size_kind => __MANGLE(insert_size_kind)
-      procedure :: insert_default => __MANGLE(insert_default)
-      generic :: insert => insert_default
-#ifndef  __gftl_disable_index_kind_overload
-      generic :: insert => insert_size_kind
-#endif
 
       procedure :: resize_size_kind => __MANGLE(resize_size_kind)
       procedure :: resize_default => __MANGLE(resize_default)
@@ -155,6 +149,7 @@
    interface operator(/=)
       module procedure __MANGLE(not_equal)
    end interface operator(/=)
+
 #endif
 
 #ifdef __T_LT__

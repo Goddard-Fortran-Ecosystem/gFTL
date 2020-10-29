@@ -34,23 +34,23 @@
    end function __MANGLE(new_vector_empty)
 
 
-   function __MANGLE(new_vector_fill_size_kind)(n, val) result(v)
+   function __MANGLE(new_vector_fill_size_kind)(n, value) result(v)
       type (__vector) :: v
       integer(kind=GFTL_SIZE_KIND), intent(in) :: n
-      __T_declare_dummy__, optional, intent(in) :: val
+      __T_declare_dummy__, optional, intent(in) :: value
 
-      call v%resize(n, val)
+      call v%resize(n, value=value)
 
       return
    end function __MANGLE(new_vector_fill_size_kind)
 
 
-   function __MANGLE(new_vector_fill_default)(n, val) result(v)
+   function __MANGLE(new_vector_fill_default)(n, value) result(v)
       type (__vector) :: v
       integer, intent(in) :: n
-      __T_declare_dummy__, optional, intent(in) :: val
+      __T_declare_dummy__, optional, intent(in) :: value
 
-      call v%resize(n, val)
+      call v%resize(n, value=value)
 
       return
    end function __MANGLE(new_vector_fill_default)
@@ -65,7 +65,7 @@
 
       iter = first
       do while (iter /= last)
-         call v%push_back(iter%at())
+         call v%push_back(iter%of())
       end do
 
       return
@@ -197,6 +197,7 @@
 
       if ((idx <= 0).or.(idx > this%vsize)) then
          rc = OUT_OF_RANGE
+         res => null()
       else
          rc = 0
          res => this%elements(idx)%item
@@ -231,7 +232,6 @@
 
 
 #if !defined(__T_allocatable__) && !(__T_rank__ > 0)
-
    ! =======================
    !  get_data
    ! =======================
@@ -318,7 +318,7 @@
    ! =======================
    !  copyFromArray() assignment(=)
    ! =======================
-   subroutine __MANGLE(copyFromArray)(this, array)
+   subroutine __MANGLE(copy_from_array)(this, array)
       class(__vector), intent(inout) :: this
       __T_declare_component__, intent(in) :: array(:)
 
@@ -331,7 +331,7 @@
       this%vsize=n
 
       return
-   end subroutine __MANGLE(copyFromArray)
+   end subroutine __MANGLE(copy_from_array)
 #endif
 
 
@@ -357,6 +357,7 @@
                return
             end if
 #else
+! then must have a less-than operator
             if ((__T_LT__(lhs%elements(i)%item,rhs%elements(i)%item))) then
                equal = .false.
                return
@@ -474,7 +475,7 @@
       __UNUSED_DUMMY(unused)
 
       call this%grow_to(this%vsize+1)
-      call this%resize(this%vsize+1, value, rc=rc)
+      call this%resize(this%vsize+1, value=value, rc=rc)
 
       return
 
@@ -493,61 +494,15 @@
    end subroutine __MANGLE(pop_back)
 
 
-   ! =======================
-   !  insert
-   ! =======================
-   subroutine __MANGLE(insert_size_kind)(                                                 &
-        &   this, index, value, unused, rc)
-      class(__vector), target, intent(inout) :: this
-
-      integer(kind=GFTL_SIZE_KIND), intent(in) :: index
-
-      __T_declare_dummy__, intent(in) :: value
-      type (KeywordEnforcer), optional, intent(in) :: unused
-      integer, optional, intent(out) :: rc
-
-      __T_declare_component__ :: temp
-      integer(kind=GFTL_SIZE_KIND) :: i, n
-
-      __UNUSED_DUMMY(unused)
-
-      n = this%vsize
-      if (index==n+1) then
-         call this%push_back(value)
-         ! Workaround for NAG -6221 - temp needs some status
-         __T_COPY__(temp,value)
-         return
-      endif
-      call this%grow_to(this%vsize+1)
-      __T_COPY__(temp,this%elements(n)%item)
-      call this%resize(n+1, temp, rc=rc)
-
-      do i = n, index, -1
-         __T_MOVE__(this%elements(index)%item,value)
-      end do
-
-      __T_COPY__(this%elements(index)%item,value)
-
-      return
-   end subroutine __MANGLE(insert_size_kind)
-
-   subroutine __MANGLE(insert_default)(this, index, value)
-      class(__vector), intent(inout) :: this
-      integer, intent(in) :: index
-      __T_declare_dummy__, intent(in) :: value
-
-      call this%insert(int(index,kind=GFTL_SIZE_KIND), value)
-   end subroutine __MANGLE(insert_default)
-
 
    ! =======================
    !  resize()
    ! =======================
-   subroutine __MANGLE(resize_size_kind)(this, newsize, value, unused, rc)
+   subroutine __MANGLE(resize_size_kind)(this, count, unused, value, rc)
       class(__vector), intent(inout) :: this
-      integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize
-      __T_declare_dummy__, optional, intent(in) :: value
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: count
       type (KeywordEnforcer), optional, intent(in) :: unused
+      __T_declare_dummy__, optional, intent(in) :: value
       integer, optional, intent(out) :: rc
 
       integer(kind=GFTL_SIZE_KIND) :: oldSize
@@ -556,28 +511,34 @@
 
       __UNUSED_DUMMY(unused)
 
-      if (newSize == this%vsize) return
-      if (newSize < 0) then
+      if (count == this%vsize) then
+         if (present(rc)) rc = 0
+         return
+      end if
+      if (count < 0) then
          if (present(rc)) rc = ILLEGAL_INPUT
          return
       end if
+
+      if (present(rc)) rc = 0
+
       oldSize=this%vsize
 
-      call this%reserve(newSize, rc=status)
+      call this%reserve(count, rc=status)
       if (status/=0) then
          if (present(rc)) rc=status
          return
       end if
 
 
-      this%vsize = newSize
+      this%vsize = count
 
-      do i = newSize + 1, oldSize
+      do i = count + 1, oldSize
          __T_FREE__(this%elements(i)%item)
       end do
 
-      if (present(value) .and. (newsize>oldsize)) then
-         do i = oldSize + 1, newSize
+      if (present(value) .and. (count>oldsize)) then
+         do i = oldSize + 1, count
             __T_COPY__(this%elements(i)%item, value)
          end do
       endif
@@ -585,16 +546,16 @@
       return
    end subroutine __MANGLE(resize_size_kind)
 
-   subroutine __MANGLE(resize_default)(this, newsize, value, unused, rc)
+   subroutine __MANGLE(resize_default)(this, count, unused, value, rc)
       class(__vector), intent(inout) :: this
-      integer, intent(in) :: newsize
-      __T_declare_dummy__, optional, intent(in) :: value
+      integer, intent(in) :: count
       type (KeywordEnforcer), optional, intent(in) :: unused
+      __T_declare_dummy__, optional, intent(in) :: value
       integer, optional, intent(out) :: rc
 
       __UNUSED_DUMMY(unused)
 
-      call this%resize(int(newsize,kind=GFTL_SIZE_KIND), value, rc=rc)
+      call this%resize(int(count,kind=GFTL_SIZE_KIND), value=value, rc=rc)
 
    end subroutine __MANGLE(resize_default)
 
@@ -647,20 +608,22 @@
    ! =======================
    !  erase_one
    ! =======================
-   subroutine __MANGLE(erase_one)(this, position)
+   function __MANGLE(erase_one)(this, position) result(new_iter)
+      type(__vector_iterator), target :: new_iter
       class(__vector), target, intent(inout) :: this
       type (__vector_iterator), intent(in)  :: position
 
-      call this%erase(position, position+1)
+      new_iter = this%erase(position, position+1)
 
       return
-   end subroutine __MANGLE(erase_one)
+   end function __MANGLE(erase_one)
 
 
    ! =======================
    !  erase_range
    ! =======================
-   subroutine __MANGLE(erase_range)(this, first, last)
+   function __MANGLE(erase_range)(this, first, last) result(new_iter)
+      type(__vector_iterator), target :: new_iter
       class(__vector), target, intent(inout) :: this
       type (__vector_iterator), intent(in)  :: first
       type (__vector_iterator), intent(in)  :: last
@@ -678,8 +641,11 @@
       end do
       this%vsize=this%vsize-delta
 
+      new_iter%elements => this%elements
+      new_iter%current_index = first%current_index
+
       return
-   end subroutine __MANGLE(erase_range)
+   end function __MANGLE(erase_range)
 
    ! =======================
    !  reserve()

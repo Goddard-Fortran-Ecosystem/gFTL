@@ -32,32 +32,32 @@
 
 
 
-      function __MANGLE(riter_at)(this) result(ptr)
+      function __MANGLE(riter_of)(this) result(ptr)
          __T_declare_result__, pointer :: ptr
          class (__vector_riterator), intent(in) :: this
 
          ptr => this%elements(this%current_index)%item
 
-      end function __MANGLE(riter_at)
+      end function __MANGLE(riter_of)
 
 
-      function __MANGLE(riter_at_offset_size_kind)(this, i) result(ptr)
+      function __MANGLE(riter_of_offset_size_kind)(this, i) result(ptr)
          __T_declare_result__, pointer :: ptr
          class (__vector_riterator), intent(in) :: this
          integer(kind=__gftl_size_kind), intent(in) :: i
 
          ptr => this%elements(this%current_index + i)%item
 
-      end function __MANGLE(riter_at_offset_size_kind)
+      end function __MANGLE(riter_of_offset_size_kind)
 
-      function __MANGLE(riter_at_offset_default)(this, i) result(ptr)
+      function __MANGLE(riter_of_offset_default)(this, i) result(ptr)
          __T_declare_result__, pointer :: ptr
          class (__vector_riterator), intent(in) :: this
          integer, intent(in) :: i
 
          ptr => this%elements(this%current_index + i)%item
          
-      end function __MANGLE(riter_at_offset_default)
+      end function __MANGLE(riter_of_offset_default)
 
 
 
@@ -184,7 +184,7 @@
       logical function __MANGLE(riter_less)(a, b) result(less)
          type(__vector_riterator), intent(in) :: a
          type(__vector_riterator), intent(in) :: b
-         less = (a%current_index < b%current_index)
+         less = (b%current_index < a%current_index)
       end function __MANGLE(riter_less)
 
 

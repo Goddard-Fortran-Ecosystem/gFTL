@@ -24,14 +24,14 @@
       procedure :: prev => __MANGLE(riter_prev)
 
       procedure :: get => __MANGLE(riter_get)
-      procedure :: __MANGLE(riter_at)
-      procedure :: __MANGLE(riter_at_offset_size_kind)
-      procedure :: __MANGLE(riter_at_offset_default)
+      procedure :: __MANGLE(riter_of)
+      procedure :: __MANGLE(riter_of_offset_size_kind)
+      procedure :: __MANGLE(riter_of_offset_default)
 
-      generic :: at => __MANGLE(riter_at)
-      generic :: at => __MANGLE(riter_at_offset_size_kind)
+      generic :: of => __MANGLE(riter_of)
+      generic :: of => __MANGLE(riter_of_offset_size_kind)
 #ifndef __gftl_disable_index_kind_overload
-      generic :: at => __MANGLE(riter_at_offset_default)
+      generic :: of => __MANGLE(riter_of_offset_default)
 #endif
 
 
