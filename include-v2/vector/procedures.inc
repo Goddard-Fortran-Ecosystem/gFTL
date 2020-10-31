@@ -285,6 +285,14 @@
 
       idx = merge(i, this%vsize+i, i > 0)
 
+#ifdef __T_allocatable__
+      block
+        integer :: j
+        do j = 1, this%vsize
+           print*,'set size: ', j, allocated(this%elements(j)%item)
+        end do
+      end block
+#endif
       __T_FREE__(this%elements(idx)%item)
       __T_COPY__(this%elements(idx)%item, value)
 
@@ -352,6 +360,12 @@
 
          do i = 1, lhs%vsize
 #ifdef __T_EQ__
+#if __T_rank > 0 && !defined(__T_shape)
+            if (any(shape(lhs%elements(i)%item) /= shape(rhs%elements(i)%item))) then
+               equal = .false.
+               return
+            endif
+#endif
             if (.not. (__T_EQ__(lhs%elements(i)%item,rhs%elements(i)%item))) then
                equal = .false.
                return
@@ -545,7 +559,20 @@
          else
             do i = oldSize + 1, count
                __T_COPY__(this%elements(i)%item, __T_default__)
+#ifdef __T_allocatable__
+               print*,'set size: ', i, allocated(this%elements(i)%item), __T_default__
+               this%elements(i)%item = __T_default__
+               print*,'set size: ', i, allocated(this%elements(i)%item), __T_default__
+#endif
             end do
+#ifdef __T_allocatable__
+      block
+        integer :: j
+        do j = 1, this%vsize
+           print*,'set size: ', j, allocated(this%elements(j)%item)
+        end do
+      end block
+#endif
          end if
       endif
 

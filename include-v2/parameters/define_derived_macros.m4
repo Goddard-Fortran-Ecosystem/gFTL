@@ -97,7 +97,7 @@ define(__T,`__`'_T()')
 #            define __T()_kindlen_string__ "(kind=REAL128)"
 #        endif
 #        if !defined(__T()_default__)
-#            define __T()_default__ 0
+#            define __T()_default_scalar__ 0
 #        endif
 
 #    elif __T()_type_id__ == __LOGICAL__
@@ -107,7 +107,7 @@ define(__T,`__`'_T()')
 #        define __T()_NE_SCALAR__(a,b) a .neqv. b
 #        define __T()_name__ "logical"
 #        if !defined(__T()_default__)
-#            define __T()_default__ .false.
+#            define __T()_default_scalar__ .false.
 #        endif
 
 #    elif __T()_type_id__ == __UNLIMITED_POLYMORPHIC__
@@ -120,7 +120,7 @@ define(__T,`__`'_T()')
 #        define __T()_type__ *
 #        define __T()_name__ "*"
 #        if !defined(__T()_default__)
-#            define __T()_default__ NO_TYPE__
+#            define __T()_default_scalar__ NO_TYPE__
 #        endif
 
 #    else
@@ -151,7 +151,7 @@ define(__T,`__`'_T()')
 #                define __T()_kindlen_string__ "(kind=INT64)"
 #            endif
 #            if !defined(__T()_default__)
-#                define __T()_default__ 0
+#                define __T()_default_scalar__ 0
 #            endif
 
 #        elif __T()_type_id__ == __REAL__
@@ -172,7 +172,7 @@ define(__T,`__`'_T()')
 #                define __T()_kindlen_string__ "(kind=REAL128)"
 #            endif
 #           if !defined(__T()_default__)
-#               define __T()_default__ 0
+#               define __T()_default_scalar__ 0
 #           endif
 
 #        elif __T()_type_id__ == __DOUBLE_PRECISION__
@@ -180,7 +180,7 @@ define(__T,`__`'_T()')
 #            define __T()_type__ double precision
 #            define __T()_name__ "double precision"
 #            if !defined(__T()_default__)
-#                define __T()_default__ 0
+#                define __T()_default_scalar__ 0
 #            endif
 
 #        elif __T()_type_id__ == __CHARACTER__
@@ -192,11 +192,11 @@ define(__T,`__`'_T()')
 #                define __T()_KINDLEN__(context) (len=context)
 #                define __T()_kindlen_string__ "(len=:)"
 #                if !defined(__T()_default__)
-#                    define __T()_default__ ""
+#                    define __T()_default_scalar__ ""
 #                endif
 #            else
 #                if !defined(__T()_default__)
-#                    define __T()_default__ ""
+#                    define __T()_default_scalar__ ""
 #                endif
 #            endif
 
@@ -219,7 +219,7 @@ define(__T,`__`'_T()')
 #        define __T()_NAME__(name,kindlen) "type("//name//kindlen//")"
 #    endif
 #    if !defined(__T()_default__)
-#        define __T()_default__ __T()()
+#        define __T()_default_scalar__ __T()()
 #    endif
 
 
@@ -291,12 +291,19 @@ define(__T,`__`'_T()')
 #        else
 #            define __T()_dimension_string__ ", dimension(rank<"//T_()_rank_string__//">)"
 #        endif
+#        ifndef __T()_default__
+#            define __T()_default__ __T()_default_scalar__
+#        endif
 #    else
-         ! assumed shape
+         ! deferred shape
 #        define __T()_dimension_component__ __T()_dimension_result__
 #        define __T()_dimension_string__ __T()_shape_string__
+#        ifndef __T()_default__
+#            define __T()_default__ reshape([__T()_default_scalar__],spread(0,1,__T()_rank))
+#        endif
 #    endif
 #    define __T()_dimension_dummy__ __T()_dimension_component__
+
 
 #else
 ! Scalar
@@ -304,6 +311,9 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_component__
 #    define __T()_dimension_dummy__
 #    define __T()_dimension_string__ ""
+#        ifndef __T()_default__
+#            define __T()_default__ __T()_default_scalar__
+#        endif
 #endif
 
 #if defined(__T()_deferred) && !defined(__T()_deferred__)

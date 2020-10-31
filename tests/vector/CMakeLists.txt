@@ -9,6 +9,7 @@ set (types
   deferred_string
   unlimited
   integer_shape_3
+  real_rank_2_deferred_shape
   )
 
 foreach (T ${types})

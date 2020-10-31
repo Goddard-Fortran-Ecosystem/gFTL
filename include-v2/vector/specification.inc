@@ -49,6 +49,7 @@
    ! "T_shape"  T_shape __T_shape __T_shape__
    ! "component" __T_declare_component__
    ! "dimension" __T_dimension_component__
+   ! "default" __T_default__
    
 
    type :: __vector
