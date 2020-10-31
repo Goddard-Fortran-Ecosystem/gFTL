@@ -1,5 +1,5 @@
-declare string:    "character"//"(len=:)"//""//""
-declare component: character(len=:)
+declare string:    "character"//"(len=:)"//""//", allocatable"
+declare component: character(len=:), allocatable
 declare result:    character(len=:)
 declare dummy:     character(len=*)
 
@@ -10,6 +10,6 @@ a >= b:            a >= b
 a <  b:            a < b
 a >  b:            a > b
 
-FREE(x):           
+FREE(x):           deallocate(x)
 COPY(dst,src):     dst=src
-MOVE(dst,src):     dst=src
+MOVE(dst,src):     call move_alloc(from=src,to=dst)

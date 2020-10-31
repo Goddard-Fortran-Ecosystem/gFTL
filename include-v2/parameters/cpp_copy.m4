@@ -32,8 +32,10 @@ cpp_copy(kindlen_dummy)
 cpp_copy(kindlen_component)
 cpp_copy(kindlen_string)
 
+cpp_copy(default)
+
 cpp_copy(rank)
-cpp_copy(extents)
+cpp_copy(shape)
 
 cpp_copy(FREE,x)
 cpp_copy(COPY,lhs,rhs)

@@ -50,8 +50,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(two))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(two)))
       
    end subroutine test_of_default
 
@@ -61,8 +61,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%of(1_GFTL_SIZE_KIND), is(one))
-      @assert_that(v%of(2_GFTL_SIZE_KIND), is(two))
+      @assert_that(v%of(1_GFTL_SIZE_KIND), is(equal_to(one)))
+      @assert_that(v%of(2_GFTL_SIZE_KIND), is(equal_to(two)))
 
    end subroutine test_of_size_kind
 
@@ -72,8 +72,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%at(1), is(one))
-      @assert_that(v%at(2), is(two))
+      @assert_that(v%at(1), is(equal_to(one)))
+      @assert_that(v%at(2), is(equal_to(two)))
       
    end subroutine test_at_default
 
@@ -83,8 +83,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%at(1_GFTL_SIZE_KIND), is(one))
-      @assert_that(v%at(2_GFTL_SIZE_KIND), is(two))
+      @assert_that(v%at(1_GFTL_SIZE_KIND), is(equal_to(one)))
+      @assert_that(v%at(2_GFTL_SIZE_KIND), is(equal_to(two)))
 
    end subroutine test_at_size_kind
 
@@ -109,10 +109,10 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      @assert_that(v%back(), is(one))
+      @assert_that(v%back(), is(equal_to(one)))
 
       call v%push_back(two)
-      @assert_that(v%back(), is(two))
+      @assert_that(v%back(), is(equal_to(two)))
       
    end subroutine test_back
 
@@ -122,10 +122,10 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      @assert_that(v%front(), is(one))
+      @assert_that(v%front(), is(equal_to(one)))
 
       call v%push_back(two)
-      @assert_that(v%front(), is(one))
+      @assert_that(v%front(), is(equal_to(one)))
       
    end subroutine test_front
 
@@ -136,6 +136,7 @@ contains
 
       call v%reserve(5)
       @assert_that(v%capacity() >= 5, is(true()))
+
    end subroutine test_reserve
 
 
@@ -143,9 +144,13 @@ contains
    subroutine test_set_default()
       type(Vector) :: v
 
-      call v%reserve(5)
+      call v%push_back(one)
+      call v%set(1, two)
+      @assert_that(v%of(1), is(equal_to(two)))
+
+      call v%resize(5)
       call v%set(5, one)
-      @assert_that(v%of(5), is(one))
+      @assert_that(v%of(5), is(equal_to(one)))
       
    end subroutine test_set_default
 
@@ -153,24 +158,24 @@ contains
    subroutine test_set_size_kind()
       type(Vector) :: v
 
-      call v%reserve(5_GFTL_SIZE_KIND)
+      call v%resize(5_GFTL_SIZE_KIND)
       call v%set(5_GFTL_SIZE_KIND, one)
-      @assert_that(v%of(5_GFTL_SIZE_KIND), is(one))
+      @assert_that(v%of(5_GFTL_SIZE_KIND), is(equal_to(one)))
       
    end subroutine test_set_size_kind
 
    @test
    subroutine  test_copy_from_array()
-#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
+#if !defined(__T_allocatable__) && !(__T_rank > 0)
       type(Vector) :: v
       __T_declare_result__, allocatable :: array(:)
 
       array = [one, two, three]
       v = array
       @assert_that(int(v%size()), is(3))
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(two))
-      @assert_that(v%of(3), is(three))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(two)))
+      @assert_that(v%of(3), is(equal_to(three)))
       
 #endif
    end subroutine test_copy_from_array
@@ -186,20 +191,52 @@ contains
       call v%pop_back()
       
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(two))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(two)))
    end subroutine test_pop_back
 
    
    @test
+   subroutine test_vector_fill_default_value()
+      type(Vector) :: v
+      __T_declare_component__ :: default
+
+      v = Vector(n=3)
+      @assert_that(int(v%size()), is(3))
+      default = __T_default__
+
+#if __T_type_id__ == __UNLIMITED_POLYMORPHIC__
+      ! Forced default to be integer 0
+      block
+        integer ::i
+        do i = 1, 3
+           select type(q => v%at(i))
+           type is (integer)
+              @assert_that(v%at(1), is(equal_to(default)))
+              @assert_that(v%at(2), is(equal_to(default)))
+              @assert_that(v%at(3), is(equal_to(default)))
+           class default
+              @assertFail('incorrect default type')
+           end select
+        end do
+      end block
+#else
+      @assert_that(v%at(1), is(equal_to(default)))
+      @assert_that(v%at(2), is(equal_to(default)))
+      @assert_that(v%at(3), is(equal_to(default)))
+#endif
+      
+   end subroutine test_vector_fill_default_value
+
+   @test
    subroutine test_vector_fill()
       type(Vector) :: v
 
-      v = Vector(3, value=7)
+      v = Vector(n=3, value=two)
       @assert_that(int(v%size()), is(3))
-      @assert_that(v%at(1), is(7))
-      @assert_that(v%at(2), is(7))
-      @assert_that(v%at(3), is(7))
+      @assert_that(v%at(1), is(equal_to(two)))
+      @assert_that(v%at(2), is(equal_to(two)))
+      @assert_that(v%at(3), is(equal_to(two)))
 
    end subroutine test_vector_fill
 
@@ -222,8 +259,8 @@ contains
       call v%resize(2, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(three))
-      @assert_that(v%of(2), is(three))
+      @assert_that(v%of(1), is(equal_to(three)))
+      @assert_that(v%of(2), is(equal_to(three)))
 
    end subroutine resize_default_with_value
 
@@ -236,8 +273,8 @@ contains
       call v%resize(2, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(three))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(three)))
 
    end subroutine resize_default_with_value_b
 
@@ -258,8 +295,8 @@ contains
       call v%shrink_to_fit()
       @assert_that(int(v%capacity()) == 2,is(true()))
       ! other elements unchanged
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(two))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(two)))
       
    end subroutine test_shrink_to_fit
 
@@ -271,8 +308,8 @@ contains
       call v%resize(2_GFTL_SIZE_KIND, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      @assert_that(v%of(1_GFTL_SIZE_KIND), is(three))
-      @assert_that(v%of(2_GFTL_SIZE_KIND), is(three))
+      @assert_that(v%of(1_GFTL_SIZE_KIND), is(equal_to(three)))
+      @assert_that(v%of(2_GFTL_SIZE_KIND), is(equal_to(three)))
 
    end subroutine resize_size_kind_with_value
 
@@ -299,10 +336,10 @@ contains
       next_iter = v%erase(iter)
 
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(three))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(three)))
 
-      @assert_that(next_iter%of(), is(three))
+      @assert_that(next_iter%of(), is(equal_to(three)))
       
    end subroutine test_erase_one
 
@@ -320,10 +357,10 @@ contains
       next_iter = v%erase(iter, iter+2)
 
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(one))
-      @assert_that(v%of(2), is(one))
+      @assert_that(v%of(1), is(equal_to(one)))
+      @assert_that(v%of(2), is(equal_to(one)))
       
-      @assert_that(next_iter%of(), is(one))
+      @assert_that(next_iter%of(), is(equal_to(one)))
 
    end subroutine test_erase_range
 
@@ -351,12 +388,12 @@ contains
    subroutine test_vector_copy()
       type(Vector) :: v1, v2
 
-      v1 = Vector(n=3, value=7)
+      v1 = Vector(n=3, value=two)
       v2 = v1
       @assert_that(int(v2%size()), is(3))
-      @assert_that(v2%at(1), is(7))
-      @assert_that(v2%at(2), is(7))
-      @assert_that(v2%at(3), is(7))
+      @assert_that(v2%at(1), is(equal_to(two)))
+      @assert_that(v2%at(2), is(equal_to(two)))
+      @assert_that(v2%at(3), is(equal_to(two)))
 
    end subroutine test_vector_copy
 
@@ -395,7 +432,7 @@ contains
    subroutine test_not_equal()
       type(vector) :: ref, smaller, bigger, different
 
-#if defined(__T__EQ__) || defined(__T_LT__)
+#if defined(__T_EQ__) || defined(__T_LT__)
       ! [1,2]
       call ref%push_back(one)
       call ref%push_back(two)
@@ -422,7 +459,7 @@ contains
    end subroutine test_not_equal
 
 #ifdef __T_LT__
-   @test(ifdef=(__T_LT__))
+   @test(ifdef=__T_LT__)
    subroutine test_less_than()
       type(vector) :: a, b, c, d
 
@@ -453,7 +490,7 @@ contains
 
    end subroutine test_less_than
 
-   @test
+   @test(ifdef=__T_LT__)
    subroutine test_less_than_or_equal()
       type(vector) :: a, b, c, d
 
@@ -483,7 +520,7 @@ contains
       @assert_that(d <= a, is(false()))
    end subroutine test_less_than_or_equal
 
-   @test
+   @test(ifdef=__T_LT__)
    subroutine test_greater_than()
       type(vector) :: a, b, c, d
 
@@ -513,7 +550,7 @@ contains
       @assert_that(d > a, is(true()))
    end subroutine test_greater_than
 
-   @test
+   @test(ifdef=__T_LT__)
    subroutine test_greater_than_or_equal()
       type(vector) :: a, b, c, d
 
@@ -543,8 +580,28 @@ contains
       @assert_that(d >= a, is(true()))
    end subroutine test_greater_than_or_equal
 
+#endif
 
-#endif   
+   @test
+   subroutine test_swap()
+      type(vector) :: v1, v2
+
+      call v1%push_back(one)
+      call v1%push_back(two)
+
+      call v2%push_back(three)
+
+      call v1%swap(v2)
+
+      @assert_that(int(v1%size()), is(1))
+      @assert_that(int(v2%size()), is(2))
+
+      @assert_that(v1%of(1), is(equal_to(three)))
+      @assert_that(v2%of(1), is(equal_to(one)))
+      @assert_that(v2%of(2), is(equal_to(two)))
+   end subroutine test_swap
+      
+   
 
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"

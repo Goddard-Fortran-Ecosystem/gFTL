@@ -4,8 +4,8 @@
 
 ! Per-container name mangling   
 #    define __IDENTITY(x) x
+#    define __COMMA(x) , x
 #    define __MANGLE(proc) __IDENTITY(__guard)__IDENTITY(proc)
-
 
 ! Fortran portability support
 #    ifdef  gftl_size_kind
@@ -83,6 +83,9 @@
 #    define __UNUSED_DUMMY(x) if (.false.) print*,shape(x)
 
    integer, parameter :: GFTL_SIZE_KIND = __gftl_size_kind
+   type :: NO_TYPE_
+   end type NO_TYPE_
+   type(NO_TYPE_), parameter :: NO_TYPE__ = NO_TYPE_()
 
 #endif
 

@@ -53,13 +53,17 @@ define(__T,`__`'_T()')
    !     __T()_kindlen_dummy__
    !     __T()_kindlen_component__
 
-   !     __T()_dimensions_result__
-   !     __T()_dimensions_component__
-   !     __T()_dimensions_dummy__
+   !     __T()_dimension_result__
+   !     __T()_dimension_component__
+   !     __T()_dimension_dummy__
 
    !     __T()_type_id__
    !     __T()_kind__
    !     __T()_kindlen_string__
+
+#if defined(__T()_default)
+#   define __T()_default__ __T()_default
+#endif
 
 #if __T() > 0
    ! Instrinsic types
@@ -80,17 +84,20 @@ define(__T,`__`'_T()')
 #        define __T()_EQ_SCALAR__(a,b) a == b
 #        define __T()_name__ "complex"
 #        if __T()_kind__ == 16
-#           define __T()_KINDLEN__(context) (kind=REAL16)
-#           define __T()_kindlen_string__ "(kind=REAL16)"
+#            define __T()_KINDLEN__(context) (kind=REAL16)
+#            define __T()_kindlen_string__ "(kind=REAL16)"
 #        elif __T()_kind__ == 32
-#           define __T()_KINDLEN__(context) (kind=REAL32)
-#           define __T()_kindlen_string__ "(kind=REAL32)"
+#            define __T()_KINDLEN__(context) (kind=REAL32)
+#            define __T()_kindlen_string__ "(kind=REAL32)"
 #        elif __T()_kind__ == 64
-#           define __T()_KINDLEN__(context) (kind=REAL64)
-#           define __T()_kindlen_string__ "(kind=REAL64)"
+#            define __T()_KINDLEN__(context) (kind=REAL64)
+#            define __T()_kindlen_string__ "(kind=REAL64)"
 #        elif __T()_kind__ == 128
-#           define __T()_KINDLEN__(context) (kind=REAL128)
-#           define __T()_kindlen_string__ "(kind=REAL128)"
+#            define __T()_KINDLEN__(context) (kind=REAL128)
+#            define __T()_kindlen_string__ "(kind=REAL128)"
+#        endif
+#        if !defined(__T()_default__)
+#            define __T()_default__ 0
 #        endif
 
 #    elif __T()_type_id__ == __LOGICAL__
@@ -99,6 +106,9 @@ define(__T,`__`'_T()')
 #        define __T()_EQ_SCALAR__(a,b) a .eqv. b
 #        define __T()_NE_SCALAR__(a,b) a .neqv. b
 #        define __T()_name__ "logical"
+#        if !defined(__T()_default__)
+#            define __T()_default__ .false.
+#        endif
 
 #    elif __T()_type_id__ == __UNLIMITED_POLYMORPHIC__
 
@@ -109,6 +119,10 @@ define(__T,`__`'_T()')
 #        define __T()_polymorphic
 #        define __T()_type__ *
 #        define __T()_name__ "*"
+#        if !defined(__T()_default__)
+#            define __T()_default__ NO_TYPE__
+#        endif
+
 #    else
 
 !        Most intrinsics can be compared with consistent scalars
@@ -133,8 +147,11 @@ define(__T,`__`'_T()')
 #                define __T()_KINDLEN__(context) (kind=INT32)
 #                define __T()_kindlen_string__ "(kind=INT32)"
 #            elif __T()_kind__ == 64
-#                 define __T()_KINDLEN__(context) (kind=INT64)
+#                define __T()_KINDLEN__(context) (kind=INT64)
 #                define __T()_kindlen_string__ "(kind=INT64)"
+#            endif
+#            if !defined(__T()_default__)
+#                define __T()_default__ 0
 #            endif
 
 #        elif __T()_type_id__ == __REAL__
@@ -154,11 +171,17 @@ define(__T,`__`'_T()')
 #                define __T()_KINDLEN__(context) (kind=REAL128)
 #                define __T()_kindlen_string__ "(kind=REAL128)"
 #            endif
+#           if !defined(__T()_default__)
+#               define __T()_default__ 0
+#           endif
 
 #        elif __T()_type_id__ == __DOUBLE_PRECISION__
 
 #            define __T()_type__ double precision
 #            define __T()_name__ "double precision"
+#            if !defined(__T()_default__)
+#                define __T()_default__ 0
+#            endif
 
 #        elif __T()_type_id__ == __CHARACTER__
 
@@ -168,6 +191,13 @@ define(__T,`__`'_T()')
 #                define __T()_deferred__
 #                define __T()_KINDLEN__(context) (len=context)
 #                define __T()_kindlen_string__ "(len=:)"
+#                if !defined(__T()_default__)
+#                    define __T()_default__ ""
+#                endif
+#            else
+#                if !defined(__T()_default__)
+#                    define __T()_default__ ""
+#                endif
 #            endif
 
 #        endif
@@ -188,6 +218,11 @@ define(__T,`__`'_T()')
 #        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
 #        define __T()_NAME__(name,kindlen) "type("//name//kindlen//")"
 #    endif
+#    if !defined(__T()_default__)
+#        define __T()_default__ __T()()
+#    endif
+
+
 #endif
 
 #ifdef __T()_KINDLEN
@@ -271,12 +306,16 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_string__ ""
 #endif
 
-#if defined(__T()_deferred) || defined(__T()_polymorphic) || (__T()_rank > 0)
+#if defined(__T()_deferred) && !defined(__T()_deferred__)
+#   define __T_deferred__
+#endif
+
+#if defined(__T()_deferred__) || defined(__T()_polymorphic) || (__T()_rank > 0)
 #else
 #    define __T()_listable__
 #endif
 
-#if defined(__T()_deferred) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
+#if defined(__T()_deferred__) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
 #    define __T()_allocatable__
 #    define __T()_allocatable_attr__ , allocatable
 #    define __T()_allocatable_string__ ", allocatable"
@@ -285,9 +324,15 @@ define(__T,`__`'_T()')
 #    define __T()_allocatable_string__ ""
 #endif
 
-#define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_component__)__T()_allocatable_attr__
-#define __T()_declare_result__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__IDENTITY(__T()_dimension_result__)
-#define __T()_declare_dummy__ __T()_DECLARE__(__T()_type__,__T()_kindlen_dummy__)__IDENTITY(__T()_dimension_dummy__)
+! Intel fpp has issues with comma in a macro argument, so we do something a bit brute force here
+#ifdef __T()_allocatable__
+#    define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__T()_dimension_component__, allocatable
+#else
+#    define __T()_declare_component__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__T()_dimension_component__
+#endif
+#define __T()_declare_result__ __T()_DECLARE__(__T()_type__,__T()_kindlen_component__)__T()_dimension_result__
+#define __T()_declare_dummy__ __T()_DECLARE__(__T()_type__,__T()_kindlen_dummy__)__T()_dimension_dummy__
+#undef tmp
 
 #ifdef __T()_name__
 #    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__T()_dimension_string__//__T()_allocatable_string__

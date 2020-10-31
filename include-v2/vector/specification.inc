@@ -44,7 +44,13 @@
    type :: __MANGLE(wrapper)
       __T_declare_component__ :: item
    end type __MANGLE(Wrapper)
+
+   ! "T_rank"   T_rank __T_rank __T_rank__
+   ! "T_shape"  T_shape __T_shape __T_shape__
+   ! "component" __T_declare_component__
+   ! "dimension" __T_dimension_component__
    
+
    type :: __vector
       private
       type(__MANGLE(wrapper)), allocatable :: elements(:)
@@ -72,7 +78,7 @@
       generic :: of => of_size_kind
 #endif
 
-#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
+#if !defined(__T_allocatable__) && !(__T_rank > 0)
       procedure :: data => __MANGLE(data)
 #endif
       procedure :: back => __MANGLE(back)
@@ -85,7 +91,7 @@
       generic :: set => set_size_kind
 #endif
 
-#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
+#if !defined(__T_allocatable__) && !(__T_rank > 0)
       procedure :: copy_from_array => __MANGLE(copy_from_array)
       generic :: assignment(=) => copy_from_array
 #endif

@@ -231,7 +231,7 @@
    end function __MANGLE(of_default)
 
 
-#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
+#if !defined(__T_allocatable__) && !(__T_rank > 0)
    ! =======================
    !  get_data
    ! =======================
@@ -239,6 +239,7 @@
       class(__vector), target, intent(in) :: this
       __T_declare_component__, dimension(:), pointer :: res
 
+      ! __T_rank__
       res => this%elements(:this%vsize)%item
 
       return
@@ -313,8 +314,7 @@
       return
    end subroutine __MANGLE(reset)
 
-
-#if !defined(__T_allocatable__) && !(__T_rank__ > 0)
+#if !defined(__T_allocatable__) && !(__T_rank > 0)
    ! =======================
    !  copyFromArray() assignment(=)
    ! =======================
@@ -522,7 +522,7 @@
 
       if (present(rc)) rc = 0
 
-      oldSize=this%vsize
+      oldSize = this%vsize
 
       call this%reserve(count, rc=status)
       if (status/=0) then
@@ -537,10 +537,16 @@
          __T_FREE__(this%elements(i)%item)
       end do
 
-      if (present(value) .and. (count>oldsize)) then
-         do i = oldSize + 1, count
-            __T_COPY__(this%elements(i)%item, value)
-         end do
+      if (count > oldsize) then
+         if (present(value)) then
+            do i = oldSize + 1, count
+               __T_COPY__(this%elements(i)%item, value)
+            end do
+         else
+            do i = oldSize + 1, count
+               __T_COPY__(this%elements(i)%item, __T_default__)
+            end do
+         end if
       endif
 
       return
@@ -710,7 +716,7 @@
             allocate(this%elements(capacity))
          else                                      ! allocated
             allocate(temp(capacity))
-            do i=1, this%vsize
+            do i = 1, this%vsize
                __T_MOVE__(temp(i)%item, this%elements(i)%item)
             end do
             deallocate(this%elements)
@@ -851,7 +857,6 @@
       end if
 
    end function __MANGLE(rend)
-
 
 #include "vector/iterator_procedures.inc"
 #include "vector/reverse_iterator_procedures.inc"

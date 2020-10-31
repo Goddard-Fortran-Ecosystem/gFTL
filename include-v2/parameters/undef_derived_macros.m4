@@ -30,10 +30,16 @@ cpp_undef(declare_component)
 cpp_undef(declare_result)
 cpp_undef(declare_dummy)
 
+cpp_undef(polymorphic__)
+cpp_undef(deferred__)
 cpp_undef(allocatable__)
 cpp_undef(allocatable_attr__)
 cpp_undef(allocatable_string__)
 cpp_undef(listable__)
+
+cpp_undef(default__)
+cpp_undef(rank__)
+cpp_undef(shape__)
 
 cpp_undef(EQ__)
 cpp_undef(LT__)

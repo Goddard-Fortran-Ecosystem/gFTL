@@ -28,6 +28,8 @@ cpp_undef(kindlen_dummy)
 cpp_undef(kindlen_component)
 cpp_undef(kindlen_string)
 
+cpp_undef(default)
+
 cpp_undef(rank)
 cpp_undef(extents)
 

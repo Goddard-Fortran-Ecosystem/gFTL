@@ -4,7 +4,11 @@ find_program(M4 m4)
 
 set (types
   integer
-
+  logical
+  character_len17
+  deferred_string
+  unlimited
+  integer_shape_3
   )
 
 foreach (T ${types})

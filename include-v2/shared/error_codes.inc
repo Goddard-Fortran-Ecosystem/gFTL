@@ -13,6 +13,6 @@
    integer, parameter :: BAD_ALLOC = 2
    integer, parameter :: ILLEGAL_INPUT = 3
    integer, parameter :: LENGTH_ERROR = 4
-
+   integer, parameter :: TYPE_HAS_NO_DEFAULT_VALUE = 5
       
 

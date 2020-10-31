@@ -23,10 +23,10 @@ contains
       call v%push_back(three)
 
       iter = v%begin()
-      @assert_that(iter%of(), is(one))
+      @assert_that(iter%of(), is(equal_to(one)))
 
       iter = v%end() - 1
-      @assert_that(iter%of(), is(three))
+      @assert_that(iter%of(), is(equal_to(three)))
 
    end subroutine test_of
 
@@ -40,9 +40,9 @@ contains
       call v%push_back(three)
 
       iter = v%begin() + 1
-      @assert_that(iter%of(-1), is(one))
-      @assert_that(iter%of(+0), is(two))
-      @assert_that(iter%of(+1), is(three))
+      @assert_that(iter%of(-1), is(equal_to(one)))
+      @assert_that(iter%of(+0), is(equal_to(two)))
+      @assert_that(iter%of(+1), is(equal_to(three)))
 
    end subroutine test_of_offset_default
 
@@ -56,9 +56,9 @@ contains
       call v%push_back(three)
 
       iter = v%begin() + 1
-      @assert_that(iter%of(-1_GFTL_SIZE_KIND), is(one))
-      @assert_that(iter%of(+0_GFTL_SIZE_KIND), is(two))
-      @assert_that(iter%of(+1_GFTL_SIZE_KIND), is(three))
+      @assert_that(iter%of(-1_GFTL_SIZE_KIND), is(equal_to(one)))
+      @assert_that(iter%of(+0_GFTL_SIZE_KIND), is(equal_to(two)))
+      @assert_that(iter%of(+1_GFTL_SIZE_KIND), is(equal_to(three)))
 
    end subroutine test_of_offset_size_kind
 
@@ -73,16 +73,16 @@ contains
 
       iter = v%begin()
       call iter%add(2)
-      @assert_that(iter%of(), is(three))
+      @assert_that(iter%of(), is(equal_to(three)))
       
       call iter%sub(2)
-      @assert_that(iter%of(), is(one))
+      @assert_that(iter%of(), is(equal_to(one)))
 
       call iter%add(1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(two))
+      @assert_that(iter%of(), is(equal_to(two)))
 
       call iter%sub(1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(one))
+      @assert_that(iter%of(), is(equal_to(one)))
 
    end subroutine test_add
 
@@ -97,16 +97,16 @@ contains
 
       iter = v%begin()
       new_iter = iter + 2
-      @assert_that(new_iter%of(), is(three))
+      @assert_that(new_iter%of(), is(equal_to(three)))
       
       new_iter = new_iter - 2
-      @assert_that(new_iter%of(), is(one))
+      @assert_that(new_iter%of(), is(equal_to(one)))
 
       new_iter = iter + 1_GFTL_SIZE_KIND
-      @assert_that(new_iter%of(), is(two))
+      @assert_that(new_iter%of(), is(equal_to(two)))
 
       new_iter = new_iter - 1_GFTL_SIZE_KIND
-      @assert_that(new_iter%of(), is(one))
+      @assert_that(new_iter%of(), is(equal_to(one)))
 
    end subroutine test_add_operator
 
@@ -236,7 +236,7 @@ contains
       iter = v%end()
       call iter%prev()
       @assert_that(iter == v%begin(), is(false()))
-      @assert_that(iter%of(), is(two))
+      @assert_that(iter%of(), is(equal_to(two)))
 
       call iter%prev()
       @assert_that(iter == v%begin(), is(true()))
@@ -252,13 +252,13 @@ contains
       call v%push_back(two)
 
       iter = next(v%begin(),1)
-      @assert_that(iter%of(), is(two))
+      @assert_that(iter%of(), is(equal_to(two)))
 
       iter = next(v%begin(),2)
       @assert_that(iter == v%end(), is(true()))
 
       iter = next(v%begin(),1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(two))
+      @assert_that(iter%of(), is(equal_to(two)))
 
       iter = next(v%begin(),2_GFTL_SIZE_KIND)
       @assert_that(iter == v%end(), is(true()))
@@ -276,14 +276,14 @@ contains
       call v%push_back(three)
 
       iter = prev(v%end(),1)
-      @assert_that(iter%of(), is(three))
+      @assert_that(iter%of(), is(equal_to(three)))
       iter = prev(v%end(),3)
-      @assert_that(iter%of(), is(one))
+      @assert_that(iter%of(), is(equal_to(one)))
       
       iter = prev(v%end(),1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(three))
+      @assert_that(iter%of(), is(equal_to(three)))
       iter = prev(v%end(),3_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(one))
+      @assert_that(iter%of(), is(equal_to(one)))
       
    end subroutine test_prev
 

@@ -4,23 +4,7 @@
    ! Non type-bound procedures
    public :: swap
 
-#include "parameters/T/copy_vector_T_to_internal_T.inc"
-#include "parameters/T/define_derived_macros.inc"
-
-#if defined(__T_EQ__) || defined(__T_LT__)
-   public :: operator(==)
-   public :: operator(/=)
-#endif
-#ifdef __T_LT__
-   public :: operator(<)
-   public :: operator(>)
-   public :: operator(<=)
-   public :: operator(>=)
-#endif
-#include "parameters/T/undef_derived_macros.inc"
-#include "parameters/T/undef_internal.inc"
-
-   ! iterators
+   ! Iterator functions
    public :: __vector_iterator
    public :: __vector_riterator
    public :: advance
@@ -32,4 +16,17 @@
    public :: operator(+)
    public :: operator(-)
 
-   
+
+   ! Iterator and possibly container functions:
+   ! The following are always defined for the iterator.
+   ! May not also be defined for the container itself depending
+   ! on properties of parameter T.
+
+   public :: operator(==)
+   public :: operator(/=)
+
+   public :: operator(<)
+   public :: operator(>)
+   public :: operator(<=)
+   public :: operator(>=)
+
