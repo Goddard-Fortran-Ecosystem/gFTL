@@ -17,7 +17,16 @@ foreach (T ${types})
   set (test Test_${T}Vector)
   set (src ${CMAKE_CURRENT_SOURCE_DIR})
   set (bin ${CMAKE_CURRENT_BINARY_DIR})
-    
+
+  set (depends
+    ${src}/Vector.m4
+    ${src}/Test_Vector.m4
+    ${src}/Test_VectorIterator.m4
+    ${src}/Test_VectorRIterator.m4
+    ${src}/${T}.inc
+    ${src}/test_${T}.inc
+    )
+
   add_custom_command (
     OUTPUT ${bin}/${sut}.F90 ${bin}/${test}.pf  ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Vector.m4  > ${sut}.F90
@@ -25,7 +34,7 @@ foreach (T ${types})
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorIterator.m4 > ${test}Iterator.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorRIterator.m4 > ${test}RIterator.pf
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${src}/Vector.m4 ${src}/Test_Vector.m4 ${src}/Test_VectorIterator.m4 ${src}/Test_VectorRIterator.m4 ${src}/${T}.inc 
+    DEPENDS ${depends}
     )
 
   add_pfunit_ctest (${test}.x

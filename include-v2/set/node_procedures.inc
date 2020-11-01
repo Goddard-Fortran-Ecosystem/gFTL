@@ -57,7 +57,6 @@
    recursive subroutine __MANGLE(finalize_node)(this)
       type(__set_node), intent(inout) :: this
       
-      print*,'final: set', this%value
       if (associated(this%left)) deallocate(this%left)
       if (associated(this%right)) deallocate(this%right)
 

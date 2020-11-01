@@ -74,6 +74,19 @@
    end function __MANGLE(size)
 
    ! =======================
+   !  max_size()
+   ! =======================
+   pure function __MANGLE(max_size)() result(res)
+      integer(kind=GFTL_SIZE_KIND) :: res
+
+      integer(kind=GFTL_SIZE_KIND) :: index
+      
+      res = huge(index)
+
+      return
+   end function __MANGLE(max_size)
+
+   ! =======================
    !  find
    ! =======================
    function __MANGLE(find)(this, value) result(find)
@@ -136,11 +149,11 @@
    ! =======================
    !  insert_single()
    ! =======================
-   subroutine __MANGLE(insert_single)(this, value, unused, isNew, iter)
+   subroutine __MANGLE(insert_single)(this, value, unused, is_new, iter)
       class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused
-      logical, optional, intent(out) :: isNew
+      logical, optional, intent(out) :: is_new
       type(__set_iterator), optional, intent(out) :: iter
       type(__set_node), pointer :: new
       type(__set_node), pointer :: parent
@@ -163,14 +176,14 @@
                __T_FREE__(parent%value)
                __T_COPY__(parent%value, value)
             endif
-            if (present(isNew)) then
-               isNew = .false.
+            if (present(is_new)) then
+               is_new = .false.
             end if
             return
          endif
 #endif
-         if (present(isNew)) then
-            isNew = .true.
+         if (present(is_new)) then
+            is_new = .true.
          end if
 
          allocate(new)
@@ -184,8 +197,8 @@
          if (present(iter)) iter%node => this%root
          r => this%root
          __T_COPY__(r%value, value)
-         if (present(isNew)) then
-            isNew = .true.
+         if (present(is_new)) then
+            is_new = .true.
          end if
       endif
       this%tsize = this%tsize + 1
@@ -222,10 +235,30 @@
 
       iter = first
       do while (iter /= last)
-         call this%insert(iter%at())
+         call this%insert(iter%of())
+         call iter%next()
       end do
 
    end subroutine __MANGLE(insert_range)
+
+   ! =======================
+   !  insert_with_hint()
+   ! =======================
+   ! Currently a very sub-optimal implementation.
+   
+   subroutine __MANGLE(insert_single_with_hint)(this, hint, value, unused, iter)
+      class(__set), intent(inout) :: this
+      type(__set_iterator), intent(in) :: hint
+      __T_declare_dummy__, intent(in) :: value
+      type (KeywordEnforcer), optional :: unused
+      type(__set_iterator), optional, intent(out) :: iter
+
+      call this%insert(value, iter=iter)
+
+   end subroutine __MANGLE(insert_single_with_hint)
+
+   
+
 
    logical function __MANGLE(lessThan)(x, y) result(less)
       __T_declare_dummy__, intent(in) :: x
@@ -642,8 +675,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end())
-         ptr_a => iter_a%at()
-         ptr_b => iter_b%at()
+         ptr_a => iter_a%of()
+         ptr_b => iter_b%of()
 
          if (.not. __MANGLE(order_eq)(ptr_a,ptr_b)) return
 
@@ -682,8 +715,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end() .and. iter_b /= b%end())
-         ptr_a => iter_a%at()
-         ptr_b => iter_b%at()
+         ptr_a => iter_a%of()
+         ptr_b => iter_b%of()
 
          ! a < b ?
          lt = __T_LT__(ptr_a, ptr_b)
@@ -750,7 +783,7 @@
 
       iter = other%begin()
       do while (iter /= other%end())
-         ptr => iter%at()
+         ptr => iter%of()
          call this%insert(ptr)
          call iter%next()
       end do
@@ -774,7 +807,6 @@
    recursive subroutine __MANGLE(finalize_set)(this)
       type(__set), intent(inout) :: this
 
-      print*,'final: set'
       if (associated(this%root)) deallocate(this%root)
 
       return
@@ -791,8 +823,8 @@
 
       iter = source%begin()
       do while (iter /= source%end())
-         if (this%count(iter%at()) == 0) then
-            call this%insert(iter%at())
+         if (this%count(iter%of()) == 0) then
+            call this%insert(iter%of())
             iter = source%erase(iter)
          else
             ! already in result

@@ -32,6 +32,7 @@ cpp_undef(default)
 
 cpp_undef(rank)
 cpp_undef(extents)
+cpp_undef(polymorphic)
 
 cpp_undef(FREE)
 cpp_undef(COPY)

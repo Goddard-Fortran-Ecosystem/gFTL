@@ -3,6 +3,7 @@ changequote(`{',`}')
 module Test_{}_type()VectorIterator
    use funit
    use _type()Vector_mod
+   ifelse(_type(),{Foo},{use Foo_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"

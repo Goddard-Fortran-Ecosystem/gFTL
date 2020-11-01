@@ -45,21 +45,25 @@
       
 
    type :: __set
+      private
       type(__set_node), pointer :: root => null()
       integer(kind=GFTL_SIZE_KIND) :: tsize = 0
    contains
       procedure :: empty => __MANGLE(empty)
       procedure :: size => __MANGLE(size)
+      procedure, nopass :: max_size => __MANGLE(max_size)
       procedure :: count => __MANGLE(count)
       procedure :: find => __MANGLE(find)
       procedure :: clear => __MANGLE(clear)
       
       procedure :: insert_single => __MANGLE(insert_single)
+      procedure :: insert_single_with_hint => __MANGLE(insert_single_with_hint)
       procedure :: insert_range => __MANGLE(insert_range)
 #ifdef __T_listable__
       procedure :: insert_initializer_list => __MANGLE(insert_initializer_list)
 #endif
       generic :: insert => insert_single
+      generic :: insert => insert_single_with_hint
       generic :: insert => insert_range
 #ifdef __T_listable__
       generic :: insert => insert_initializer_list

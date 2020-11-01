@@ -36,6 +36,7 @@ cpp_copy(default)
 
 cpp_copy(rank)
 cpp_copy(shape)
+cpp_copy(polymorphic)
 
 cpp_copy(FREE,x)
 cpp_copy(COPY,lhs,rhs)
