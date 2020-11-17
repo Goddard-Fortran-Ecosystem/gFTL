@@ -876,10 +876,11 @@
     iostat = 0
 
 #ifdef __T_name__
-    write(unit,'(a)') 'Vector container<' // __T_declare_string__ // '>'
+    write(unit,'(a)') 'Vector<' // __T_declare_string__ // '>'
 #else
-    write(unit,'(a)') 'Vector container<' // 'unknown' // '>'
+    write(unit,'(a)') 'Vector<' // 'unknown' // '>'
 #endif
+    write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
    end subroutine __MANGLE(write_formatted)
 

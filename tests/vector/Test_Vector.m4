@@ -211,7 +211,6 @@ contains
       @assert_that(v%of(1), is(equal_to(one)))
       @assert_that(v%of(2), is(equal_to(two)))
 
-      print*, v
    end subroutine test_pop_back
 
    
