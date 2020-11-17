@@ -136,11 +136,15 @@
 #ifdef __T_EQ__
       procedure :: get_index => __MANGLE(get_index)
 #endif
+      ! I/O
+      procedure :: write_formatted => __MANGLE(write_formatted)
+      generic :: write(formatted) => write_formatted
 
       ! private helper procedures
       procedure, private :: set_capacity => __MANGLE(set_capacity)
       procedure, private :: grow_to => __MANGLE(grow_to)
       procedure, private :: downsize=>__MANGLE(downsize)
+
    end type __vector
 
 

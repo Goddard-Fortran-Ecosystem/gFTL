@@ -863,6 +863,27 @@
 
    end function __MANGLE(rend)
 
+
+
+   subroutine __MANGLE(write_formatted)(this, unit, iotype, v_list, iostat, iomsg)
+    class(__vector), intent(in) :: this
+    integer, intent(in) :: unit
+    character(*), intent(in) :: iotype
+    integer, intent(in) :: v_list(:)
+    integer, intent(out) :: iostat
+    character(*), intent(inout) :: iomsg
+
+    iostat = 0
+
+#ifdef __T_name__
+    write(unit,'(a)') 'Vector container<' // __T_declare_string__ // '>'
+#else
+    write(unit,'(a)') 'Vector container<' // 'unknown' // '>'
+#endif
+    write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+   end subroutine __MANGLE(write_formatted)
+
+
 #include "vector/iterator_procedures.inc"
 #include "vector/reverse_iterator_procedures.inc"
 

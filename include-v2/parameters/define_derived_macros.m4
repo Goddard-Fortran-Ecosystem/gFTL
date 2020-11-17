@@ -115,7 +115,7 @@ define(__T,`__`'_T()')
 #        undef __T()_DECLARE__
 #        undef __T()_NAME__
 #        define __T()_DECLARE__(type,kindlen) __IDENTITY(class(*))
-#        define __T()_NAME__(type,kindlen) __IDENTITY(class(*))
+#        define __T()_NAME__(type,kindlen) __IDENTITY("class(*)")
 #        define __T()_polymorphic
 #        define __T()_type__ *
 #        define __T()_name__ "*"
@@ -289,7 +289,7 @@ define(__T,`__`'_T()')
 #        ifdef __T()_shape_string
 #            define __T()_dimension_string__ ", "//__T()_shape_string
 #        else
-#            define __T()_dimension_string__ ", dimension(rank<"//T_()_rank_string__//">)"
+#            define __T()_dimension_string__ ", dimension(rank<"//__T()_rank_string__//">)"
 #        endif
 #        ifndef __T()_default__
 #            define __T()_default__ __T()_default_scalar__

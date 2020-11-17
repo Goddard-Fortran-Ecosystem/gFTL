@@ -1,4 +1,4 @@
-declare string:    class(*)//""//", allocatable"
+declare string:    "class(*)"//""//", allocatable"
 declare component: class(*), allocatable
 declare result:    class(*)
 declare dummy:     class(*)
