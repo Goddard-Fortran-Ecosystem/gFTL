@@ -4,6 +4,7 @@ module Test_{}_type()VectorRIterator
    use funit
    use _type()Vector_mod
    ifelse(_type(),{Foo},{use Foo_mod})
+   ifelse(_type(),{FooPoly},{use Foo_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"
@@ -12,7 +13,22 @@ module Test_{}_type()VectorRIterator
 #include "parameters/T/copy_vector_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+   __T_declare_component__ :: zero
+   __T_declare_component__ :: one
+   __T_declare_component__ :: two
+   __T_declare_component__ :: three
+
 contains
+
+   @before
+   subroutine setup()
+
+      zero = _zero
+      one = _one
+      two = _two
+      three = _three
+
+   end subroutine setup
 
    @test
    subroutine test_of()

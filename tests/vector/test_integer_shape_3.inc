@@ -1,5 +1,5 @@
-   integer :: zero(3) = [0,0,0]
-   integer :: one(3) = [1,1,1]
-   integer :: two(3) = [2,3,5]
-   integer :: three(3) = [1,4,9]
+#define _zero  [0,0,0]
+#define _one  [1,1,1]
+#define _two  [2,3,5]
+#define _three  [1,4,9]
    

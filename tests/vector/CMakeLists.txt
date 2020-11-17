@@ -10,6 +10,8 @@ set (types
   unlimited
   integer_shape_3
   real_rank_2_deferred_shape
+  Foo
+  FooPoly
   )
 
 foreach (T ${types})
@@ -37,9 +39,14 @@ foreach (T ${types})
     DEPENDS ${depends}
     )
 
+  set (other_sources ${bin}/${sut}.F90)
+  if (T STREQUAL Foo OR T STREQUAL FooPoly)
+    list (APPEND other_sources Foo.F90)
+  endif ()
+
   add_pfunit_ctest (${test}.x
     TEST_SOURCES ${bin}/${test}.pf ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
-    OTHER_SOURCES ${bin}/${sut}.F90
+    OTHER_SOURCES ${other_sources}
     LINK_LIBRARIES gftl-v2
     )
 

@@ -285,14 +285,6 @@
 
       idx = merge(i, this%vsize+i, i > 0)
 
-#ifdef __T_allocatable__
-      block
-        integer :: j
-        do j = 1, this%vsize
-           print*,'set size: ', j, allocated(this%elements(j)%item)
-        end do
-      end block
-#endif
       __T_FREE__(this%elements(idx)%item)
       __T_COPY__(this%elements(idx)%item, value)
 
@@ -544,7 +536,6 @@
          return
       end if
 
-
       this%vsize = count
 
       do i = count + 1, oldSize
@@ -559,20 +550,7 @@
          else
             do i = oldSize + 1, count
                __T_COPY__(this%elements(i)%item, __T_default__)
-#ifdef __T_allocatable__
-               print*,'set size: ', i, allocated(this%elements(i)%item), __T_default__
-               this%elements(i)%item = __T_default__
-               print*,'set size: ', i, allocated(this%elements(i)%item), __T_default__
-#endif
             end do
-#ifdef __T_allocatable__
-      block
-        integer :: j
-        do j = 1, this%vsize
-           print*,'set size: ', j, allocated(this%elements(j)%item)
-        end do
-      end block
-#endif
          end if
       endif
 
@@ -631,7 +609,7 @@
    subroutine __MANGLE(shrink_to_fit)(this)
       class(__vector), intent(inout) :: this
 
-      if (this%vsize<this%capacity()) then
+      if (this%vsize < this%capacity()) then
          call this%set_capacity(this%vsize)
       endif
       return
