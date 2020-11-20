@@ -2,7 +2,23 @@
 
 ## Unreleased
 
-## [1.2.5] - 2020-03-06
+## [1.2.7] - 2020-08-25
+
+###Changed
+- Undoing previous commit.  Caused insidious downstream issues with 18.0.5.
+  Better to just kludge the failing test and move on.
+
+## [1.2.6] - 2020-08-24
+
+
+### Fixed
+- Blocked installation of *Foo*.inc include files that are
+  only used for testing.
+
+- Reintroduced workarounds for older ifort and gfortran compilers.
+  Annoyingly the workaround for one breaks the other.
+  
+## [1.2.5] - 2020-04-06
 
 ### Fixed
  - eliminated stray <tab> in source code; was generating annoying

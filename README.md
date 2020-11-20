@@ -44,7 +44,7 @@ Contributions of additional containers are very much welcomed.
 # Prerequisites
 
 * CMake 3.0
-* m4 (must be in path)
+* GNU m4 (must be in path as "gm4" or "m4")
 
 # Related package
 
@@ -67,7 +67,7 @@ section be factually correct.
 
 ### Differences
 
-* Naming conventions for gFTL are much closer to C++ STL.
+* Naming conventions for gFTL are  closer to C++ STL.
 
 
 

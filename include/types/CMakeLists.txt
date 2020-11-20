@@ -46,7 +46,7 @@ foreach (macro_file ${macro_files})
 
     add_custom_command (
       OUTPUT ${outfile}
-      COMMAND m4 -s -Dparam=${param} -I${src}/../templates < ${infile} > ${outfile}
+      COMMAND ${M4} -s -Dparam=${param} -I${src}/../templates < ${infile} > ${outfile}
       WORKING_DIRECTORY ${bin}
       DEPENDS ${infile}
       )
@@ -66,5 +66,6 @@ set_source_files_properties (${generated_incs} PROPERTIES GENERATED TRUE)
 install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/types"
   FILES_MATCHING PATTERN "*.inc"
   PATTERN CMakeFiles EXCLUDE
+  PATTERN "*Foo*" EXCLUDE
   )
 

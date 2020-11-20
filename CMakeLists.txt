@@ -4,7 +4,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.2.5
+  VERSION 1.2.7
   LANGUAGES Fortran)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -13,6 +13,11 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   message("   Override with -DCMAKE_INSTALL_PREFIX=<path>.")
 endif ()
 
+# For BSD systems use GNU m4
+find_program( M4 NAMES "gm4" "m4")
+if( NOT M4 )
+  message( SEND_ERROR "m4 program not found" )
+endif()
 
 add_subdirectory (include)
 add_subdirectory (examples)
