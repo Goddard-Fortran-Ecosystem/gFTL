@@ -65,7 +65,7 @@ install (
 install(EXPORT GFTL
   FILE GFTLTargets.cmake
   NAMESPACE GFTL::
-  DESTINATION "${top_dir}/cmake/GFTL"
+  DESTINATION "${top_dir}/cmake"
   )
 export(EXPORT GFTL
   FILE "${CMAKE_CURRENT_BINARY_DIR}/GFTLTargets.cmake"
