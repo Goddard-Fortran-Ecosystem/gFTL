@@ -93,6 +93,10 @@
       procedure, private :: advpos => __MANGLE(advpos)
       procedure, private :: rot => __MANGLE(rot)
 
+      ! I/O
+      procedure :: write_formatted => __MANGLE(write_formatted)
+      generic :: write(formatted) => write_formatted
+
       ! key_compare() and value_compare() are the same thing for Set.
       procedure :: key_compare => __MANGLE(value_compare)
       procedure :: value_compare => __MANGLE(value_compare)

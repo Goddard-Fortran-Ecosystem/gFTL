@@ -1,14 +1,16 @@
 find_program(M4 m4)
 
+# Note that a set of elements of type LOGICAL is not
+# supported.
 set (types
   integer
+  character_len17
+  deferred_string
+  Foo
 #  logical
-#  character_len17
-#  deferred_string
 #  unlimited
 #  integer_shape_3
 #  real_rank_2_deferred_shape
-#  Foo
   )
 
 
@@ -33,9 +35,9 @@ foreach (T ${types})
 #  m4_preprocess (${T} ${src}/Test_SetRIterator.m4 Test_${T}SetRIterator.pf ${depends})
 
   set (other_sources ${sut})
-#  if (T STREQUAL Foo)
-#    list (APPEND other_sources Foo.F90)
-#  endif ()
+  if (T STREQUAL Foo)
+    list (APPEND other_sources Foo.F90)
+  endif ()
 
   add_pfunit_ctest (test_${T}_set.x
     TEST_SOURCES ${bin}/Test_${T}Set.pf #${bin}/Test_${T}SetIterator.pf ${bin}/Test_${T}SetRIterator.pf

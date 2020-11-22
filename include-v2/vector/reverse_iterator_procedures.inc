@@ -241,6 +241,15 @@
       end function __MANGLE(riter_distance)
 
 
+      function __MANGLE(riter_next_1)(it) result(new_it)
+         type(__vector_riterator) :: new_it
+         type(__vector_riterator), intent(in) :: it
+
+         new_it = next(it,1)
+
+         return
+      end function __MANGLE(riter_next_1)
+
       function __MANGLE(riter_next_n_size_kind)(it, n) result(new_it)
          type(__vector_riterator) :: new_it
          type(__vector_riterator), intent(in) :: it
@@ -262,6 +271,14 @@
 
          return
       end function __MANGLE(riter_next_n_default)
+
+      function __MANGLE(riter_prev_1)(it) result(new_it)
+         type(__vector_riterator) :: new_it
+         type(__vector_riterator), intent(in) :: it
+
+         new_it = prev(it,1)
+         return
+      end function __MANGLE(riter_prev_1)
 
       function __MANGLE(riter_prev_n_size_kind)(it, n) result(new_it)
          type(__vector_riterator) :: new_it

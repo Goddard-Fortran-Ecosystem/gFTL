@@ -119,6 +119,8 @@
    end interface end
 
    interface next
+      ! Cannot use optional dummy due to otherwise ambiguous interfaces
+      module procedure __MANGLE(iter_next_1)
 #ifndef  __gftl_disable_index_kind_overload
       module procedure __MANGLE(iter_next_n_size_kind)
 #endif
@@ -126,6 +128,7 @@
    end interface next
 
    interface prev
+      module procedure __MANGLE(iter_prev_1)
 #ifndef __gftl_disable_index_kind_overload
       module procedure __MANGLE(iter_prev_n_size_kind)
 #endif

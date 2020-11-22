@@ -1,12 +1,12 @@
    private
    public :: __vector
+   public :: __vector_iterator
+   public :: __vector_riterator
 
    ! Non type-bound procedures
    public :: swap
 
    ! Iterator functions
-   public :: __vector_iterator
-   public :: __vector_riterator
    public :: advance
    public :: begin
    public :: distance

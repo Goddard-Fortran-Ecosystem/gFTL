@@ -221,7 +221,9 @@ define(__T,`__`'_T()')
 #    if !defined(__T()_default__)
 #        define __T()_default_scalar__ __T()()
 #    endif
-
+#    ifdef __T()_LT
+#        define __T()_LT__(a,b) __T()_LT(a,b)
+#    endif
 
 #endif
 

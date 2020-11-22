@@ -1,5 +1,5 @@
-   integer :: zero = 0
-   real :: one = 1.
-   character(*), parameter :: two = 'two'
-   complex :: three = (3.,4.)
+#define _zero 0
+#define _one 1.
+#define _two 'two'
+#define _three (3.,4.)
 

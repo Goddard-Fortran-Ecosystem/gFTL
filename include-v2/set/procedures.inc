@@ -792,6 +792,7 @@
 
    end subroutine __MANGLE(deep_copy)
 
+#ifdef __T_listable__
    subroutine __MANGLE(copy_list)(this, il)
       class(__set), intent(out) :: this
       __T_declare_dummy__, intent(in) :: il(:)
@@ -800,7 +801,7 @@
       call this%insert(il)
 
    end subroutine __MANGLE(copy_list)
-
+#endif
    ! =======================
    !  finalize_set()
    ! =======================
@@ -832,6 +833,29 @@
          end if
       end do
    end subroutine __MANGLE(merge)
+
+
+   subroutine __MANGLE(write_formatted)(this, unit, iotype, v_list, iostat, iomsg)
+    class(__set), intent(in) :: this
+    integer, intent(in) :: unit
+    character(*), intent(in) :: iotype
+    integer, intent(in) :: v_list(:)
+    integer, intent(out) :: iostat
+    character(*), intent(inout) :: iomsg
+
+    iostat = 0
+
+#ifdef __T_name__
+    write(unit,'(a)') 'Set<' // __T_declare_string__ // '>'
+#else
+    write(unit,'(a)') 'Set<' // 'unknown' // '>'
+#endif
+    write(unit,'(a)') new_line('a')
+    write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+   end subroutine __MANGLE(write_formatted)
+
+
+
 
 #include "set/iterator_procedures.inc"
 

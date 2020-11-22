@@ -36,6 +36,7 @@ module Foo_mod
    type(Foo) :: two
    type(ChildOfFoo) :: three
 
+
    interface operator(<)
       module procedure less
    end interface operator(<)
@@ -115,6 +116,7 @@ contains
       call description%append_text(trim(buffer))
       
    end subroutine describe_to_child_of_foo
+
 
    logical function less(a, b)
       type(Foo), intent(in) :: a

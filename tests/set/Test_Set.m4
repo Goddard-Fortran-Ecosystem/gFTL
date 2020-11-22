@@ -12,7 +12,22 @@ module Test_{}_type()Set
 #include "parameters/T/copy_set_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+   __T_declare_component__ :: zero
+   __T_declare_component__ :: one
+   __T_declare_component__ :: two
+   __T_declare_component__ :: three
+
 contains
+
+   @before
+   subroutine setup()
+
+      zero = _zero
+      one = _one
+      two = _two
+      three = _three
+
+   end subroutine setup
 
    @test
    subroutine test_empty()
@@ -162,9 +177,27 @@ contains
       hint = s%find(one)
       call s%insert(hint, two, iter=iter)
       @assert_that(iter%of(), is(two))
-
       
    end subroutine test_insert_with_hint
+
+   @test
+   subroutine test_erase_iter()
+      type(Set) :: s
+      type(SetIterator) :: iter
+      
+      call s%insert(zero)
+      call s%insert(one)
+      call s%insert(two)
+
+      ! Delete "one"
+      iter = s%find(one)
+      iter = s%erase(iter)
+      
+      @assert_that(int(s%size()), is(2))
+      @assert_that(int(s%count(one)), is(0))
+
+      
+   end subroutine test_erase_iter
 
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"

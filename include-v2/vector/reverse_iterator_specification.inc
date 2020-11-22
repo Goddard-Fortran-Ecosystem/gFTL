@@ -105,6 +105,7 @@
    end interface distance
 
    interface next
+      module procedure __MANGLE(riter_next_1)
 #ifndef  __gftl_disable_index_kind_overload
       module procedure __MANGLE(riter_next_n_size_kind)
 #endif
@@ -112,6 +113,7 @@
    end interface next
 
    interface prev
+      module procedure __MANGLE(riter_prev_1)
 #ifndef  __gftl_disable_index_kind_overload
       module procedure __MANGLE(riter_prev_n_size_kind)
 #endif

@@ -1,4 +1,4 @@
-   character(len=*), parameter :: zero = 'zero'
-   character(len=*), parameter :: one = 'one'
-   character(len=*), parameter :: two = 'two'
-   character(len=*), parameter :: three = 'three'
+#define _zero 'zero'
+#define _one 'one'
+#define _two 'two'
+#define _three 'three'

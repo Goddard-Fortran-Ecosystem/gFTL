@@ -246,6 +246,15 @@
       end function __MANGLE(iter_end)
 
 
+      function __MANGLE(iter_next_1)(it) result(new_it)
+         type(__vector_iterator) :: new_it
+         type(__vector_iterator), intent(in) :: it
+
+         new_it = next(it,1)
+
+         return
+      end function __MANGLE(iter_next_1)
+
       function __MANGLE(iter_next_n_size_kind)(it, n) result(new_it)
          type(__vector_iterator) :: new_it
          type(__vector_iterator), intent(in) :: it
@@ -267,6 +276,15 @@
 
          return
       end function __MANGLE(iter_next_n_default)
+
+      function __MANGLE(iter_prev_1)(it) result(new_it)
+         type(__vector_iterator) :: new_it
+         type(__vector_iterator), intent(in) :: it
+
+         new_it = prev(it,1)
+
+         return
+      end function __MANGLE(iter_prev_1)
 
       function __MANGLE(iter_prev_n_size_kind)(it, n) result(new_it)
          type(__vector_iterator) :: new_it
