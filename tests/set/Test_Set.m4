@@ -17,6 +17,13 @@ module Test_{}_type()Set
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+define({ASSERT},{
+#if (__T_type_id__ == __CHARACTER__) && defined(__GFORTRAN__)
+@assertEqual({$1},{$2})
+#else
+@assert_that({$1},is(equal_to({$2})))
+#endif})
+
 contains
 
    @before
@@ -103,11 +110,11 @@ contains
       call s%insert(one)
       iter = s%find(one)
       @assert_that(iter /= s%end(), is(true()))
-      @assert_that(iter%of(), is(one))
+      ASSERT(iter%of(), one)
 
       iter = s%find(zero)
       @assert_that(iter /= s%end(), is(true()))
-      @assert_that(iter%of(), is(zero))
+      ASSERT(iter%of(), zero)
       
 
    end subroutine test_find_found
@@ -135,13 +142,13 @@ contains
       type(SetIterator) :: iter
 
       call s%insert(zero, iter=iter)
-      @assert_that(iter%of(), is(zero))
+      ASSERT(iter%of(), zero)
 
       call s%insert(one, iter=iter)
-      @assert_that(iter%of(), is(one))
+      ASSERT(iter%of(), one)
 
       call s%insert(zero, iter=iter)
-      @assert_that(iter%of(), is(zero))
+      ASSERT(iter%of(), zero)
 
       
    end subroutine test_insert_get_iterator_new
@@ -176,7 +183,7 @@ contains
 
       hint = s%find(one)
       call s%insert(hint, two, iter=iter)
-      @assert_that(iter%of(), is(two))
+      ASSERT(iter%of(), two)
       
    end subroutine test_insert_with_hint
 

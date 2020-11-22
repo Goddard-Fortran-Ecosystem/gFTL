@@ -18,6 +18,13 @@ module Test_{}_type()Vector
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+define({ASSERT},{
+#if (__T_type_id__ == __CHARACTER__) && defined(__GFORTRAN__)
+@assertEqual({$1},{$2})
+#else
+@assert_that({$1},is(equal_to({$2})))
+#endif})
+
 contains
 
    @before
@@ -67,8 +74,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(two)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), two)
       
    end subroutine test_of_default
 
@@ -78,8 +85,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%of(1_GFTL_SIZE_KIND), is(equal_to(one)))
-      @assert_that(v%of(2_GFTL_SIZE_KIND), is(equal_to(two)))
+      ASSERT(v%of(1_GFTL_SIZE_KIND), one)
+      ASSERT(v%of(2_GFTL_SIZE_KIND), two)
 
    end subroutine test_of_size_kind
 
@@ -89,8 +96,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%at(1), is(equal_to(one)))
-      @assert_that(v%at(2), is(equal_to(two)))
+      ASSERT(v%at(1), one)
+      ASSERT(v%at(2), two)
       
    end subroutine test_at_default
 
@@ -100,8 +107,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      @assert_that(v%at(1_GFTL_SIZE_KIND), is(equal_to(one)))
-      @assert_that(v%at(2_GFTL_SIZE_KIND), is(equal_to(two)))
+      ASSERT(v%at(1_GFTL_SIZE_KIND), one)
+      ASSERT(v%at(2_GFTL_SIZE_KIND), two)
 
    end subroutine test_at_size_kind
 
@@ -126,11 +133,9 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      @assert_that(v%back(), is(equal_to(one)))
-
+      ASSERT(v%back(), one)
       call v%push_back(two)
-      @assert_that(v%back(), is(equal_to(two)))
-      
+      ASSERT(v%back(), two)
    end subroutine test_back
 
 
@@ -139,10 +144,10 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      @assert_that(v%front(), is(equal_to(one)))
+      ASSERT(v%front(), one)
 
       call v%push_back(two)
-      @assert_that(v%front(), is(equal_to(one)))
+      ASSERT(v%front(), one)
       
    end subroutine test_front
 
@@ -163,11 +168,11 @@ contains
 
       call v%push_back(one)
       call v%set(1, two)
-      @assert_that(v%of(1), is(equal_to(two)))
+      ASSERT(v%of(1), two)
 
       call v%resize(5)
       call v%set(5, one)
-      @assert_that(v%of(5), is(equal_to(one)))
+      ASSERT(v%of(5), one)
       
    end subroutine test_set_default
 
@@ -177,7 +182,7 @@ contains
 
       call v%resize(5_GFTL_SIZE_KIND)
       call v%set(5_GFTL_SIZE_KIND, one)
-      @assert_that(v%of(5_GFTL_SIZE_KIND), is(equal_to(one)))
+      ASSERT(v%of(5_GFTL_SIZE_KIND), one)
       
    end subroutine test_set_size_kind
 
@@ -190,9 +195,9 @@ contains
       array = [one, two, three]
       v = array
       @assert_that(int(v%size()), is(3))
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(two)))
-      @assert_that(v%of(3), is(equal_to(three)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), two)
+      ASSERT(v%of(3), three)
       
 #endif
    end subroutine test_copy_from_array
@@ -208,8 +213,8 @@ contains
       call v%pop_back()
       
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(two)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), two)
 
    end subroutine test_pop_back
 
@@ -230,18 +235,18 @@ contains
         do i = 1, 3
            select type(q => v%at(i))
            type is (integer)
-              @assert_that(v%at(1), is(equal_to(default)))
-              @assert_that(v%at(2), is(equal_to(default)))
-              @assert_that(v%at(3), is(equal_to(default)))
+              ASSERT(v%at(1), default)
+              ASSERT(v%at(2), default)
+              ASSERT(v%at(3), default)
            class default
               @assertFail('incorrect default type')
            end select
         end do
       end block
 #else
-      @assert_that(v%at(1), is(equal_to(default)))
-      @assert_that(v%at(2), is(equal_to(default)))
-      @assert_that(v%at(3), is(equal_to(default)))
+      ASSERT(v%at(1), default)
+      ASSERT(v%at(2), default)
+      ASSERT(v%at(3), default)
 #endif
       
    end subroutine test_vector_fill_default_value
@@ -252,9 +257,9 @@ contains
 
       v = Vector(n=3, value=two)
       @assert_that(int(v%size()), is(3))
-      @assert_that(v%at(1), is(equal_to(two)))
-      @assert_that(v%at(2), is(equal_to(two)))
-      @assert_that(v%at(3), is(equal_to(two)))
+      ASSERT(v%at(1), two)
+      ASSERT(v%at(2), two)
+      ASSERT(v%at(3), two)
 
    end subroutine test_vector_fill
 
@@ -277,8 +282,8 @@ contains
       call v%resize(2, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(equal_to(three)))
-      @assert_that(v%of(2), is(equal_to(three)))
+      ASSERT(v%of(1), three)
+      ASSERT(v%of(2), three)
 
    end subroutine resize_default_with_value
 
@@ -291,8 +296,8 @@ contains
       call v%resize(2, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(three)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), three)
 
    end subroutine resize_default_with_value_b
 
@@ -313,9 +318,9 @@ contains
       call v%shrink_to_fit()
       @assert_that(int(v%capacity()) == 2,is(true()))
       ! other elements unchanged
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(two)))
-      
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), two)
+
    end subroutine test_shrink_to_fit
 
    @test
@@ -326,8 +331,8 @@ contains
       call v%resize(2_GFTL_SIZE_KIND, value=three, rc=status)
       @assert_that(status, is(0))
       @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      @assert_that(v%of(1_GFTL_SIZE_KIND), is(equal_to(three)))
-      @assert_that(v%of(2_GFTL_SIZE_KIND), is(equal_to(three)))
+      ASSERT(v%of(1_GFTL_SIZE_KIND), three)
+      ASSERT(v%of(2_GFTL_SIZE_KIND), three)
 
    end subroutine resize_size_kind_with_value
 
@@ -354,10 +359,10 @@ contains
       next_iter = v%erase(iter)
 
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(three)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), three)
 
-      @assert_that(next_iter%of(), is(equal_to(three)))
+      ASSERT(next_iter%of(), three)
       
    end subroutine test_erase_one
 
@@ -375,10 +380,10 @@ contains
       next_iter = v%erase(iter, iter+2)
 
       @assert_that(int(v%size()), is(2))
-      @assert_that(v%of(1), is(equal_to(one)))
-      @assert_that(v%of(2), is(equal_to(one)))
+      ASSERT(v%of(1), one)
+      ASSERT(v%of(2), one)
       
-      @assert_that(next_iter%of(), is(equal_to(one)))
+      ASSERT(next_iter%of(), one)
 
    end subroutine test_erase_range
 
@@ -409,9 +414,9 @@ contains
       v1 = Vector(n=3, value=two)
       v2 = v1
       @assert_that(int(v2%size()), is(3))
-      @assert_that(v2%at(1), is(equal_to(two)))
-      @assert_that(v2%at(2), is(equal_to(two)))
-      @assert_that(v2%at(3), is(equal_to(two)))
+      ASSERT(v2%at(1), two)
+      ASSERT(v2%at(2), two)
+      ASSERT(v2%at(3), two)
 
    end subroutine test_vector_copy
 
@@ -614,15 +619,15 @@ contains
       @assert_that(int(v1%size()), is(1))
       @assert_that(int(v2%size()), is(2))
 
-      @assert_that(v1%of(1), is(equal_to(three)))
-      @assert_that(v2%of(1), is(equal_to(one)))
-      @assert_that(v2%of(2), is(equal_to(two)))
+      ASSERT(v1%of(1), three)
+      ASSERT(v2%of(1), one)
+      ASSERT(v2%of(2), two)
    end subroutine test_swap
       
-   
-
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_vector_T.inc"
 #include "shared/undef_common_macros.inc"
+
+
 end module Test_{}_type()Vector

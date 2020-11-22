@@ -97,7 +97,7 @@ define(__T,`__`'_T()')
 #            define __T()_kindlen_string__ "(kind=REAL128)"
 #        endif
 #        if !defined(__T()_default__)
-#            define __T()_default_scalar__ 0
+#            define __T()_default_scalar__ (0.,0.)
 #        endif
 
 #    elif __T()_type_id__ == __LOGICAL__
@@ -172,7 +172,7 @@ define(__T,`__`'_T()')
 #                define __T()_kindlen_string__ "(kind=REAL128)"
 #            endif
 #           if !defined(__T()_default__)
-#               define __T()_default_scalar__ 0
+#               define __T()_default_scalar__ 0.
 #           endif
 
 #        elif __T()_type_id__ == __DOUBLE_PRECISION__
@@ -180,7 +180,7 @@ define(__T,`__`'_T()')
 #            define __T()_type__ double precision
 #            define __T()_name__ "double precision"
 #            if !defined(__T()_default__)
-#                define __T()_default_scalar__ 0
+#                define __T()_default_scalar__ 0.
 #            endif
 
 #        elif __T()_type_id__ == __CHARACTER__
@@ -220,9 +220,6 @@ define(__T,`__`'_T()')
 #    endif
 #    if !defined(__T()_default__)
 #        define __T()_default_scalar__ __T()()
-#    endif
-#    ifdef __T()_LT
-#        define __T()_LT__(a,b) __T()_LT(a,b)
 #    endif
 
 #endif
@@ -301,7 +298,7 @@ define(__T,`__`'_T()')
 #        define __T()_dimension_component__ __T()_dimension_result__
 #        define __T()_dimension_string__ __T()_shape_string__
 #        ifndef __T()_default__
-#            define __T()_default__ reshape([__T()_default_scalar__],spread(0,1,__T()_rank))
+#            define __T()_default__ reshape([__T()_type__ :: ],spread(0,1,__T()_rank))
 #        endif
 #    endif
 #    define __T()_dimension_dummy__ __T()_dimension_component__

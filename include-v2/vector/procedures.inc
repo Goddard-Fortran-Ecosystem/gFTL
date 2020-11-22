@@ -537,7 +537,6 @@
       end if
 
       this%vsize = count
-
       do i = count + 1, oldSize
          __T_FREE__(this%elements(i)%item)
       end do
@@ -551,6 +550,7 @@
             do i = oldSize + 1, count
                __T_COPY__(this%elements(i)%item, __T_default__)
             end do
+            print*,__FILE__,__LINE__,'d4'
          end if
       endif
 

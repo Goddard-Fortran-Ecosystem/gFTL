@@ -18,6 +18,13 @@ module Test_{}_type()VectorRIterator
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+define({ASSERT},{
+#if (__T_type_id__ == __CHARACTER__) && defined(__GFORTRAN__)
+@assertEqual({$1},{$2})
+#else
+@assert_that({$1},is(equal_to({$2})))
+#endif})
+
 contains
 
    @before
@@ -40,10 +47,10 @@ contains
       call v%push_back(three)
 
       iter = v%rbegin()
-      @assert_that(iter%of(), is(equal_to(three)))
+      ASSERT(iter%of(), three)
 
       iter = v%rend() - 1
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
 
    end subroutine test_of
 
@@ -57,9 +64,9 @@ contains
       call v%push_back(three)
 
       iter = v%rbegin() + 1
-      @assert_that(iter%of(-1), is(equal_to(one)))
-      @assert_that(iter%of(+0), is(equal_to(two)))
-      @assert_that(iter%of(+1), is(equal_to(three)))
+      ASSERT(iter%of(-1), one)
+      ASSERT(iter%of(+0), two)
+      ASSERT(iter%of(+1), three)
 
    end subroutine test_of_offset_default
 
@@ -73,9 +80,9 @@ contains
       call v%push_back(three)
 
       iter = v%rbegin() + 1
-      @assert_that(iter%of(-1_GFTL_SIZE_KIND), is(equal_to(one)))
-      @assert_that(iter%of(+0_GFTL_SIZE_KIND), is(equal_to(two)))
-      @assert_that(iter%of(+1_GFTL_SIZE_KIND), is(equal_to(three)))
+      ASSERT(iter%of(-1_GFTL_SIZE_KIND), one)
+      ASSERT(iter%of(+0_GFTL_SIZE_KIND), two)
+      ASSERT(iter%of(+1_GFTL_SIZE_KIND), three)
 
    end subroutine test_of_offset_size_kind
 
@@ -90,16 +97,16 @@ contains
 
       iter = v%rbegin()
       call iter%add(2)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
       
       call iter%sub(2)
-      @assert_that(iter%of(), is(equal_to(three)))
+      ASSERT(iter%of(), three)
 
       call iter%add(1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(equal_to(two)))
+      ASSERT(iter%of(), two)
 
       call iter%sub(1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(equal_to(three)))
+      ASSERT(iter%of(), three)
 
    end subroutine test_add
 
@@ -114,16 +121,16 @@ contains
 
       iter = v%rbegin()
       new_iter = iter + 2
-      @assert_that(new_iter%of(), is(equal_to(one)))
+      ASSERT(new_iter%of(), one)
       
       new_iter = new_iter - 2
-      @assert_that(new_iter%of(), is(equal_to(three)))
+      ASSERT(new_iter%of(), three)
 
       new_iter = iter + 1_GFTL_SIZE_KIND
-      @assert_that(new_iter%of(), is(equal_to(two)))
+      ASSERT(new_iter%of(), two)
 
       new_iter = new_iter - 1_GFTL_SIZE_KIND
-      @assert_that(new_iter%of(), is(equal_to(three)))
+      ASSERT(new_iter%of(), three)
 
    end subroutine test_add_operator
 
@@ -253,7 +260,7 @@ contains
       iter = v%rend()
       call iter%prev()
       @assert_that(iter == v%rbegin(), is(false()))
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
 
       call iter%prev()
       @assert_that(iter == v%rbegin(), is(true()))
@@ -269,13 +276,13 @@ contains
       call v%push_back(two)
 
       iter = next(v%rbegin(),1)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
 
       iter = next(v%rbegin(),2)
       @assert_that(iter == v%rend(), is(true()))
 
       iter = next(v%rbegin(),1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
 
       iter = next(v%rbegin(),2_GFTL_SIZE_KIND)
       @assert_that(iter == v%rend(), is(true()))
@@ -293,14 +300,14 @@ contains
       call v%push_back(three)
 
       iter = prev(v%rend(),1)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
       iter = prev(v%rend(),3)
-      @assert_that(iter%of(), is(equal_to(three)))
+      ASSERT(iter%of(), three)
       
       iter = prev(v%rend(),1_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
       iter = prev(v%rend(),3_GFTL_SIZE_KIND)
-      @assert_that(iter%of(), is(equal_to(three)))
+      ASSERT(iter%of(), three)
       
    end subroutine test_prev
 

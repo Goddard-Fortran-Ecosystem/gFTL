@@ -129,8 +129,8 @@
 !#include "set/reverse_iterator_specification.inc"
 
 
-#undef __LEFT 0
-#undef __RIGHT 1
+#undef __LEFT
+#undef __RIGHT
 #undef __set_node
 
 ! undef derived template parameters
