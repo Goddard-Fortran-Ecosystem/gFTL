@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.2.7] - 2020-08-25
+
+###Changed
+- Undoing previous commit.  Caused insidious downstream issues with 18.0.5.
+  Better to just kludge the failing test and move on.
+
 ## [1.2.6] - 2020-08-24
 
 

@@ -380,8 +380,7 @@ contains
       call a%insert(TWO)
       
       call b%insert(THREE)
-
-      b = a
+      call b%deepCopy(a)
       @assertTrue(a == b)
 
       ! Shallow copy will show problems if we now insert an element
