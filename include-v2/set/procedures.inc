@@ -855,6 +855,27 @@
    end subroutine __MANGLE(write_formatted)
 
 
+   ! =======================
+   !  swap
+   ! =======================
+   subroutine __MANGLE(swap)(this, x)
+      class(__set), target, intent(inout) :: this
+      type(__set), target, intent(inout) :: x
+
+      type(__set_node), pointer :: tmp
+      integer(kind=GFTL_SIZE_KIND) :: tsize
+
+      tmp => this%root
+      this%root => x%root
+      x%root => tmp
+
+      tsize = this%tsize
+      this%tsize = x%tsize
+      x%tsize = tsize
+
+      return
+   end subroutine __MANGLE(swap)
+
 
 
 #include "set/iterator_procedures.inc"

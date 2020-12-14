@@ -100,6 +100,8 @@
    function __MANGLE(iter_end)(cont) result(end)
       type(__set_iterator) :: end
       type(__set), target, intent(in) :: cont
+
+      end = cont%end()
       
    end function __MANGLE(iter_end)
    

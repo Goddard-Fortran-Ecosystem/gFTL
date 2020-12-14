@@ -3,6 +3,9 @@
    public :: __set
    public :: __set_iterator
    
+   ! Non type-bound procedures
+   public :: swap
+
    ! Iterator functions
    public :: advance
    public :: begin

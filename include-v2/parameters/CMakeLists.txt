@@ -63,6 +63,11 @@ cpp_copy_parameter (T __vector_T T/copy_T_to_vector_T.inc)
 cpp_copy_parameter (__vector_T __T T/copy_vector_T_to_internal_T.inc)
 process_m4 (vector_T cpp_undef.m4 T/undef_vector_T.inc)
 
+# deque
+cpp_copy_parameter (T __deque_T T/copy_T_to_deque_T.inc)
+cpp_copy_parameter (__deque_T __T T/copy_deque_T_to_internal_T.inc)
+process_m4 (deque_T cpp_undef.m4 T/undef_deque_T.inc)
+
 #set
 cpp_copy_parameter (T __set_T T/copy_T_to_set_T.inc)
 cpp_copy_parameter (__set_T __T T/copy_set_T_to_internal_T.inc)

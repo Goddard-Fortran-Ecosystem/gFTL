@@ -206,6 +206,26 @@ contains
       
    end subroutine test_erase_iter
 
+   @test
+   subroutine test_swap()
+      type(set) :: s1, s2
+
+      call s1%insert(one)
+      call s1%insert(two)
+      call s2%insert(three)
+
+      call s1%swap(s2)
+
+      @assert_that(int(s1%size()), is(1))
+      @assert_that(int(s2%size()), is(2))
+
+      @assert_that(int(s1%count(three)), is(1))
+      @assert_that(int(s2%count(one)), is(1))
+      @assert_that(int(s2%count(two)), is(1))
+
+   end subroutine test_swap
+
+
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_set_T.inc"

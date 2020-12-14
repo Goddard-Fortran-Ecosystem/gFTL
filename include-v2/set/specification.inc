@@ -87,6 +87,8 @@
       generic :: assignment(=) => copy_list
 #endif
 
+      procedure :: swap => __MANGLE(swap)
+
       procedure, private :: find_node => __MANGLE(find_node)
       procedure, private :: rebalance=> __MANGLE(rebalance)
       procedure, private :: erase_nonleaf => __MANGLE(erase_nonleaf)
@@ -104,6 +106,9 @@
 
    end type __set
 
+   interface swap
+      module procedure __MANGLE(swap)
+   end interface swap
 
    interface operator(==)
       module procedure __MANGLE(equal)
