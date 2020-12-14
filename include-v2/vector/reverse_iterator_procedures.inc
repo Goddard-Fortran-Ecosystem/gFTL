@@ -7,15 +7,6 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-      function __MANGLE(riter_get)(this) result (item)
-         class (__vector_riterator), intent(in) :: this
-
-         __T_declare_result__, pointer :: item
-         item => this%elements(this%current_index)%item
-
-      end function __MANGLE(riter_get)
-
-
       subroutine __MANGLE(riter_next)(this)
          class (__vector_riterator), intent(inout) :: this
 
@@ -46,7 +37,7 @@
          class (__vector_riterator), intent(in) :: this
          integer(kind=__gftl_size_kind), intent(in) :: i
 
-         ptr => this%elements(this%current_index + i)%item
+         ptr => this%elements(this%current_index - i)%item
 
       end function __MANGLE(riter_of_offset_size_kind)
 
@@ -55,7 +46,7 @@
          class (__vector_riterator), intent(in) :: this
          integer, intent(in) :: i
 
-         ptr => this%elements(this%current_index + i)%item
+         ptr => this%elements(this%current_index - i)%item
          
       end function __MANGLE(riter_of_offset_default)
 

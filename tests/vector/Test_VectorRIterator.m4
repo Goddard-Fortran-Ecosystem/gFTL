@@ -64,9 +64,9 @@ contains
       call v%push_back(three)
 
       iter = v%rbegin() + 1
-      ASSERT(iter%of(-1), one)
+      ASSERT(iter%of(-1), three)
       ASSERT(iter%of(+0), two)
-      ASSERT(iter%of(+1), three)
+      ASSERT(iter%of(+1), one)
 
    end subroutine test_of_offset_default
 
@@ -80,9 +80,9 @@ contains
       call v%push_back(three)
 
       iter = v%rbegin() + 1
-      ASSERT(iter%of(-1_GFTL_SIZE_KIND), one)
+      ASSERT(iter%of(-1_GFTL_SIZE_KIND), three)
       ASSERT(iter%of(+0_GFTL_SIZE_KIND), two)
-      ASSERT(iter%of(+1_GFTL_SIZE_KIND), three)
+      ASSERT(iter%of(+1_GFTL_SIZE_KIND), one)
 
    end subroutine test_of_offset_size_kind
 

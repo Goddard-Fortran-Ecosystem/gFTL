@@ -76,7 +76,7 @@
       type (__vector) :: v
       type (__vector) :: x
 
-      integer :: i
+      integer(kind=GFTL_SIZE_KIND) :: i
 
       call v%resize(x%size())
       do i = 1, x%size()
@@ -92,7 +92,7 @@
       type (__vector) :: v
       __T_declare_dummy__, dimension(:), intent(in) :: il ! initializer list
 
-      integer :: i
+      integer(kind=GFTL_SIZE_KIND) :: i
 
       call v%resize(size(il))
       do i = 1, size(il)
@@ -168,7 +168,8 @@
       integer, intent(out) :: rc
       __T_declare_result__, pointer :: res
 
-      integer :: idx
+      integer(kind=GFTL_SIZE_KIND) :: idx
+
       idx = merge(i, this%vsize+i, i > 0)
 
       if ((idx <= 0).or.(idx > this%vsize)) then
@@ -188,9 +189,9 @@
       __T_declare_result__, pointer :: res
       integer, intent(out) :: rc
 
-      integer :: idx
+      integer(kind=GFTL_SIZE_KIND) :: idx
 
-      ! Cannot directly invoke at_sizek_kind() because result
+      ! Cannot directly invoke at_size_kind() because result
       ! is undefined for out-of-bound indices
       
       idx = merge(int(i,kind=GFTL_SIZE_KIND), this%vsize+i, i > 0)
@@ -343,7 +344,9 @@
       logical :: equal
       type(__vector), intent(in) :: lhs
       type(__vector), intent(in) :: rhs
-      integer :: i
+
+      integer(kind=GFTL_SIZE_KIND) :: i
+
 
       ! Same size?
       equal = (lhs%vsize == rhs%vsize)
@@ -408,7 +411,8 @@
       type (__vector), intent(in) :: lhs
       type (__vector), intent(in) :: rhs
 
-      integer :: i, n
+      integer(kind=GFTL_SIZE_KIND) :: i, n
+
       __T_declare_result__, pointer :: lhs_i, rhs_i
       
       n = min(lhs%size(), rhs%size())
@@ -550,7 +554,6 @@
             do i = oldSize + 1, count
                __T_COPY__(this%elements(i)%item, __T_default__)
             end do
-            print*,__FILE__,__LINE__,'d4'
          end if
       endif
 
@@ -639,7 +642,7 @@
       type (__vector_iterator), intent(in)  :: first
       type (__vector_iterator), intent(in)  :: last
 
-      integer :: i, delta
+      integer(kind=GFTL_SIZE_KIND) :: i, delta
 
       delta=last%current_index-first%current_index
       do i=last%current_index, this%vsize
@@ -757,7 +760,7 @@
       type(__vector), target, intent(inout) :: x
 
       type(__MANGLE(wrapper)), dimension(:), allocatable :: tmp
-      integer :: tmpsize
+      integer(kind=GFTL_SIZE_KIND) :: tmpsize
 
       call move_alloc(this%elements, tmp)
       call move_alloc(x%elements, this%elements)

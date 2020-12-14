@@ -23,11 +23,9 @@
       procedure :: next => __MANGLE(riter_next)
       procedure :: prev => __MANGLE(riter_prev)
 
-      procedure :: get => __MANGLE(riter_get)
       procedure :: __MANGLE(riter_of)
       procedure :: __MANGLE(riter_of_offset_size_kind)
       procedure :: __MANGLE(riter_of_offset_default)
-
       generic :: of => __MANGLE(riter_of)
       generic :: of => __MANGLE(riter_of_offset_size_kind)
 #ifndef __gftl_disable_index_kind_overload
