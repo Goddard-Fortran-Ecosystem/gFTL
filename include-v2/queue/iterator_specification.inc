@@ -7,7 +7,7 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-   type __deque_iterator__
+   type __deque_iterator
       private
 
       type(__deque), pointer :: deque
@@ -51,7 +51,7 @@
       generic :: sub => __MANGLE(iter_sub_n_size_kind)
 #endif
 
-   end type __deque_iterator__
+   end type __deque_iterator
 
 
    ! Non type-bound functions

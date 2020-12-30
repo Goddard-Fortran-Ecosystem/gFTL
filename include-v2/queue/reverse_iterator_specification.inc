@@ -7,7 +7,7 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-   type __deque_riterator__
+   type __deque_riterator
       private
 
       type(__deque), pointer :: deque
@@ -45,7 +45,7 @@
       generic :: sub => __MANGLE(riter_sub_n_size_kind)
 #endif
 
-   end type __deque_riterator__
+   end type __deque_riterator
 
 
    ! Arithmetic

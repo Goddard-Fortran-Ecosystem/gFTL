@@ -14,9 +14,26 @@
 ! containers.  E.g., Set uses Deque and Map uses Pair.
 !---------------
 
-! define generic internal template parameters from pair parameters.
 #include "parameters/T/copy_deque_T_to_internal_T.inc"
 #define __guard __deque_guard
+
+#if defined(__deque_iterator)
+#    define __deque_iterator__ __deque_iterator
+#else
+#    define __deque_iterator__ DequeIterator
+#endif
+
+#if defined(__deque_riterator)
+#    define __deque_riterator__ __deque_riterator
+#else
+#    define __deque_riterator__ DequeRIterator
+#endif
+
+#if defined(__deque_bucket_size)
+#    define __deque_bucket_size__ __deque_bucket_size
+#else
+#    define __deque_bucket_size__ 1
+#endif
 
 ! define derived generic template parameters from internal parameters.
 #include "parameters/T/define_derived_macros.inc"
@@ -58,10 +75,10 @@
 
    function __MANGLE(new_deque_range)(first, last) result(v)
       type (__deque) :: v
-      type (__deque_iterator), intent(in) :: first
-      type (__deque_iterator), intent(in) :: last
+      type (__deque_iterator__), intent(in) :: first
+      type (__deque_iterator__), intent(in) :: last
 
-      type (__deque_iterator) :: iter
+      type (__deque_iterator__) :: iter
 
       iter = first
       do while (iter /= last)
@@ -473,13 +490,18 @@
    subroutine __MANGLE(pop_back)(this)
       class(__deque), intent(inout) :: this
 
-      call this%downsize(this%size_-1)
+      integer(kind=GFTL_SIZE_KIND) :: old_back
+
+      old_back = this%back_
 
       if (this%back_ == 1) then
-         this%back_ = this%size_
+         this%back_ = this%capacity()
       else
          this%back_ = this%back_ - 1
       end if
+
+      call this%downsize(old_back, old_back)
+
 
       return
    end subroutine __MANGLE(pop_back)
@@ -515,18 +537,21 @@
 
 
    ! =======================
-   !  pop_back()
+   !  pop_front()
    ! =======================
    subroutine __MANGLE(pop_front)(this)
       class(__deque), intent(inout) :: this
 
-      call this%downsize(this%size_ - 1)
-
+      integer(kind=GFTL_SIZE_KIND) :: old_front
+      
+      old_front = this%front_
       if (this%front_ == this%capacity()) then
          this%front_ = 1
       else
          this%front_ = this%front_ + 1
       end if
+      
+      call this%downsize(old_front, old_front)
 
       return
    end subroutine __MANGLE(pop_front)
@@ -608,20 +633,28 @@
    ! =======================
    !  downsize()
    ! =======================
-   subroutine __MANGLE(downsize)(this, newsize)
+   subroutine __MANGLE(downsize)(this, from, to)
       class(__deque), intent(inout) :: this
-      integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize  ! assumes newsize<=size()
-      integer(kind=GFTL_SIZE_KIND) :: i
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: from, to  ! assumes newsize<=size()
 
-      integer(kind=GFTL_SIZE_KIND) :: ii
+      integer(kind=GFTL_SIZE_KIND) :: i, ii
 
-      if (newsize < this%size_) then
-         do i = newsize+1, this%size_
+      if (from <= to) then
+         do i = from, to - 1
             ii = this%idx(i)
             __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
          end do
-         this%size_=newsize
+      else
+         do i = from, this%capacity()
+            ii = this%idx(i)
+            __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
+         end do
+         do i = 1, to
+            ii = this%idx(i)
+            __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
+         end do
       endif
+      this%size_ = this%size_ - modulo(from - to, this%capacity())  - 1
 
       return
    end subroutine __MANGLE(downsize)
@@ -633,7 +666,9 @@
    subroutine __MANGLE(clear)(this)
       class(__deque), intent(inout) :: this
 
-      call this%downsize(0_GFTL_SIZE_KIND)
+      call this%downsize(this%front_, this%back_)
+      this%front_ = -1
+      this%back_ = 0
 
       return
    end subroutine __MANGLE(clear)
@@ -657,9 +692,9 @@
    !  erase_one
    ! =======================
    function __MANGLE(erase_one)(this, position) result(new_iter)
-      type(__deque_iterator), target :: new_iter
+      type(__deque_iterator__), target :: new_iter
       class(__deque), target, intent(inout) :: this
-      type (__deque_iterator), intent(in)  :: position
+      type (__deque_iterator__), intent(in)  :: position
 
       new_iter = this%erase(position, position+1)
 
@@ -671,10 +706,10 @@
    !  erase_range
    ! =======================
    function __MANGLE(erase_range)(this, first, last) result(new_iter)
-      type(__deque_iterator), target :: new_iter
+      type(__deque_iterator__), target :: new_iter
       class(__deque), target, intent(inout) :: this
-      type (__deque_iterator), intent(in)  :: first
-      type (__deque_iterator), intent(in)  :: last
+      type (__deque_iterator__), intent(in)  :: first
+      type (__deque_iterator__), intent(in)  :: last
 
       integer(kind=GFTL_SIZE_KIND) :: i, ii, delta
 
@@ -877,7 +912,7 @@
    !  begin() - create an iterator
    ! =======================
    function __MANGLE(begin)(this) result(iter)
-      type (__deque_iterator) :: iter
+      type (__deque_iterator__) :: iter
       class (__deque), target, intent(in) :: this
 
       iter%current_index = 1
@@ -893,7 +928,7 @@
    ! =======================
    function __MANGLE(end)(this) result(iter)
       class (__deque), target, intent(in) :: this
-      type (__deque_iterator) :: iter
+      type (__deque_iterator__) :: iter
 
       iter%current_index = this%size() + 1 ! past the end
       iter%deque => this
@@ -905,7 +940,7 @@
    !  rbegin() - create a reverse iterator
    ! =======================
    function __MANGLE(rbegin)(this) result(iter)
-      type (__deque_riterator) :: iter
+      type (__deque_riterator__) :: iter
       class (__deque), target, intent(in) :: this
 
       iter%current_index = this%size_
@@ -921,7 +956,7 @@
    ! =======================
    function __MANGLE(rend)(this) result(iter)
       class (__deque), target, intent(in) :: this
-      type (__deque_riterator) :: iter
+      type (__deque_riterator__) :: iter
 
       iter%current_index = 0 ! before beginning
       iter%deque => this
@@ -954,7 +989,7 @@
       class(__deque), intent(in) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: i
 
-      bucket_index = 1 + (i-1)/__deque_bucket_size
+      bucket_index = 1 + (i-1)/__deque_bucket_size__
    end function __MANGLE(bucket_index)
 
    function __MANGLE(bucket_offset)(this, i) result(bucket_offset)
@@ -962,11 +997,23 @@
       class(__deque), intent(in) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: i
 
-      bucket_offset = 1 + modulo(i-1, __deque_bucket_size)
+      bucket_offset = 1 + modulo(i-1, __deque_bucket_size__)
    end function __MANGLE(bucket_offset)
 
 #include "deque/iterator_procedures.inc"
 #include "deque/reverse_iterator_procedures.inc"
+
+#if defined(__deque_iterator__)
+#    undef __deque_iterator__
+#endif
+
+#if defined(__deque_riterator__)
+#    undef __deque_riterator__
+#endif
+
+#if defined(__deque_bucket_size__)
+#    undef __deque_bucket_size__
+#endif
 
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"

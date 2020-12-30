@@ -8,14 +8,14 @@
 !--------------------------------------------------------------------
 
       subroutine __MANGLE(iter_next)(this)
-         class (__deque_iterator__), intent(inout) :: this
+         class (__deque_iterator), intent(inout) :: this
 
          this%current_index = this%current_index + 1
       end subroutine __MANGLE(iter_next)
 
 
       subroutine __MANGLE(iter_prev)(this)
-         class (__deque_iterator__), intent(inout) :: this
+         class (__deque_iterator), intent(inout) :: this
 
          this%current_index = this%current_index - 1
 
@@ -24,7 +24,7 @@
 
       function __MANGLE(iter_of)(this) result(ptr)
          __T_declare_result__, pointer :: ptr
-         class (__deque_iterator__), intent(in) :: this
+         class (__deque_iterator), intent(in) :: this
 
          ptr => this%deque%at(this%current_index)
 
@@ -33,7 +33,7 @@
 
       function __MANGLE(iter_of_offset_size_kind)(this, i) result(ptr)
          __T_declare_result__, pointer :: ptr
-         class (__deque_iterator__), intent(in) :: this
+         class (__deque_iterator), intent(in) :: this
          integer(kind=__gftl_size_kind), intent(in) :: i
 
          ptr => this%deque%at(this%current_index + i)
@@ -42,7 +42,7 @@
 
       function __MANGLE(iter_of_offset_default)(this, i) result(ptr)
          __T_declare_result__, pointer :: ptr
-         class (__deque_iterator__), intent(in) :: this
+         class (__deque_iterator), intent(in) :: this
          integer, intent(in) :: i
 
          ptr => this%deque%of(this%current_index + i)
@@ -51,28 +51,28 @@
 
 
       subroutine __MANGLE(iter_add_n_size_kind)(this, n)
-         class(__deque_iterator__), intent(inout) :: this
+         class(__deque_iterator), intent(inout) :: this
          integer(kind=__gftl_size_kind), intent(in) :: n
          this%current_index = this%current_index + n
          return
       end subroutine __MANGLE(iter_add_n_size_kind)
 
       subroutine __MANGLE(iter_add_n_default)(this, n)
-         class(__deque_iterator__), intent(inout) :: this
+         class(__deque_iterator), intent(inout) :: this
          integer, intent(in) :: n
          this%current_index = this%current_index + n
          return
       end subroutine __MANGLE(iter_add_n_default)
 
       subroutine __MANGLE(iter_sub_n_size_kind)(this, n)
-         class(__deque_iterator__), intent(inout) :: this
+         class(__deque_iterator), intent(inout) :: this
          integer(kind=__gftl_size_kind), intent(in) :: n
          this%current_index = this%current_index - n
          return
       end subroutine __MANGLE(iter_sub_n_size_kind)
 
       subroutine __MANGLE(iter_sub_n_default)(this, n)
-         class(__deque_iterator__), intent(inout) :: this
+         class(__deque_iterator), intent(inout) :: this
          integer, intent(in) :: n
          this%current_index = this%current_index - n
          return
@@ -82,8 +82,8 @@
       ! Non type-bound procedures
 
       function __MANGLE(iter_a_plus_n_size_kind)(a, n) result(new_iter)
-         type (__deque_iterator__) :: new_iter
-         type(__deque_iterator__), intent(in) :: a
+         type (__deque_iterator) :: new_iter
+         type(__deque_iterator), intent(in) :: a
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_iter = a
@@ -92,9 +92,9 @@
       end function __MANGLE(iter_a_plus_n_size_kind)
 
       function __MANGLE(iter_n_plus_a_size_kind)(n, a) result(new_iter)
-         type (__deque_iterator__) :: new_iter
+         type (__deque_iterator) :: new_iter
          integer(kind=__gftl_size_kind), intent(in) :: n
-         type(__deque_iterator__), intent(in) :: a
+         type(__deque_iterator), intent(in) :: a
 
          new_iter = a
          call new_iter%add(n)
@@ -102,8 +102,8 @@
       end function __MANGLE(iter_n_plus_a_size_kind)
 
       function __MANGLE(iter_a_minus_n_size_kind)(a, n) result(new_iter)
-         type (__deque_iterator__) :: new_iter
-         type (__deque_iterator__), intent(in) :: a
+         type (__deque_iterator) :: new_iter
+         type (__deque_iterator), intent(in) :: a
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_iter = a
@@ -112,8 +112,8 @@
       end function __MANGLE(iter_a_minus_n_size_kind)
 
       function __MANGLE(iter_a_plus_n_default)(a, n) result(new_iter)
-         type (__deque_iterator__) :: new_iter
-         type (__deque_iterator__), intent(in) :: a
+         type (__deque_iterator) :: new_iter
+         type (__deque_iterator), intent(in) :: a
          integer, intent(in) :: n
 
          new_iter = a
@@ -122,9 +122,9 @@
       end function __MANGLE(iter_a_plus_n_default)
 
       function __MANGLE(iter_n_plus_a_default)(n, a) result(new_iter)
-         type (__deque_iterator__) :: new_iter
+         type (__deque_iterator) :: new_iter
          integer, intent(in) :: n
-         type (__deque_iterator__), intent(in) :: a
+         type (__deque_iterator), intent(in) :: a
 
          new_iter = a
          call new_iter%add(n)
@@ -132,8 +132,8 @@
       end function __MANGLE(iter_n_plus_a_default)
 
       function __MANGLE(iter_a_minus_n_default)(a, n) result(new_iter)
-         type (__deque_iterator__) :: new_iter
-         type (__deque_iterator__), intent(in) :: a
+         type (__deque_iterator) :: new_iter
+         type (__deque_iterator), intent(in) :: a
          integer, intent(in) :: n
 
          new_iter = a
@@ -143,8 +143,8 @@
 
       function __MANGLE(iter_a_minus_b)(a, b) result(n)
          integer(kind=__gftl_size_kind) :: n
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
 
          n = a%current_index - b%current_index
       end function __MANGLE(iter_a_minus_b)
@@ -152,8 +152,8 @@
 
       ! Relational operators
       logical function __MANGLE(iter_equal)(a, b) result(eq)
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
 
          eq = (a%current_index == b%current_index)
 
@@ -161,44 +161,44 @@
 
 
       logical function __MANGLE(iter_not_equal)(a, b) result(ne)
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
 
          ne = .not. (a == b)
 
       end function __MANGLE(iter_not_equal)
 
       logical function __MANGLE(iter_less)(a, b) result(less)
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
          less = (a%current_index < b%current_index)
       end function __MANGLE(iter_less)
 
 
       function __MANGLE(iter_less_equal)(a,b) result(le)
          logical :: le
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
          le = .not. (b < a)
       end function __MANGLE(iter_less_equal)
 
       logical function __MANGLE(iter_greater)(a, b) result(gt)
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
          gt = (a%current_index > b%current_index)
       end function __MANGLE(iter_greater)
 
       function __MANGLE(iter_greater_equal)(a,b) result(ge)
          logical :: ge
-         type(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         type(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
          ge = .not. (a < b)
       end function __MANGLE(iter_greater_equal)
 
 
 
       subroutine __MANGLE(iter_advance_size_kind)(it, n)
-         type(__deque_iterator__), intent(inout) :: it
+         type(__deque_iterator), intent(inout) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          call it%add(n)
@@ -207,7 +207,7 @@
       end subroutine __MANGLE(iter_advance_size_kind)
 
       subroutine __MANGLE(iter_advance_default)(it, n)
-         type(__deque_iterator__), intent(inout) :: it
+         type(__deque_iterator), intent(inout) :: it
          integer, intent(in) :: n
 
          call it%add(n)
@@ -217,7 +217,7 @@
 
 
       function __MANGLE(iter_begin)(cont) result(begin)
-         type(__deque_iterator__) :: begin
+         type(__deque_iterator) :: begin
          type(__deque), target, intent(in) :: cont
 
          begin = cont%begin()
@@ -227,8 +227,8 @@
 
       
       integer(kind=__gftl_size_kind) function __MANGLE(iter_distance)(a, b) result(distance)
-         class(__deque_iterator__), intent(in) :: a
-         type(__deque_iterator__), intent(in) :: b
+         class(__deque_iterator), intent(in) :: a
+         type(__deque_iterator), intent(in) :: b
 
          distance = b - a
 
@@ -237,7 +237,7 @@
 
 
       function __MANGLE(iter_end)(cont) result(end)
-         type(__deque_iterator__) :: end
+         type(__deque_iterator) :: end
          type(__deque), target, intent(in) :: cont
 
          end = cont%end()
@@ -247,8 +247,8 @@
 
 
       function __MANGLE(iter_next_1)(it) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
 
          new_it = next(it,1)
 
@@ -256,8 +256,8 @@
       end function __MANGLE(iter_next_1)
 
       function __MANGLE(iter_next_n_size_kind)(it, n) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_it = it
@@ -267,8 +267,8 @@
       end function __MANGLE(iter_next_n_size_kind)
 
       function __MANGLE(iter_next_n_default)(it, n) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
          integer, intent(in) :: n
 
          new_it = it
@@ -278,8 +278,8 @@
       end function __MANGLE(iter_next_n_default)
 
       function __MANGLE(iter_prev_1)(it) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
 
          new_it = prev(it,1)
 
@@ -287,8 +287,8 @@
       end function __MANGLE(iter_prev_1)
 
       function __MANGLE(iter_prev_n_size_kind)(it, n) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
 
          new_it = it
@@ -298,8 +298,8 @@
       end function __MANGLE(iter_prev_n_size_kind)
 
       function __MANGLE(iter_prev_n_default)(it, n) result(new_it)
-         type(__deque_iterator__) :: new_it
-         type(__deque_iterator__), intent(in) :: it
+         type(__deque_iterator) :: new_it
+         type(__deque_iterator), intent(in) :: it
          integer, intent(in) :: n
 
          new_it = it
