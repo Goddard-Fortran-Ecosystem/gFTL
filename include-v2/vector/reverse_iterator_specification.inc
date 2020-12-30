@@ -9,10 +9,7 @@
 
    type __vector_riterator
       private
-
-      type(__MANGLE(wrapper)), dimension(:), pointer :: elements
-      integer(kind=__gftl_size_kind) :: current_index = -1 ! intentionally invalid value
-
+      type(__vector_iterator) :: iterator
    contains
 
 !!$      procedure :: back_inserter => __MANGLE(back_inserter)

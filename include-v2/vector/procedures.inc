@@ -838,12 +838,7 @@
       type (__vector_riterator) :: iter
       class (__vector), target, intent(in) :: this
 
-      iter%current_index = this%vsize
-      if (allocated(this%elements)) then
-         iter%elements => this%elements
-      else
-         iter%elements => null()
-      end if
+      iter%iterator = this%end()
 
    end function __MANGLE(rbegin)
 
@@ -857,12 +852,7 @@
       class (__vector), target, intent(in) :: this
       type (__vector_riterator) :: iter
 
-      iter%current_index = 0 ! before beginning
-      if (allocated(this%elements)) then
-         iter%elements => this%elements
-      else
-         iter%elements => null()
-      end if
+      iter%iterator = this%begin()
 
    end function __MANGLE(rend)
 

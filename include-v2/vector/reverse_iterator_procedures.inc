@@ -10,14 +10,15 @@
       subroutine __MANGLE(riter_next)(this)
          class (__vector_riterator), intent(inout) :: this
 
-         this%current_index = this%current_index - 1
+         call this%iterator%prev()
+
       end subroutine __MANGLE(riter_next)
 
 
       subroutine __MANGLE(riter_prev)(this)
          class (__vector_riterator), intent(inout) :: this
 
-         this%current_index = this%current_index + 1
+         call this%iterator%next()
 
       end subroutine __MANGLE(riter_prev)
 
@@ -27,7 +28,7 @@
          __T_declare_result__, pointer :: ptr
          class (__vector_riterator), intent(in) :: this
 
-         ptr => this%elements(this%current_index)%item
+         ptr => this%iterator%of(-1)
 
       end function __MANGLE(riter_of)
 
@@ -37,7 +38,7 @@
          class (__vector_riterator), intent(in) :: this
          integer(kind=__gftl_size_kind), intent(in) :: i
 
-         ptr => this%elements(this%current_index - i)%item
+         ptr => this%iterator%of(-i-1)
 
       end function __MANGLE(riter_of_offset_size_kind)
 
@@ -46,7 +47,7 @@
          class (__vector_riterator), intent(in) :: this
          integer, intent(in) :: i
 
-         ptr => this%elements(this%current_index - i)%item
+         ptr => this%iterator%of(-i-1)
          
       end function __MANGLE(riter_of_offset_default)
 
@@ -55,31 +56,35 @@
       subroutine __MANGLE(riter_add_n_size_kind)(this, n)
          class(__vector_riterator), intent(inout) :: this
          integer(kind=__gftl_size_kind), intent(in) :: n
-         this%current_index = this%current_index - n
+
+         call this%iterator%sub(n)
+
          return
       end subroutine __MANGLE(riter_add_n_size_kind)
 
       subroutine __MANGLE(riter_add_n_default)(this, n)
          class(__vector_riterator), intent(inout) :: this
          integer, intent(in) :: n
-         this%current_index = this%current_index - n
+
+         call this%iterator%sub(n)
+         
          return
       end subroutine __MANGLE(riter_add_n_default)
 
       subroutine __MANGLE(riter_sub_n_size_kind)(this, n)
          class(__vector_riterator), intent(inout) :: this
          integer(kind=__gftl_size_kind), intent(in) :: n
-         this%current_index = this%current_index + n
+
+         call this%iterator%add(n)
          return
       end subroutine __MANGLE(riter_sub_n_size_kind)
 
       subroutine __MANGLE(riter_sub_n_default)(this, n)
          class(__vector_riterator), intent(inout) :: this
          integer, intent(in) :: n
-         this%current_index = this%current_index + n
+         call this%iterator%add(n)
          return
       end subroutine __MANGLE(riter_sub_n_default)
-
 
 
 
@@ -88,8 +93,7 @@
          type(__vector_riterator), intent(in) :: a
          integer(kind=__gftl_size_kind), intent(in) :: n
 
-         new_iter = a
-         call new_iter%add(n)
+         new_iter%iterator = a%iterator - n
 
       end function __MANGLE(riter_a_plus_n_size_kind)
 
@@ -98,8 +102,7 @@
          integer(kind=__gftl_size_kind), intent(in) :: n
          type(__vector_riterator), intent(in) :: a
 
-         new_iter = a
-         call new_iter%add(n)
+         new_iter%iterator = a%iterator - n
 
       end function __MANGLE(riter_n_plus_a_size_kind)
 
@@ -108,8 +111,7 @@
          type (__vector_riterator), intent(in) :: a
          integer(kind=__gftl_size_kind), intent(in) :: n
 
-         new_iter = a
-         call new_iter%sub(n)
+         new_iter%iterator = a%iterator + n
 
       end function __MANGLE(riter_a_minus_n_size_kind)
 
@@ -118,8 +120,7 @@
          type (__vector_riterator), intent(in) :: a
          integer, intent(in) :: n
 
-         new_iter = a
-         call new_iter%add(n)
+         new_iter%iterator = a%iterator - n
 
       end function __MANGLE(riter_a_plus_n_default)
 
@@ -128,8 +129,7 @@
          integer, intent(in) :: n
          type (__vector_riterator), intent(in) :: a
 
-         new_iter = a
-         call new_iter%add(n)
+         new_iter%iterator = a%iterator - n
 
       end function __MANGLE(riter_n_plus_a_default)
 
@@ -138,8 +138,7 @@
          type (__vector_riterator), intent(in) :: a
          integer, intent(in) :: n
 
-         new_iter = a
-         call new_iter%sub(n)
+         new_iter%iterator = a%iterator + n
 
       end function __MANGLE(riter_a_minus_n_default)
 
@@ -148,7 +147,7 @@
          type(__vector_riterator), intent(in) :: a
          type(__vector_riterator), intent(in) :: b
 
-         n = a%current_index - b%current_index
+         n = b%iterator - a%iterator
       end function __MANGLE(riter_a_minus_b)
 
 
@@ -159,7 +158,7 @@
          type(__vector_riterator), intent(in) :: a
          type(__vector_riterator), intent(in) :: b
 
-         eq = (a%current_index == b%current_index)
+         eq = (a%iterator == b%iterator)
 
       end function __MANGLE(riter_equal)
 
@@ -175,7 +174,9 @@
       logical function __MANGLE(riter_less)(a, b) result(less)
          type(__vector_riterator), intent(in) :: a
          type(__vector_riterator), intent(in) :: b
-         less = (b%current_index < a%current_index)
+
+         less = (b%iterator < a%iterator)
+
       end function __MANGLE(riter_less)
 
 
