@@ -394,28 +394,18 @@ contains
    subroutine test_pop()
       type(Deque) :: v
 
-      print*,__FILE__,__LINE__
       call v%push_back(one)
-      print*,__FILE__,__LINE__
       call v%push_back(two)
-      print*,__FILE__,__LINE__
       call v%push_back(three)
-      print*,__FILE__,__LINE__
 
       call v%pop_front()
-      print*,__FILE__,__LINE__
       
       @assert_that(int(v%size()), is(2))
-      print*,__FILE__,__LINE__
       ASSERT(v%front(), two)
-      print*,__FILE__,__LINE__
       call v%pop_front()
-      print*,__FILE__,__LINE__
       ASSERT(v%front(), three)
-      print*,__FILE__,__LINE__
 
    end subroutine test_pop
-
 
    @test
    subroutine test_deque_copy()

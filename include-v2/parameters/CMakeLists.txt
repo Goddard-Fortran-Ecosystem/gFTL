@@ -74,6 +74,12 @@ cpp_copy_parameter (__queue_T __T T/copy_queue_T_to_internal_T.inc)
 cpp_copy_parameter (__queue_T __deque_T T/copy_queue_T_to_deque_T.inc)
 process_m4 (queue_T cpp_undef.m4 T/undef_queue_T.inc)
 
+# stack
+cpp_copy_parameter (T __stack_T T/copy_T_to_stack_T.inc)
+cpp_copy_parameter (__stack_T __T T/copy_stack_T_to_internal_T.inc)
+cpp_copy_parameter (__stack_T __deque_T T/copy_stack_T_to_deque_T.inc)
+process_m4 (stack_T cpp_undef.m4 T/undef_stack_T.inc)
+
 #set
 cpp_copy_parameter (T __set_T T/copy_T_to_set_T.inc)
 cpp_copy_parameter (__set_T __T T/copy_set_T_to_internal_T.inc)

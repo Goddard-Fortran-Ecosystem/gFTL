@@ -1,6 +1,7 @@
 add_subdirectory(vector)
 add_subdirectory(deque)
 add_subdirectory(queue)
+add_subdirectory(stack)
 add_subdirectory(set)
 
 # tests for legacy version 1
