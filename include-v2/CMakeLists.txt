@@ -10,8 +10,8 @@ target_include_directories (gftl-v2 INTERFACE
 # Union of parameters across all supported
 # templates.
 set (template_parameters
-  T # vector, deque, queue, stack, set, map
-  Key # map
+  T # vector, deque, queue, stack, set, map, ordered_map
+  Key # map, ordered_map
   T1 # pair
   T2 # pair
   )
@@ -24,7 +24,7 @@ endif()
 add_subdirectory(shared)
 add_subdirectory(parameters)
 
-foreach (template ptr pair vector deque queue stack set altset map)
+foreach (template ptr pair vector deque queue stack set altset map ordered_map)
   install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION "${dest}/include"
     PATTERN CMakeLists.txt EXCLUDE
     PATTERN *~ EXCLUDE

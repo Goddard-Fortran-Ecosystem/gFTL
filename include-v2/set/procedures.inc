@@ -235,7 +235,7 @@
 
       iter = first
       do while (iter /= last)
-         call this%insert(iter%of())
+         call this%insert(iter%at())
          call iter%next()
       end do
 
@@ -675,8 +675,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end())
-         ptr_a => iter_a%of()
-         ptr_b => iter_b%of()
+         ptr_a => iter_a%at()
+         ptr_b => iter_b%at()
 
          if (.not. __MANGLE(order_eq)(ptr_a,ptr_b)) return
 
@@ -715,8 +715,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end() .and. iter_b /= b%end())
-         ptr_a => iter_a%of()
-         ptr_b => iter_b%of()
+         ptr_a => iter_a%at()
+         ptr_b => iter_b%at()
 
          ! a < b ?
          lt = __T_LT__(ptr_a, ptr_b)
@@ -783,7 +783,7 @@
 
       iter = other%begin()
       do while (iter /= other%end())
-         ptr => iter%of()
+         ptr => iter%at()
          call this%insert(ptr)
          call iter%next()
       end do
@@ -824,8 +824,8 @@
 
       iter = source%begin()
       do while (iter /= source%end())
-         if (this%count(iter%of()) == 0) then
-            call this%insert(iter%of())
+         if (this%count(iter%at()) == 0) then
+            call this%insert(iter%at())
             iter = source%erase(iter)
          else
             ! already in result

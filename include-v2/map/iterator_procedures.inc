@@ -20,7 +20,7 @@
 
          p => this%at()
          if (associated(p)) then
-            first => p%get_first()
+            first => p%first
          else
             first => null()
          end if
@@ -38,7 +38,7 @@
 
          p => this%at()
          if (associated(p)) then
-            second => p%get_second()
+            second => p%second
          else
             second => null()
          end if

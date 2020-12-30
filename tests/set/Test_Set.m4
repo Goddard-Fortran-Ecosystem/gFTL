@@ -110,11 +110,11 @@ contains
       call s%insert(one)
       iter = s%find(one)
       @assert_that(iter /= s%end(), is(true()))
-      ASSERT(iter%of(), one)
+      ASSERT(iter%at(), one)
 
       iter = s%find(zero)
       @assert_that(iter /= s%end(), is(true()))
-      ASSERT(iter%of(), zero)
+      ASSERT(iter%at(), zero)
       
 
    end subroutine test_find_found
@@ -142,13 +142,13 @@ contains
       type(SetIterator) :: iter
 
       call s%insert(zero, iter=iter)
-      ASSERT(iter%of(), zero)
+      ASSERT(iter%at(), zero)
 
       call s%insert(one, iter=iter)
-      ASSERT(iter%of(), one)
+      ASSERT(iter%at(), one)
 
       call s%insert(zero, iter=iter)
-      ASSERT(iter%of(), zero)
+      ASSERT(iter%at(), zero)
 
       
    end subroutine test_insert_get_iterator_new
@@ -183,7 +183,7 @@ contains
 
       hint = s%find(one)
       call s%insert(hint, two, iter=iter)
-      ASSERT(iter%of(), two)
+      ASSERT(iter%at(), two)
       
    end subroutine test_insert_with_hint
 

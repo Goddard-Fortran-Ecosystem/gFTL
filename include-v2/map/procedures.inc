@@ -25,8 +25,8 @@
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-!#include "set/procedures.inc"
-#include "altset/procedures.inc"
+#include "set/procedures.inc"
+!#include "altset/procedures.inc"
 
 #undef __set
 #undef __set_iterator
@@ -152,7 +152,7 @@
       res = (iter /= this%tree%end())
       if (res) then
          pair_ptr => iter%at()
-         value => pair_ptr%get_second()
+         value => pair_ptr%second
       end if
 
       return
@@ -168,7 +168,6 @@
       type(__map_pair) :: p
 
       __Key_COPY__(p%first, key)
-      __T_FREE__(p%second)
       __T_COPY__(p%second, value)
 
       call this%tree%insert(p)
@@ -186,16 +185,16 @@
       __T_declare_result__, pointer :: res
       type(__map_pair) :: p
 
-      logical :: isNew
+      logical :: is_new
       type(__MANGLE(SetIterator)) :: iter
       type(__map_pair), pointer :: pair_ptr
 
       __Key_COPY__(p%first, key)
 
-      call this%tree%insert(p, iter=iter, isNew=isNew)
-      if (.not. isNew) then
+      call this%tree%insert(p, iter=iter, is_new=is_new)
+      if (.not. is_new) then
          pair_ptr => iter%at()
-         res => pair_ptr%get_second()
+         res => pair_ptr%second
       else
          res => null()
       end if
@@ -393,7 +392,7 @@
          type(__map_pair), intent(in) :: a
          type(__map_pair), intent(in) :: b
 
-         less_than = __Key_LT__(a%get_first(),b%get_first())
+         less_than = __Key_LT__(a%first,b%first)
 
          return
       end function __MANGLE(key_less_than)
@@ -410,7 +409,7 @@
       it=this%tree%begin()
       do while (it%good())
         p => it%at()
-        write(*, *)p%get_first(), ' => ',p%secord,'+'
+        write(*, *)p%first, ' => ',p%secord,'+'
         call it%next
       end do
       return

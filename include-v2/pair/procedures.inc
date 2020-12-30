@@ -31,20 +31,6 @@
       p%second = second
    end function __MANGLE(new_pair)
 
-   function __MANGLE(get_first)(this) result(first)
-      __T1_declare_result__, pointer :: first
-      class(__pair), target, intent(in) :: this
-
-      first => this%first
-   end function __MANGLE(get_first)
-
-   function __MANGLE(get_second)(this) result(second)
-      __T2_declare_result__, pointer :: second
-      class(__pair), target, intent(in) :: this
-
-      second => this%second
-   end function __MANGLE(get_second)
-
 
 #if (defined(__T1_LT__) || defined(__T1_EQ__)) && (defined(__T2_LT__) || defined(__T2_EQ__))
    ! =======================

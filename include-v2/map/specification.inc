@@ -30,8 +30,8 @@
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-   !#include "set/specification.inc"
-#include "altset/specification.inc"
+#include "set/specification.inc"
+!#include "altset/specification.inc"
 
 #undef __set
 #undef __set_iterator

@@ -99,6 +99,16 @@ cpp_copy_parameter (__map_T __T T/copy_map_T_to_internal_T.inc)
 process_m4 (map_Key cpp_undef.m4 Key/undef_map_Key.inc)
 process_m4 (map_T cpp_undef.m4 T/undef_map_T.inc)
 
+# ordered_map
+cpp_copy_parameter (Key __omap_Key Key/copy_Key_to_omap_Key.inc)
+cpp_copy_parameter (__omap_Key __vector_T T/copy_omap_Key_to_vector_T.inc)
+
+cpp_copy_parameter (T __omap_T T/copy_T_to_omap_T.inc)
+cpp_copy_parameter (__omap_T __vector_T T/copy_omap_T_to_vector_T.inc)
+
+process_m4 (omap_Key cpp_undef.m4 Key/undef_omap_Key.inc)
+process_m4 (omap_T cpp_undef.m4 T/undef_omap_T.inc)
+
 
 add_subdirectory(tests)
 

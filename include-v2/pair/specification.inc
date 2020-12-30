@@ -24,13 +24,9 @@
 #include "parameters/T2/define_derived_macros.inc"
 
    type :: __pair
-      private
       __T1_declare_component__ :: first
       __T2_declare_component__ :: second
    contains
-!!$      procedure :: write_formatted => __MANGLE(get)
-      procedure :: get_first => __MANGLE(get_first)
-      procedure :: get_second => __MANGLE(get_second)
    end type __pair
 
    interface __pair
