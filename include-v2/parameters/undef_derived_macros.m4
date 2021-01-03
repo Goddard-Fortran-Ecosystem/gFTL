@@ -26,9 +26,14 @@ cpp_undef(kindlen_component__)
 cpp_undef(kindlen_dummy__)
 cpp_undef(kindlen_string__)
 
-cpp_undef(declare_component)
-cpp_undef(declare_result)
-cpp_undef(declare_dummy)
+cpp_undef(dimension_string__)
+cpp_undef(dimension_result__)
+cpp_undef(dimension_component__)
+cpp_undef(dimension_dummy__)
+
+cpp_undef(declare_component__)
+cpp_undef(declare_result__)
+cpp_undef(declare_dummy__)
 
 cpp_undef(polymorphic__)
 cpp_undef(deferred__)
@@ -38,6 +43,7 @@ cpp_undef(allocatable_string__)
 cpp_undef(listable__)
 
 cpp_undef(default__)
+cpp_undef(default_scalar__)
 cpp_undef(rank__)
 cpp_undef(shape__)
 

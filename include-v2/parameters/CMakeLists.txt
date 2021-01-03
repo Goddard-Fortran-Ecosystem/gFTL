@@ -7,7 +7,7 @@ if( NOT M4 )
 endif()
 
 function (process_m4 parameter input_file output_file)
-  message("processing: ${input_file} and ${output_file}")
+#  message("processing: ${input_file} and ${output_file}")
   add_custom_command (
     OUTPUT ${output_file}
     COMMAND ${M4} -s -D_T=${parameter} -I. ${CMAKE_CURRENT_SOURCE_DIR}/${input_file} > ${output_file}
@@ -110,7 +110,7 @@ process_m4 (omap_Key cpp_undef.m4 Key/undef_omap_Key.inc)
 process_m4 (omap_T cpp_undef.m4 T/undef_omap_T.inc)
 
 
-add_subdirectory(tests)
+add_subdirectory(tests EXCLUDE_FROM_ALL)
 
 
 add_custom_target(m4_type_includes ALL DEPENDS ${type_incs})

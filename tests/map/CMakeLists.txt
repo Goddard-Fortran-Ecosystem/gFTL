@@ -4,10 +4,9 @@ find_program(M4 m4)
 # supported.
 set (keys
   integer
-#  character_len17
-#  deferred_string
+  character_len17
+  deferred_string
 #  Foo
-#  logical
 #  integer_shape_3
 #  real_rank_2_deferred_shape
   )

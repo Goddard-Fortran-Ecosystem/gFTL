@@ -29,6 +29,8 @@ foreach (T ${types})
     ${src}/test_${T}.inc
     )
 
+  set(WD ${CMAKE_CURRENT_BINARY_DIR}/${T})
+
   add_custom_command (
     OUTPUT ${bin}/${sut}.F90 ${bin}/${test}.pf  ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Vector.m4  > ${sut}.F90
