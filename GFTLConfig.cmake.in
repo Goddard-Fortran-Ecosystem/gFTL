@@ -5,3 +5,5 @@ set (PREFIX ${SELF_DIR}/../..)
 set (GFTL_TOP_DIR ${PREFIX}/GFTL-@GFTL_VERSION_MAJOR@.@GFTL_VERSION_MINOR@ CACHE PATH "")
 include ("${GFTL_TOP_DIR}/cmake/GFTL.cmake")
 
+set (GFTL_TOP_DIR "@GFTL_TOP_DIR@")
+include ("${CMAKE_CURRENT_LIST_DIR}/GFTLTargets.cmake")
