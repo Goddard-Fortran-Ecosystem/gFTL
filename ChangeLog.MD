@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+## [1.3.1] - 2021-01-31
+
+### Changed
+
+- Updated the logic for CMake installation. 
+
+
+### Added
+## [1.3.0] - 2020-12-07
+
+### Added
+
+- Export CMake targtes to make it easier to consume.    (Contrib)
+
 ## [1.2.7] - 2020-08-25
 
 ###Changed

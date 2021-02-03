@@ -4,7 +4,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.2.7
+  VERSION 1.3.1
   LANGUAGES Fortran)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
@@ -66,14 +66,4 @@ configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
   DESTINATION "${top_dir}/include"
-  )
-
-install(EXPORT GFTL
-  FILE GFTLTargets.cmake
-  NAMESPACE GFTL::
-  DESTINATION "${top_dir}/cmake"
-  )
-export(EXPORT GFTL
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/GFTLTargets.cmake"
-  NAMESPACE GFTL::
   )
