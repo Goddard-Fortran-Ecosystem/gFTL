@@ -1,4 +1,6 @@
 add_library (gftl INTERFACE)
+add_library (GFTL::gftl ALIAS gftl)
+
 set (dest "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
 target_include_directories (gftl INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for headers when building
