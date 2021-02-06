@@ -2,19 +2,21 @@
 
 ## Unreleased
 
-## [1.3.1] - 2021-01-31
+## [1.3.1] - 2021-02-06
 
 ### Changed
 
-- Updated the logic for CMake installation. 
+### Fixed
 
+- Some conflicts among GFE build chains related to previous version.
 
-### Added
 ## [1.3.0] - 2020-12-07
 
-### Added
+- gFTL now uses CMake namespaces.   Upstream projects should now link with
+  'GFTL::gftl` instead of `gftl`.  Technically a backward incompatibility, but
+  does not seem serious enough to warrant a major release.
 
-- Export CMake targtes to make it easier to consume.    (Contrib)
+- Export CMake targets to make it easier to consume.    (Contrib)
 
 ## [1.2.7] - 2020-08-25
 
