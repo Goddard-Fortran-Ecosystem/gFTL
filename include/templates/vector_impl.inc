@@ -583,18 +583,19 @@
          type (__iterator), intent(in)  :: first
          type (__iterator), intent(in)  :: last
 
-         integer :: i, delta
+         integer :: i, d
 
-         delta=last%currentindex-first%currentindex
+         d = last%currentindex-first%currentindex
          do i=last%currentIndex, this%vsize
-            associate(a => this%elements(i-delta),b =>this%elements(i))
-              __TYPE_MOVE(__GET(a),__GET(b))
-            end associate
+            ! Workaround for Intel 2021.1
+            ! Defect report has been submitted to Intel.
+            ! Indentation is critical here.
+         __TYPE_MOVE(__GET(this%elements(i-d)),__GET(this%elements(i)))
          end do
-         do i = this%vsize - delta + 1, last%currentIndex - 1
+         do i = this%vsize - d + 1, last%currentIndex - 1
             __TYPE_FREE(__GET(this%elements(i)))
          end do
-         this%vsize=this%vsize-delta
+         this%vsize=this%vsize-d
 
          return
       end subroutine __PROC(erase_range)

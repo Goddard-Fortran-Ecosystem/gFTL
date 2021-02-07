@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0)
 
 include_directories("$ENV{FTL}/include")
 #add_executable(VecIntAndReal.x EXCLUDE_FROM_ALL VecIntAndReal.F90)
