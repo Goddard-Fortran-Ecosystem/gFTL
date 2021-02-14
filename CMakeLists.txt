@@ -3,7 +3,7 @@ if (COMMAND cmake_policy)
   cmake_policy (SET CMP0003 NEW)
 endif (COMMAND cmake_policy)
 
-project (gFTL
+project (GFTL
   VERSION 2.0.0
   LANGUAGES NONE)
 
@@ -29,7 +29,7 @@ add_subdirectory (include-v2)
 
 # v1 legacy
 add_subdirectory (include)
-add_subdirectory (examples)
+#add_subdirectory (examples)
 
 # No Fortran compiler is required to build gFTL, but the tests do
 # require Fortran.  So we check for that before searching for the
@@ -44,11 +44,11 @@ if (CMAKE_Fortran_COMPILER)
   if (PFUNIT_FOUND)
     message("-- Detecting pFUnit: ${PFUNIT_DIR}")
     project (gFTL-TEST
-      VERSION ${gFTL_VERSION}
+      VERSION ${GFTL_VERSION}
       LANGUAGES Fortran
       )
     
-    set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${gFTL_SOURCE_DIR}/cmake")
+    set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake")
     include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
     include (CheckFortranSource)
     include (CheckCompilerCapabilities)
@@ -76,19 +76,17 @@ write_basic_package_version_file(GFTLConfig-version.cmake
   )
 
 install (
-  FILES  ${CMAKE_CURRENT_BINARY_DIR}/gFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/gFTLConfig-version.cmake
-  DESTINATION ${top_dir}/${cmake_dir}
+  FILES  ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig-version.cmake
+  DESTINATION ${top_dir}/cmake
   )
 
 configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
-
 install (
-  FILES ${CMAKE_CURRENT_BINARY_DIR}/gFTL.mk 
-  DESTINATION "${top_dir}/include-v1"
+  FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
+  DESTINATION "${top_dir}/include"
   )
 
-install(EXPORT GFTL
-  FILE GFTLTargets.cmake
+install(EXPORT GFTL  FILE GFTLTargets.cmake
   NAMESPACE GFTL::
   DESTINATION "${top_dir}/cmake"
   )

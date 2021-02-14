@@ -1,10 +1,12 @@
-set (dest "gFTL-${gFTL_VERSION}")
-
 add_library (gftl-v2 INTERFACE)
+add_library (GFTL::gftl-v2 ALIAS gftl-v2)
+
+set (dest "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
+
 target_include_directories (gftl-v2 INTERFACE
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}> # for headers when building
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:${dest}/include>           # for client in install mode
+  $<INSTALL_INTERFACE:${dest}/include-v2>           # for client in install mode
   )
 
 # Union of parameters across all supported
@@ -25,9 +27,10 @@ add_subdirectory(shared)
 add_subdirectory(parameters)
 
 foreach (template ptr pair vector deque queue stack set altset map ordered_map)
-  install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/ DESTINATION "${dest}/include"
+  install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${template} DESTINATION "${dest}/include-v2"
     PATTERN CMakeLists.txt EXCLUDE
     PATTERN *~ EXCLUDE
     )
 endforeach ()
 
+install (TARGETS gftl-v2 EXPORT GFTL DESTINATION "${dest}/include-v2")
