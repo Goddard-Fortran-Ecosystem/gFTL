@@ -38,7 +38,7 @@ contains
 
    @test
    subroutine test_empty()
-     type(Set) :: s
+     type(Set), target :: s
 
      s = Set()
      @assert_that(s%empty(), is(true()))
@@ -49,7 +49,7 @@ contains
 
    @test
    subroutine test_max_size()
-      type(Set) :: s
+      type(Set), target :: s
 
       @assert_that(s%max_size(), is(huge(1_GFTL_SIZE_KIND)))
    end subroutine test_max_size
@@ -57,7 +57,7 @@ contains
 
    @test
    subroutine test_size()
-      type(Set) :: s
+      type(Set), target :: s
 
       @assert_that(int(s%size()), is(0))
       call s%insert(zero)
@@ -69,7 +69,7 @@ contains
 
    @test
    subroutine test_size_duplicate_insert()
-      type(Set) :: s
+      type(Set), target :: s
 
       call s%insert(zero)
       call s%insert(zero)
@@ -79,7 +79,7 @@ contains
 
    @test
    subroutine test_count()
-      type(Set) :: s
+      type(Set), target :: s
 
       @assert_that(int(s%count(zero)), is(0))
       call s%insert(zero)
@@ -93,7 +93,7 @@ contains
 
    @test
    subroutine test_find_not_found()
-      type(Set) :: s
+      type(Set), target :: s
       type(SetIterator) :: iter
 
       iter = s%find(zero)
@@ -103,7 +103,7 @@ contains
 
    @test
    subroutine test_find_found()
-      type(Set) :: s
+      type(Set), target :: s
       type(SetIterator) :: iter
 
       call s%insert(zero)
@@ -122,7 +122,7 @@ contains
 
    @test
    subroutine test_insert_is_new()
-      type(Set) :: s
+      type(Set), target :: s
       logical :: is_new
 
       call s%insert(zero, is_new=is_new)
@@ -138,7 +138,7 @@ contains
 
    @test
    subroutine test_insert_get_iterator_new()
-      type(Set) :: s
+      type(Set), target :: s
       type(SetIterator) :: iter
 
       call s%insert(zero, iter=iter)
@@ -155,7 +155,7 @@ contains
 
    @test
    subroutine test_insert_range()
-      type(Set) :: s1, s2
+      type(Set), target :: s1, s2
 
 
       call s1%insert(zero)
@@ -175,7 +175,7 @@ contains
    ! developed that actually uses the hint
    @test
    subroutine test_insert_with_hint()
-      type(Set) :: s
+      type(Set), target :: s
       type(SetIterator) :: iter, hint
 
       call s%insert(zero)
@@ -189,7 +189,7 @@ contains
 
    @test
    subroutine test_erase_iter()
-      type(Set) :: s
+      type(Set), target :: s
       type(SetIterator) :: iter
       
       call s%insert(zero)
@@ -208,7 +208,7 @@ contains
 
    @test
    subroutine test_swap()
-      type(set) :: s1, s2
+      type(set), target :: s1, s2
 
       call s1%insert(one)
       call s1%insert(two)

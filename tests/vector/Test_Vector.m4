@@ -623,7 +623,56 @@ contains
       ASSERT(v2%of(1), one)
       ASSERT(v2%of(2), two)
    end subroutine test_swap
+
+   @test
+   subroutine test_insert_empty()
+      type(vector), target :: v
+      type(VectorIterator) :: iter
+
+      iter = v%begin()
+      iter = v%insert(iter, one)
+      @assert_that(v%size(), is(1_GFTL_SIZE_KIND))
+      @assert_that(v%at(1), is(equal_to(one)))
+      @assert_that(iter%of(0), is(equal_to(one)))
       
+   end subroutine test_insert_empty
+
+   @test
+   subroutine test_insert_before()
+      type(vector), target :: v
+      type(VectorIterator) :: iter
+
+
+      call v%push_back(one)
+      iter = v%begin()
+      iter = v%insert(iter, two)
+
+      @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
+      @assert_that(reason='A:', actual=v%at(1), matcher=is(equal_to(two)))
+      @assert_that('B:', v%at(2), is(equal_to(one)))
+      @assert_that(iter%of(0), is(equal_to(two)))
+      @assert_that(iter%of(1), is(equal_to(one)))
+      
+   end subroutine test_insert_before
+   
+   @test
+   subroutine test_insert_middle()
+      type(vector), target :: v
+      type(VectorIterator) :: iter
+
+
+      call v%push_back(one)
+      iter = v%begin() + 1
+      iter = v%insert(iter, two)
+
+      @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
+      @assert_that(v%at(1), is(equal_to(one)))
+      @assert_that(v%at(2), is(equal_to(two)))
+      @assert_that(iter%of(0), is(equal_to(two)))
+      @assert_that(iter%of(-1), is(equal_to(one)))
+      
+   end subroutine test_insert_middle
+   
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_vector_T.inc"

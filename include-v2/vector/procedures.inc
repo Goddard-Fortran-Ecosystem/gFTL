@@ -302,6 +302,111 @@
 
    end subroutine __MANGLE(set_default)
 
+
+   ! =======================
+   !  insert()
+   ! =======================
+   function __MANGLE(insert_one)(this, pos, value) result(iter)
+      type(__vector_iterator) :: iter
+      class(__vector), target, intent(inout) :: this
+      type(__vector_iterator), intent(in) :: pos
+      __T_declare_dummy__, intent(in) :: value
+
+      iter = this%insert(pos, 1_GFTL_SIZE_KIND, value)
+
+   end function __MANGLE(insert_one)
+
+   function __MANGLE(insert_count_size_kind)(this, pos, count, value) result(iter)
+      type(__vector_iterator) :: iter
+      class(__vector), target, intent(inout) :: this
+      type(__vector_iterator), intent(in) :: pos
+      integer(kind=GFTL_SIZE_KIND), intent(in) :: count
+      __T_declare_dummy__, intent(in) :: value
+
+      integer(kind=GFTL_SIZE_KIND) :: i
+
+      call this%grow_to(this%vsize + count)
+
+      do i = this%vsize, pos%current_index, -1
+         __T_MOVE__(this%elements(i+count)%item, this%elements(i)%item)
+      end do
+      do i = 1, count
+         __T_COPY__(this%elements(pos%current_index + i - 1)%item, value)
+      end do
+
+      this%vsize = this%vsize + count
+      iter%elements => this%elements
+      iter%current_index = pos%current_index
+      
+   end function __MANGLE(insert_count_size_kind)
+
+#ifndef  __gftl_disable_index_kind_overload
+   function __MANGLE(insert_count_default)(this, pos, count, value) result(iter)
+      type(__vector_iterator) :: iter
+      class(__vector), target, intent(inout) :: this
+      type(__vector_iterator), intent(in) :: pos
+      integer, intent(in) :: count
+      __T_declare_dummy__, intent(in) :: value
+
+      iter = this%insert(pos, int(count,kind=GFTL_SIZE_KIND), value)
+
+   end function __MANGLE(insert_count_default)
+#endif
+   
+   function __MANGLE(insert_range)(this, pos, first, last, value) result(iter)
+      type(__vector_iterator) :: iter
+      class(__vector), target, intent(inout) :: this
+      type(__vector_iterator), intent(in) :: pos
+      type(__vector_iterator), intent(in) :: first
+      type(__vector_iterator), intent(in) :: last
+      __T_declare_dummy__, intent(in) :: value
+      
+      integer(kind=GFTL_SIZE_KIND) :: i, n
+      
+      n = last - first
+
+      call this%grow_to(this%vsize + n)
+
+      do i = this%vsize, pos%current_index, -1
+         __T_MOVE__(this%elements(i+n)%item, this%elements(i)%item)
+      end do
+
+      do i = 0, n-1
+         __T_COPY__(this%elements(pos%current_index + i)%item, first%of(i))
+      end do
+
+      this%vsize = this%vsize + n
+      iter%elements => this%elements
+      iter%current_index = pos%current_index
+
+   end function __MANGLE(insert_range)
+
+#ifdef __T_listable__
+   function __MANGLE(insert_list)(this, pos, values) result(iter)
+      type(__vector_iterator) :: iter
+      class(__vector), target, intent(inout) :: this
+      type(__vector_iterator), intent(in) :: pos
+      __T_declare_dummy__, intent(in) :: values(:)
+      
+      integer(kind=GFTL_SIZE_KIND) :: i, n
+
+      n = size(values)
+      call this%grow_to(this%vsize + n)
+
+      do i = this%vsize, pos%current_index, -1
+         __T_MOVE__(this%elements(i+n)%item, this%elements(i)%item)
+      end do
+      do i = 1, n
+         __T_COPY__(this%elements(pos%current_index + i - 1)%item, values(i))
+      end do
+
+      this%vsize = this%vsize + n
+      iter%elements => this%elements
+      iter%current_index = pos%current_index
+      
+   end function __MANGLE(insert_list)
+#endif
+
    ! =======================
    !  reset()
    ! =======================

@@ -40,7 +40,7 @@ contains
 
    @test
    subroutine test_of()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -55,7 +55,7 @@ contains
 
    @test
    subroutine test_of_offset_default()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -71,7 +71,7 @@ contains
 
    @test
    subroutine test_of_offset_size_kind()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -87,7 +87,7 @@ contains
 
    @test
    subroutine test_add()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -111,7 +111,7 @@ contains
 
    @test
    subroutine test_add_operator()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter, new_iter
 
       call v%push_back(one)
@@ -135,7 +135,7 @@ contains
 
    @test
    subroutine test_equal()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: ia, ib
 
       call v%push_back(one)
@@ -158,7 +158,7 @@ contains
    
    @test
    subroutine test_less_than()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: ia, ib
 
       call v%push_back(one)
@@ -177,7 +177,7 @@ contains
 
    @test
    subroutine test_less_than_or_equal()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: ia, ib
 
       call v%push_back(one)
@@ -196,7 +196,7 @@ contains
 
    @test
    subroutine test_greater_than()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: ia, ib
 
       call v%push_back(one)
@@ -215,7 +215,7 @@ contains
 
    @test
    subroutine test_greater_than_or_equal()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: ia, ib
 
       call v%push_back(one)
@@ -234,7 +234,7 @@ contains
 
    @test
    subroutine test_next_method()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -250,7 +250,7 @@ contains
 
    @test
    subroutine test_prev_method()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -268,7 +268,7 @@ contains
 
    @test
    subroutine test_next()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)
@@ -291,7 +291,7 @@ contains
 
    @test
    subroutine test_prev()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(DequeIterator) :: iter
 
       call v%push_back(one)

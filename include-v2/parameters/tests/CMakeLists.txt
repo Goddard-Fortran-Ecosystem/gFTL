@@ -41,7 +41,7 @@ foreach(type ${types})
 
   add_custom_command (
     OUTPUT ${actual}
-    COMMAND ${CPP} -I${gFTL_SOURCE_DIR}/include-v2 -I${gFTL_BINARY_DIR}/include-v2 ${source} > ${tmp}
+    COMMAND ${CPP} -I${GFTL_SOURCE_DIR}/include-v2 -I${GFTL_BINARY_DIR}/include-v2 ${source} > ${tmp}
     # Strip all empty lines and comments
     COMMAND ${FILTER} ${tmp} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -59,9 +59,5 @@ foreach(type ${types})
 endforeach()
 
 add_custom_target (test_generated_incs ALL DEPENDS ${actuals})
-
-if (NOT TARGET tests)
-  add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
-endif ()
 
 add_dependencies (tests test_generated_incs)

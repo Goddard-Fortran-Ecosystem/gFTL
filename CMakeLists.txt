@@ -22,6 +22,9 @@ endif()
 # Some preprocessing tests can be run without the
 # Fortran testing framework.
 enable_testing()
+if (NOT TARGET tests)
+  add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
+endif ()
 
 
 # v2
@@ -52,10 +55,6 @@ if (CMAKE_Fortran_COMPILER)
     include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
     include (CheckFortranSource)
     include (CheckCompilerCapabilities)
-
-    if (NOT TARGET tests)
-      add_custom_target(tests COMMAND ${CMAKE_CTEST_COMMAND})
-    endif ()
   
     add_subdirectory(tests EXCLUDE_FROM_ALL)
   endif ()

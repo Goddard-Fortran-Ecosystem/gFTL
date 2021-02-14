@@ -50,7 +50,7 @@ contains
 
    @test
    subroutine test_max_size()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       @assert_that(v%max_size(), is(huge(1_GFTL_SIZE_KIND)))
    end subroutine test_max_size
@@ -58,7 +58,7 @@ contains
 
    @test
    subroutine test_size()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       @assert_that(int(v%size()), is(0))
       call v%push_back(zero)
@@ -70,7 +70,7 @@ contains
 
    @test
    subroutine test_of_default()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -81,7 +81,7 @@ contains
 
    @test
    subroutine test_of_size_kind()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -92,7 +92,7 @@ contains
 
    @test
    subroutine test_at_default()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -103,7 +103,7 @@ contains
 
    @test
    subroutine test_at_size_kind()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -114,7 +114,7 @@ contains
 
    @test
    subroutine test_at_out_of_range()
-      type(Deque) :: v
+      type(Deque), target :: v
       __T_declare_result__, pointer :: value
       integer :: status
 
@@ -130,7 +130,7 @@ contains
 
    @test
    subroutine test_back()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       ASSERT(v%back(), one)
@@ -141,7 +141,7 @@ contains
 
    @test
    subroutine test_front()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       ASSERT(v%front(), one)
@@ -154,7 +154,7 @@ contains
 
    @test
    subroutine test_reserve()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%reserve(5)
       @assert_that(v%capacity() >= 5, is(true()))
@@ -164,7 +164,7 @@ contains
 
    @test
    subroutine test_set_default()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%set(1, two)
@@ -178,7 +178,7 @@ contains
 
    @test
    subroutine test_set_size_kind()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%resize(5_GFTL_SIZE_KIND)
       call v%set(5_GFTL_SIZE_KIND, one)
@@ -189,7 +189,7 @@ contains
 
    @test
    subroutine test_pop_back()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -205,7 +205,7 @@ contains
    
    @test
    subroutine test_deque_fill_default_value()
-      type(Deque) :: v
+      type(Deque), target :: v
       __T_declare_component__ :: default
 
       v = Deque(n=3)
@@ -237,7 +237,7 @@ contains
 
    @test
    subroutine test_deque_fill()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       v = Deque(n=3, value=two)
       @assert_that(int(v%size()), is(3))
@@ -249,7 +249,7 @@ contains
 
    @test
    subroutine resize_default()
-      type(Deque) :: v
+      type(Deque), target :: v
       integer :: status
 
       call v%resize(2, rc=status)
@@ -260,7 +260,7 @@ contains
 
    @test
    subroutine resize_default_with_value()
-      type(Deque) :: v
+      type(Deque), target :: v
       integer :: status
 
       call v%resize(2, value=three, rc=status)
@@ -273,7 +273,7 @@ contains
 
    @test
    subroutine resize_default_with_value_b()
-      type(Deque) :: v
+      type(Deque), target :: v
       integer :: status
 
       call v%push_back(one)
@@ -291,7 +291,7 @@ contains
 
    @test
    subroutine test_shrink_to_fit()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -309,7 +309,7 @@ contains
 
    @test
    subroutine resize_size_kind_with_value()
-      type(Deque) :: v
+      type(Deque), target :: v
       integer :: status
 
       call v%resize(2_GFTL_SIZE_KIND, value=three, rc=status)
@@ -322,7 +322,7 @@ contains
 
    @test
    subroutine resize_illegal_size()
-      type(Deque) :: v
+      type(Deque), target :: v
       integer :: status
       
       call v%resize(-2, rc=status)
@@ -332,7 +332,7 @@ contains
 
    @test
    subroutine test_erase_one()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(Dequeiterator) :: iter, next_iter
 
       call v%push_back(one)
@@ -352,7 +352,7 @@ contains
 
    @test
    subroutine test_erase_range()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(Dequeiterator) :: iter, next_iter
 
       call v%push_back(one)
@@ -373,7 +373,7 @@ contains
 
    @test
    subroutine test_erase_empty_range()
-      type(Deque) :: v
+      type(Deque), target :: v
       type(Dequeiterator) :: iter, next_iter
 
       call v%push_back(one)
@@ -392,7 +392,7 @@ contains
    ! Reproducer from test for queue with deferred length strings.
    @test
    subroutine test_pop()
-      type(Deque) :: v
+      type(Deque), target :: v
 
       call v%push_back(one)
       call v%push_back(two)
@@ -409,7 +409,7 @@ contains
 
    @test
    subroutine test_deque_copy()
-      type(Deque) :: v1, v2
+      type(Deque), target :: v1, v2
 
       v1 = Deque(n=3, value=two)
       v2 = v1

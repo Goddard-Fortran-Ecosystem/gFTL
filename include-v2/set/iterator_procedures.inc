@@ -39,7 +39,7 @@
    logical function __MANGLE(iter_equal)(a, b) result(eq)
       type(__set_iterator), intent(in) :: a
       type(__set_iterator), intent(in) :: b
-      
+
       eq = &
            &    associated(a%tree, target=b%tree) .and.                         &
            &   ((.not.associated(a%node) .and. .not.associated(b%node))         &

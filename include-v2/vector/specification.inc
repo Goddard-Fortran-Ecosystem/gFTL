@@ -92,6 +92,24 @@
       generic :: set => set_size_kind
 #endif
 
+      procedure :: __MANGLE(insert_one)
+#ifndef  __gftl_disable_index_kind_overload
+      procedure :: __MANGLE(insert_count_size_kind)
+#endif
+      procedure :: __MANGLE(insert_count_default)
+      procedure :: __MANGLE(insert_range)
+#ifdef __T_listable__
+      procedure :: __MANGLE(insert_list)
+#endif
+      generic :: insert => __MANGLE(insert_one)
+      generic :: insert => __MANGLE(insert_count_size_kind)
+#ifndef  __gftl_disable_index_kind_overload
+      generic :: insert => __MANGLE(insert_count_default)
+#endif
+      generic :: insert => __MANGLE(insert_range)
+#ifdef __T_listable__
+      generic :: insert => __MANGLE(insert_list)
+#endif
 #if !defined(__T_allocatable__) && !(__T_rank > 0)
       procedure :: copy_from_array => __MANGLE(copy_from_array)
       generic :: assignment(=) => copy_from_array
