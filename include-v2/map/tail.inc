@@ -13,6 +13,17 @@
 #ifdef __map_pair
 #  undef __map_pair
 #endif
+
+#ifdef __map_set
+#  undef __map_set
+#endif
+#ifdef __map_set_node
+#  undef __map_set_node
+#endif
+#ifdef __map_set_iterator
+#  undef __map_set_iterator
+#endif
+
 #ifdef __map_guard
 #    undef __map_guard
 #endif

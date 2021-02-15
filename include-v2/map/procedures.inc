@@ -180,7 +180,7 @@
 !  Analog of C++ [] operator.
 ! =======================
       function __MANGLE(of)(this, key) result(res)
-      class(__map), target, intent(inout) :: this
+      class(__map), target, intent(in) :: this
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_result__, pointer :: res
       type(__map_pair) :: p

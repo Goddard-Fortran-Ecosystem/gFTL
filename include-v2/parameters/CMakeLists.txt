@@ -101,10 +101,21 @@ process_m4 (map_T cpp_undef.m4 T/undef_map_T.inc)
 
 # ordered_map
 cpp_copy_parameter (Key __omap_Key Key/copy_Key_to_omap_Key.inc)
-cpp_copy_parameter (__omap_Key __vector_T T/copy_omap_Key_to_vector_T.inc)
+cpp_copy_parameter (T __omap_T T/copy_T_to_omap_T.inc)
+
+cpp_copy_parameter (__omap_Key __map_Key Key/copy_omap_Key_to_map_Key.inc)
+cpp_copy_parameter (__omap_T __map_T T/copy_omap_T_to_map_T.inc)
+
+cpp_copy_parameter (__omap_Key __pair_T1 T1/copy_omap_Key_to_pair_T1.inc)
+cpp_copy_parameter (__omap_T __pair_T2 T2/copy_omap_T_to_pair_T2.inc)
+
+cpp_copy_parameter (__omap_T __vector_T T/copy_omap_Key_to_vector_T.inc)
+cpp_copy_parameter (__omap_T __vector_T T/copy_omap_T_to_vector_T.inc)
+cpp_copy_parameter (__omap_Key __Key Key/copy_omap_Key_to_internal_Key.inc)
 
 cpp_copy_parameter (T __omap_T T/copy_T_to_omap_T.inc)
 cpp_copy_parameter (__omap_T __vector_T T/copy_omap_T_to_vector_T.inc)
+cpp_copy_parameter (__omap_T __T T/copy_omap_T_to_internal_T.inc)
 
 process_m4 (omap_Key cpp_undef.m4 Key/undef_omap_Key.inc)
 process_m4 (omap_T cpp_undef.m4 T/undef_omap_T.inc)
