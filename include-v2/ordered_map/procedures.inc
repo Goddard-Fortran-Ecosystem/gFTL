@@ -7,17 +7,13 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-! include map<integer,Key>
+   ! Declare map<T,Key>
 #include "parameters/Key/copy_omap_Key_to_map_Key.inc"
+#include "parameters/T/copy_omap_T_to_map_T.inc"
 
-#define __map_T integer
-#define __map_T_name "integer"
-#define __map_T_KINDLEN(context) (kind=__gftl_size_kind)
-#define __map_T_kindlen_string "(kind=__gftl_size_kind)"
-
-#define __map __IDENTITY(__omap_guard)__IDENTITY(IndexMap)
+#define __map __IDENTITY(__omap_guard)__IDENTITY(Map)
 #define __map_iterator __IDENTITY(__omap_guard)__IDENTITY(MapIterator)
-#define __map_pair omap_MapPair
+#define __map_pair __omap_pair
 
 #define __map_set __omap_set
 #define __map_set_node __omap_set_node
@@ -35,33 +31,16 @@
 #undef __map_iterator
 #undef __map_guard
 
-
-#include "parameters/T/undef_map_T.inc"
 #include "parameters/Key/undef_map_Key.inc"
+#include "parameters/T/undef_map_T.inc"
 
-   ! Declare Pair<Key,T>
-#include "parameters/T1/copy_omap_Key_to_pair_T1.inc"
-#include "parameters/T2/copy_omap_T_to_pair_T2.inc"
-#define __pair __omap_pair
-#define __pair_guard __IDENTITY(__omap_guard)__IDENTITY(p_)
-
-#include "pair/procedures.inc"
-
-#undef __pair
-#undef __pair_guard
-
-#include "parameters/T1/undef_pair_T1.inc"   
-#include "parameters/T2/undef_pair_T2.inc"   
-
-
-
-
-! include vector<Key>
+   ! Declare vector<Key>
+   ! __T   __T_declare_component__
 #include "parameters/T/copy_omap_Key_to_vector_T.inc"
 #define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(K_)
-#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
-#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
-#define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(VectorRIterator)
+#define __vector __IDENTITY(__omap_guard)__IDENTITY(Vector)
+#define __vector_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorIterator)
+#define __vector_riterator __IDENTITY(__omap_guard)__IDENTITY(VectorRIterator)
 
 #include "vector/procedures.inc"
 
@@ -70,26 +49,8 @@
 #undef __vector_riterator
 #undef __vector_guard
 #include "parameters/T/undef_vector_T.inc"
-
-
-! include vector<T>
-#include "parameters/T/copy_omap_T_to_vector_T.inc"
-#define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(T_)
-#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
-#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
-#define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(T_VectorRIterator)
-
-#include "vector/procedures.inc"
-
-#undef __vector
-#undef __vector_iterator
-#undef __vector_riterator
-#undef __vector_guard
-#include "parameters/T/undef_vector_T.inc"
-
 
 #define __guard __omap_guard
-
 
 #include "parameters/Key/copy_omap_Key_to_internal_Key.inc"
 #include "parameters/T/copy_omap_T_to_internal_T.inc"
@@ -110,9 +71,8 @@
          type (__omap) :: m
          type (__omap), intent(in) :: x
 
-         m%index_map = x%index_map
-         m%keys = x%keys
-         m%values = x%values
+         m%map = x%map
+         m%ordered_keys = x%ordered_keys
 
       end function __MANGLE(new_omap_copy)
 
@@ -134,7 +94,7 @@
       logical function __MANGLE(empty)(this) result(isEmpty)
          class (__omap), intent(in) :: this
 
-         isEmpty = this%index_map%empty()
+         isEmpty = this%map%empty()
 
       end function __MANGLE(empty)
 
@@ -146,7 +106,7 @@
          integer(kind=GFTL_SIZE_KIND) :: size
          class (__omap), intent(in) :: this
 
-         size = this%index_map%size()
+         size = this%map%size()
 
       end function __MANGLE(size)
 
@@ -171,31 +131,27 @@
          __Key_declare_dummy__, intent(in) :: key
          __T_declare_dummy__, intent(in) :: value
 
-         integer(kind=GFTL_SIZE_KIND), pointer :: idx
          integer :: status
+         __T_declare_result__, pointer :: tmp
 
-         idx => this%index_map%at(key, rc=status)
-         if (status /= success) then
-            allocate(idx)
-            idx = this%keys%size() + 1
-            call this%index_map%insert(key, idx)
-            call this%keys%push_back(key)
-            call this%values%push_back(value)
-            deallocate(idx)
+         tmp => this%map%at(key, rc=status)
+         if (status /= success) then ! new
+            call this%ordered_keys%push_back(key)
+            call this%map%insert(key, value)
          end if
 
       end subroutine __MANGLE(insert_key_value)
 
 
-!!$      ! TODO: This implemetation requires to searches for
-!!$      ! the element.  Should be improved
-!!$      subroutine __MANGLE(insert_pair)(this, p)
-!!$         class (__omap), intent(inout) :: this
-!!$         type (__omap_pair), intent(in) :: p
-!!$
-!!$         call this%insert_key_value(p%first, p%second)
-!!$
-!!$      end subroutine __MANGLE(insert_pair)
+      ! TODO: This implemetation requires to searches for
+      ! the element.  Should be improved
+      subroutine __MANGLE(insert_pair)(this, p)
+         class (__omap), intent(inout) :: this
+         type (__omap_pair), intent(in) :: p
+
+         call this%insert(p%first, p%second)
+
+      end subroutine __MANGLE(insert_pair)
 
 ! =======================
 !  
@@ -205,19 +161,8 @@
       class(__omap), target, intent(in) :: this
       __Key_declare_dummy__ :: key
       __T_declare_result__, pointer, intent(out) :: value
-      type(__omap_pair) :: p
 
-      type(__omap_pair), pointer :: pair_ptr
-
-      integer(kind=GFTL_SIZE_KIND), pointer :: idx
-
-      idx => this%index_map%at(key)
-      res = associated(idx)
-      if (res) then
-         value => this%values%at(idx)
-      else
-         value => null()
-      end if
+      res = this%map%get(key, value)
 
       return
       end function __MANGLE(get)
@@ -232,13 +177,14 @@
 
       type(__omap_pair) :: p
       integer :: status
-      integer(kind=__gftl_size_kind), pointer :: idx
+      __T_declare_result__, pointer :: v
       
-      idx => this%index_map%at(key, status)
-      if (rc == SUCCESS) then
-         call this%values%set(idx, value)
-      else
-         call this%insert(key, value)
+      v => this%map%at(key, status)
+      if (status == SUCCESS) then ! overwrite
+         call this%map%set(key, value)
+      else ! new 
+         call this%map%insert(key, value)
+         call this%ordered_keys%push_back(key)
       end if
 
       return
@@ -256,15 +202,10 @@
       class(__omap), target, intent(inout) :: this
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_result__, pointer :: res
-      
-      integer(kind=__gftl_size_kind), pointer :: idx
-      
-      idx => this%index_map%of(key)
-      if (associated(idx)) then
-         res => this%values%of(idx)
-      else
-         res => null()
-      end if
+
+      __T_declare_result__, pointer :: v
+
+      res => this%map%of(key)
 
       return
       end function __MANGLE(of)
@@ -280,16 +221,7 @@
 
       type (__omap_iterator) :: iter
 
-      integer(kind=__gftl_size_kind), pointer :: idx
-      
-      idx => this%index_map%of(key)
-      if (associated(idx)) then
-         res => this%values%of(idx)
-         rc = SUCCESS
-      else
-         res => null()
-         rc = OUT_OF_RANGE
-      end if
+      res => this%map%at(key, rc)
 
       return
       end function __MANGLE(at_rc)
@@ -304,9 +236,10 @@
          class(__omap), intent(inout) :: this
          type(__omap_iterator), intent(in) :: iter
 
-         call this%index_map%erase(iter%index_map_iter)
-         call this%keys%erase(iter%keys_iter)
-         call this%values%erase(iter%keys_iter)
+         type(__MANGLE(MapIterator)) :: m_iter
+
+         m_iter = this%map%erase(this%map%find(iter%key_iter%of()))
+         new_iter%key_iter = this%ordered_keys%erase(iter%key_iter)
 
       end function __MANGLE(erase_iter)
 
@@ -318,16 +251,24 @@
          class(__omap), intent(inout) :: this
          __Key_declare_dummy__, intent(in) :: k
 
-         type(__omap_iterator) :: iter
+         __T_declare_result__, pointer :: v
+         type(__MANGLE(VectorIterator)) :: iter
 
-         iter = this%find(k)
-         if (iter /= this%end()) then
-            iter = this%erase(iter)
-            n = 1
+         v => this%of(k)
+         if (associated(v)) then
+            n = this%map%erase(k)
+            associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
+              iter = this%ordered_keys%erase(find_basic(b, e, v))
+            end associate
          else
             n = 0
          end if
 
+      contains
+
+#define __find_iterator __MANGLE(VectorIterator)
+#define __find_value __Key_declare_result__
+#include "algorithms/find/procedures.inc"
       end function __MANGLE(erase_key)
 
 
@@ -340,8 +281,13 @@
          type(__omap_iterator), intent(in) :: first
          type(__omap_iterator), intent(in) :: last
 
-         new_iter%reference => first%reference
-!!$         new_iter%set_iter = this%tree%erase(first%set_iter, last%set_iter)
+         type(__omap_iterator) :: iter
+         
+         iter = first
+         do while (iter /= last)
+            iter = this%erase(iter) ! advances iter
+         end do
+         new_iter = iter
 
       end function __MANGLE(erase_range)
 
@@ -352,9 +298,8 @@
       subroutine __MANGLE(clear)(this)
       class(__omap), intent(inout) :: this
 
-      call this%index_map%clear()
-      call this%keys%clear()
-      call this%values%clear()
+      call this%map%clear()
+      call this%ordered_keys%clear()
 
       end subroutine __MANGLE(clear)
 
@@ -369,7 +314,7 @@
       type(__omap), intent(in) :: a
       type(__omap), intent(in) :: b
 
-!!$      equal = a%tree == b%tree
+      equal = (a%map == b%map)
 
    end function __MANGLE(equal)
 
@@ -392,7 +337,7 @@
          type (__omap_iterator) :: iter
 
          iter%reference => this
-!!$         iter%set_iter = this%tree%begin()
+         iter%key_iter = this%ordered_keys%begin()
 
       end function __MANGLE(begin)
 
@@ -405,7 +350,7 @@
          type (__omap_iterator) :: iter
 
          iter%reference => this
-!!$         iter%set_iter = this%tree%end()
+         iter%key_iter = this%ordered_keys%begin()
 
       end function __MANGLE(end)
 
@@ -423,8 +368,14 @@
          __Key_COPY__(p%first, key)
 
          iter%reference => this
-!!$         iter%set_iter = this%tree%find(p)
+         associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
+           iter%key_iter = find_basic(b, e, key) ! STL::find()
+         end associate
 
+      contains
+#define __find_iterator __MANGLE(VectorIterator)
+#define __find_value __Key_declare_result__
+#include "algorithms/find/procedures.inc"
       end function __MANGLE(find)
 
 
@@ -437,11 +388,7 @@
          class(__omap), intent(in) :: this
          __Key_declare_dummy__, intent(in) :: key
 
-         type (__omap_pair) :: p
-
-         __Key_COPY__(p%first, key)
-
-!!$         count = this%tree%count(p)
+         count = this%map%count(key)
 
       end function __MANGLE(count)
 
@@ -456,7 +403,8 @@
 
          ! Set container assigmnent ovrrides default assignment.
          ! Correct implementations should do a deep copy here
-!!$         this%tree = x%tree
+         this%map = x%map
+         this%ordered_keys = x%ordered_keys
 
       end subroutine __MANGLE(deep_copy)
       
@@ -465,29 +413,11 @@
          type(__omap_pair), intent(in) :: a
          type(__omap_pair), intent(in) :: b
 
-         less_than = __Key_LT__(a%get_first(),b%get_first())
+         less_than = __Key_LT__(a%first,b%first)
 
          return
       end function __MANGLE(key_less_than)
 
-#ifdef _DUMP_MAP
-! =======================
-!  mapdump
-! =======================
-      subroutine mapdump(this)
-      class(__omap), intent(inout) :: this
-      type(__omap_set_iterator) :: it
-      type(__omap_pair), pointer :: p
-
-!!$      it=this%tree%begin()
-      do while (it%good())
-        p => it%at()
-        write(*, *)p%first, ' => ',p%secord,'+'
-        call it%next
-      end do
-      return
-      end subroutine mapdump
-#endif
 
 #include "ordered_map/iterator_procedures.inc"
 

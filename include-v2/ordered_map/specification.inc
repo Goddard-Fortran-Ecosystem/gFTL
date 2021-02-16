@@ -8,18 +8,13 @@
 !--------------------------------------------------------------------
 
 
-   ! Declare map<integer,Key>
+   ! Declare map<T,Key>
 #include "parameters/Key/copy_omap_Key_to_map_Key.inc"
 #include "parameters/T/copy_omap_T_to_map_T.inc"
 
-#define __map_T integer
-#define __map_T_name "integer"
-#define __map_T_KINDLEN(context) (kind=__gftl_size_kind)
-#define __map_T_kindlen_string "(kind=__gftl_size_kind)"
-
-#define __map __IDENTITY(__omap_guard)__IDENTITY(IndexMap)
+#define __map __IDENTITY(__omap_guard)__IDENTITY(Map)
 #define __map_iterator __IDENTITY(__omap_guard)__IDENTITY(MapIterator)
-#define __map_pair omap_MapPair
+#define __map_pair __omap_pair
 
 #define __map_set __omap_set
 #define __map_set_node __omap_set_node
@@ -37,49 +32,16 @@
 #undef __map_iterator
 #undef __map_guard
 
-#undef __map_T
-#undef __map_T_name
-#undef __map_T_KINDLEN
-#undef __map_T_kindlen_string
-
 #include "parameters/Key/undef_map_Key.inc"
-
-   ! Declare Pair<Key,T>
-#include "parameters/T1/copy_omap_Key_to_pair_T1.inc"
-#include "parameters/T2/copy_omap_T_to_pair_T2.inc"
-#define __pair __omap_pair
-#define __pair_guard __IDENTITY(__omap_guard)__IDENTITY(p_)
-
-#include "pair/specification.inc"
-
-#undef __pair
-#undef __pair_guard
-
-#include "parameters/T1/undef_pair_T1.inc"   
-#include "parameters/T2/undef_pair_T2.inc"   
+#include "parameters/T/undef_map_T.inc"
 
    ! Declare vector<Key>
    ! __T   __T_declare_component__
 #include "parameters/T/copy_omap_Key_to_vector_T.inc"
 #define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(K_)
-#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
-#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
-#define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(VectorRIterator)
-
-#include "vector/specification.inc"
-
-#undef __vector
-#undef __vector_iterator
-#undef __vector_riterator
-#undef __vector_guard
-#include "parameters/T/undef_vector_T.inc"
-
-   ! Declare vector<T>
-#include "parameters/T/copy_omap_T_to_vector_T.inc"
-#define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(T_)
-#define __vector __IDENTITY(__vector_guard)__IDENTITY(Vector)
-#define __vector_iterator __IDENTITY(__vector_guard)__IDENTITY(VectorIterator)
-#define __vector_riterator __IDENTITY(__vector_guard)__IDENTITY(T_VectorRIterator)
+#define __vector __IDENTITY(__omap_guard)__IDENTITY(Vector)
+#define __vector_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorIterator)
+#define __vector_riterator __IDENTITY(__omap_guard)__IDENTITY(VectorRIterator)
 
 #include "vector/specification.inc"
 
@@ -107,9 +69,8 @@
 
    type :: __omap
       private
-      type(__MANGLE(IndexMap)) :: index_map
-      type(__MANGLE(K_Vector)) :: keys
-      type(__MANGLE(T_Vector)) :: values
+      type(__MANGLE(Map)) :: map
+      type(__MANGLE(Vector)) :: ordered_keys
    contains
       procedure :: empty => __MANGLE(empty)
       procedure :: size => __MANGLE(size)
@@ -149,6 +110,13 @@
 !      procedure :: dump => mapdump
 !#endif
    end type __omap
+
+   interface operator(==)
+      module procedure __MANGLE(equal)
+   end interface operator(==)
+   interface operator(/=)
+      module procedure __MANGLE(not_equal)
+   end interface operator(/=)
 
 #include "ordered_map/iterator_specification.inc"
    

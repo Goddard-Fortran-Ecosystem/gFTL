@@ -1,5 +1,6 @@
    public :: __omap
    public :: __omap_iterator
+   public :: __omap_pair
    
    ! Non type-bound procedures
    public :: swap
