@@ -1,3 +1,5 @@
+   private ! except for
+   
    public :: __omap
    public :: __omap_iterator
    public :: __omap_pair

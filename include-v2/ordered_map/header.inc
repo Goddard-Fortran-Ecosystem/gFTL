@@ -2,7 +2,7 @@
 #include "parameters/Key/copy_Key_to_omap_Key.inc"
 #include "parameters/T/copy_T_to_omap_T.inc"
 
-#define __omap OrdererdMap
+#define __omap OrderedMap
 #define __omap_iterator OrderedMapIterator
 #define __omap_pair Pair
 

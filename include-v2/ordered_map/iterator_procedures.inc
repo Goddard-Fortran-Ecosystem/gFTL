@@ -5,8 +5,11 @@
         type(__omap_pair), pointer :: p
          class(__omap_iterator), target, intent(in) :: this
 
+         type(__MANGLE(MapIterator)) :: map_iter
+
          associate (key => this%key_iter%of())
-           p => this%reference%map%at(key)
+           map_iter = this%reference%map%find(key)
+           p => map_iter%at()
          end associate
 
       end function __MANGLE(iter_at)
@@ -20,14 +23,12 @@
 
          type(__omap_pair), pointer :: p
 
-         associate (key => this%key_iter%of())
-           p => this%reference%map%at(key)
-           if (associated(p)) then
-              first => p%first
-           else
-              first => null()
-           end if
-         end associate
+         p => this%at()
+         if (associated(p)) then
+            first => p%first
+         else
+            first => null()
+         end if
 
       end function __MANGLE(iter_first)
 
@@ -40,14 +41,12 @@
 
          type(__omap_pair), pointer :: p
 
-         associate (key => this%key_iter%of())
-           p => this%reference%map%at(key)
-           if (associated(p)) then
-              second => p%second
-           else
-              second => null()
-           end if
-         end associate
+         p => this%at()
+         if (associated(p)) then
+            second => p%second
+         else
+            second => null()
+         end if
 
       end function __MANGLE(iter_second)
 
@@ -82,7 +81,7 @@
       subroutine __MANGLE(iter_next)(this)
          class(__omap_iterator), intent(inout) :: this
 
-         call this%set_iter%next()
+         call this%key_iter%next()
       end subroutine __MANGLE(iter_next)
 
 
@@ -92,7 +91,7 @@
       subroutine __MANGLE(iter_prev)(this)
          class(__omap_iterator), intent(inout) :: this
 
-         call this%set_iter%prev()
+         call this%key_iter%prev()
       end subroutine __MANGLE(iter_prev)
 
 
