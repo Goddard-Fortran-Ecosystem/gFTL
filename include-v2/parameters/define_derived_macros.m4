@@ -352,8 +352,12 @@ define(__T,`__`'_T()')
 #elif defined(__T()_EQ_SCALAR__)
 #    if __T()_rank == 0
 #        define __T()_EQ__(lhs,rhs) __T()_EQ_SCALAR__(lhs,rhs)
-#    else
+#    elif defined(__T()_shape)
 #        define __T()_EQ__(lhs,rhs) all(__T()_EQ_SCALAR__([lhs],[rhs]))
+#    else
+! In theory == can be defined for deferred shape arrays as well,
+! but with Fortran short-circuit rules, this cannot be expresed in line.
+! One must first compare shape and then compare elements.
 #    endif
 #endif
 

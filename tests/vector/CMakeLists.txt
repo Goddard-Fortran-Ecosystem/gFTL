@@ -37,6 +37,7 @@ foreach (T ${types})
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_Vector.m4 > ${test}.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorIterator.m4 > ${test}Iterator.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorRIterator.m4 > ${test}RIterator.pf
+    COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorAlgorithms.m4 > ${test}Algorithms.pf
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${depends}
     )
@@ -52,7 +53,14 @@ foreach (T ${types})
     LINK_LIBRARIES gftl-v2
     )
 
+  add_pfunit_ctest (${test}Algorithms.x
+    TEST_SOURCES ${bin}/${test}Algorithms.pf
+    OTHER_SOURCES ${other_sources}
+    LINK_LIBRARIES gftl-v2
+    )
+
   add_dependencies (tests ${test}.x)
+  add_dependencies (tests ${test}Algorithms.x)
 
 endforeach ()
 

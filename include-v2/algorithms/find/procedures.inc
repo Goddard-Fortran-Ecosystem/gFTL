@@ -1,35 +1,34 @@
-      
-      function find_basic(first, last, value) result(it)
-         type(__find_iterator) :: it
-         type(__find_iterator), intent(in) :: first
-         type(__find_iterator), intent(in) :: last
-         type(__find_value), intent(in) :: value
+#ifdef __T_EQ__
+      function __MANGLE(find_basic)(first, last, value) result(iter)
+         type(__iterator) :: iter
+         type(__iterator), intent(in) :: first
+         type(__iterator), intent(in) :: last
+         __T_declare_dummy__, intent(in) :: value
          
 
-         type(__find_iterator) :: iter
-         
          iter = first
          do while (iter /= last)
-            if (iter%of() == value) return
+            if (__T_EQ__(iter%of(),value)) return
             call iter%next()
          end do
          
          iter = last
-      end function find_basic
+
+      end function __MANGLE(find_basic)
+#endif      
       
-      
-#ifdef __find_predicate
-      function find_if_(first, last, p) result(it)
-         type(__find_iterator) :: it
-         type(__find_iterator), intent(in) :: first
-         type(__find_iterator), intent(in) :: last
+#ifdef __algorithm_predicate
+      function __MANGLE(find_if)(first, last, p) result(it)
+         type(__iterator) :: it
+         type(__iterator), intent(in) :: first
+         type(__iterator), intent(in) :: last
          interface
             logical function p(item)
-               __declare_T__, intent(in) :: item
+               __T_declare_dummy__, intent(in) :: item
             end function p
          end interface
          
-         type(__find_iterator) :: iter
+         type(__iterator) :: iter
          
          iter = first
          do while (iter /= last)
@@ -38,20 +37,20 @@
          end do
          
          iter = last
-      end function find_if_
+      end function __MANGLE(find_if)
 
       
-      function find_if_not_(first, last, q) result(it)
-         type(__find_iterator) :: it
-         type(__find_iterator), intent(in) :: first
-         type(__find_iterator), intent(in) :: last
+      function __MANGLE(find_if_not)(first, last, q) result(it)
+         type(__iterator) :: it
+         type(__iterator), intent(in) :: first
+         type(__iterator), intent(in) :: last
          interface
             logical function q(item)
-               __declare_T__, intent(in) :: item
+               __T_declare_dummy__, intent(in) :: item
             end function q
          end interface
          
-         type(__find_iterator) :: iter
+         type(__iterator) :: iter
          
          iter = first
          do while (iter /= last)
@@ -60,7 +59,7 @@
          end do
          
          iter = last
-      end function find_if_not_
+      end function __MANGLE(find_if_not)
 
 #endif      
    

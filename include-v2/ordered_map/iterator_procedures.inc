@@ -6,11 +6,19 @@
          class(__omap_iterator), target, intent(in) :: this
 
          type(__MANGLE(MapIterator)) :: map_iter
+         __Key_declare_result__, pointer :: key
 
-         associate (key => this%key_iter%of())
-           map_iter = this%reference%map%find(key)
-           p => map_iter%at()
-         end associate
+         if (this%key_iter /= this%reference%ordered_keys%end()) then
+            key => this%key_iter%of()
+            if (associated(key)) then
+               map_iter = this%reference%map%find(key)
+               p => map_iter%at()
+            else
+               p => null()
+            end if
+         else
+            p => null()
+         end if
 
       end function __MANGLE(iter_at)
 

@@ -323,7 +323,7 @@
       integer(kind=GFTL_SIZE_KIND), intent(in) :: count
       __T_declare_dummy__, intent(in) :: value
 
-      integer(kind=GFTL_SIZE_KIND) :: i
+      integer(kind=GFTL_SIZE_KIND) :: i, j
 
       call this%grow_to(this%vsize + count)
 
@@ -331,6 +331,7 @@
          __T_MOVE__(this%elements(i+count)%item, this%elements(i)%item)
       end do
       do i = 1, count
+         j = pos%current_index + i - 1
          __T_COPY__(this%elements(pos%current_index + i - 1)%item, value)
       end do
 
@@ -985,9 +986,24 @@
 
 #include "vector/iterator_procedures.inc"
 #include "vector/reverse_iterator_procedures.inc"
-
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
+
+
+#include "parameters/T/copy_vector_T_to_algorithm_T.inc"
+#define __algorithm_guard __IDENTITY(__vector_guard)
+#define __algorithm_container __vector
+#define __algorithm_iterator __vector_iterator
+#define __algorithm_riterator __vector_riterator
+#include "algorithms/procedures.inc"   
+#undef __algorithm_container
+#undef __algorithm_iterator
+#undef __algorithm_riterator
+#undef __algorithm_T
+#undef __algorithm_guard
+#include "parameters/T/undef_algorithm_T.inc"
+
+
 
 ! undef internal template parameters
 #undef __guard

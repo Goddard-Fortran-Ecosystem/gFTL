@@ -111,7 +111,6 @@
       __T_declare_dummy__, intent(in) :: x
       __T_declare_dummy__, intent(in) :: y
 
-      print*,__FILE__,__LINE__
       equal = .not. __MANGLE(lessThan)(x,y) .and. .not. __MANGLE(lessThan)(y,x)
    end function __MANGLE(order_eq)
 

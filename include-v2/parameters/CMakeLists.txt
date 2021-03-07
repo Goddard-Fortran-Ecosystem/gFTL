@@ -114,6 +114,12 @@ cpp_copy_parameter (__omap_T __T T/copy_omap_T_to_internal_T.inc)
 process_m4 (omap_Key cpp_undef.m4 Key/undef_omap_Key.inc)
 process_m4 (omap_T cpp_undef.m4 T/undef_omap_T.inc)
 
+# algorithms
+cpp_copy_parameter (__vector_T __algorithm_T T/copy_vector_T_to_algorithm_T.inc)
+cpp_copy_parameter (__algorithm_T __T T/copy_algorithm_T_to_internal_T.inc)
+process_m4 (omap_T cpp_undef.m4 T/undef_algorithm_T.inc)
+
+
 
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 

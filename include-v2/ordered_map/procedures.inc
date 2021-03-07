@@ -350,7 +350,7 @@
          type (__omap_iterator) :: iter
 
          iter%reference => this
-         iter%key_iter = this%ordered_keys%begin()
+         iter%key_iter = this%ordered_keys%end()
 
       end function __MANGLE(end)
 

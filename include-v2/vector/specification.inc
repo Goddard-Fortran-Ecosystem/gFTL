@@ -199,10 +199,23 @@
 
 #include "vector/iterator_specification.inc"
 #include "vector/reverse_iterator_specification.inc"
-
-
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
+
+
+#include "parameters/T/copy_vector_T_to_algorithm_T.inc"
+#define __algorithm_guard __IDENTITY(__vector_guard)
+#define __algorithm_container __vector
+#define __algorithm_iterator __vector_iterator
+#define __algorithm_riterator __vector_riterator
+#include "algorithms/specification.inc"
+#undef __algorithm_container
+#undef __algorithm_iterator
+#undef __algorithm_riterator
+#undef __algorithm_guard
+#include "parameters/T/undef_algorithm_T.inc"
+
+
 
 ! undef internal template parameters
 #undef __guard

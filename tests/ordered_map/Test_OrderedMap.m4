@@ -178,6 +178,43 @@ contains
 
    end subroutine test_next
 
+@test
+   subroutine test_order()
+      type (OrderedMap), target :: m
+      type (OrderedMapIterator) :: iter
+
+      __T_declare_result__, pointer :: q1, q2, q3
+
+      call m%insert(key_one, one)
+      call m%insert(key_two, two)
+      call m%insert(key_three, three)
+
+      iter = m%begin()
+      q1 => iter%second()
+      @assert_that(q1, is(equal_to(one)))
+      call iter%next()
+      q2 => iter%second()
+      @assert_that(q2, is(equal_to(two)))
+      call iter%next()
+      q3 => iter%second()
+      @assert_that(q3, is(equal_to(three)))
+
+      ! now reverse order to be safe
+      call m%clear
+      call m%insert(key_one, three)
+      call m%insert(key_two, two)
+      call m%insert(key_three, one)
+
+      iter = m%begin()
+      q1 => iter%second()
+      @assert_that(q1, is(equal_to(three)))
+      call iter%next()
+      q2 => iter%second()
+      @assert_that(q2, is(equal_to(two)))
+      call iter%next()
+      q3 => iter%second()
+      @assert_that(q3, is(equal_to(one)))
+   end subroutine test_order
 
 @test
    subroutine test_prev()
@@ -188,7 +225,7 @@ contains
 
       call m%insert(key_one, one)
       call m%insert(key_two, two)
-      call m%insert(key_three, THREE)
+      call m%insert(key_three, three)
 
       iter = m%end()
       call iter%prev()
