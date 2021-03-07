@@ -25,6 +25,9 @@ define({ASSERT},{
 @assert_that({$1},is(equal_to({$2})))
 #endif})
 
+
+   integer, save :: counter = 0
+
 contains
 
    @before
@@ -59,6 +62,73 @@ contains
    end subroutine test_find
 #endif
 
+
+   ! Synthetic predicates:
+
+   ! Note we cannot use "==" of the contained type as find_if() and
+   ! find_if_not() can work with types that do not have "==".
+   logical function p1(value)
+      __T_declare_dummy__, intent(in) :: value
+
+      counter = counter + 1
+      p1 = (counter == 1)
+      
+   end function p1
+   
+   logical function p2(value)
+      __T_declare_dummy__, intent(in) :: value
+      
+      counter = counter + 1
+      p2 = (counter == 2)
+      
+   end function p2
+
+   subroutine reset_counter()
+      counter = 0
+   end subroutine reset_counter
+
+
+   @test
+   subroutine test_if()
+      type(Vector), target :: v
+      type(VectorIterator) :: iter
+   
+      v = Vector()
+      call v%push_back(one)
+      call v%push_back(two)
+      call v%push_back(three)
+
+
+      call reset_counter()
+      iter = find_if(v%begin(), v%end(), p2)
+      @assert_that(iter%of(), is(equal_to(two)))
+      
+      call reset_counter()
+      iter = find_if(v%begin(), v%end(), p1)
+      @assert_that(iter%of(), is(equal_to(one)))
+      
+   end subroutine test_if
+
+         
+   @test
+   subroutine test_if_not()
+      type(Vector), target :: v
+      type(VectorIterator) :: iter
+   
+      v = Vector()
+      call v%push_back(one)
+      call v%push_back(two)
+      call v%push_back(three)
+
+
+      call reset_counter()
+      iter = find_if_not(v%begin(), v%end(), p1)
+      @assert_that(iter%of(), is(equal_to(two)))
+      call reset_counter()
+      iter = find_if_not(v%begin(), v%end(), p2)
+      @assert_that(iter%of(), is(equal_to(one)))
+      
+   end subroutine test_if_not
 
 end module Test_{}_type()VectorAlgorithms
 

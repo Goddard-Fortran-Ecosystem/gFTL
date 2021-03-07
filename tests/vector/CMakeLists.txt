@@ -24,6 +24,7 @@ foreach (T ${types})
     ${src}/Vector.m4
     ${src}/Test_Vector.m4
     ${src}/Test_VectorIterator.m4
+    ${src}/Test_VectorAlgorithms.m4
     ${src}/Test_VectorRIterator.m4
     ${src}/${T}.inc
     ${src}/test_${T}.inc
@@ -31,6 +32,7 @@ foreach (T ${types})
 
   set(WD ${CMAKE_CURRENT_BINARY_DIR}/${T})
 
+  # TODO - should be split into separate commands to streamline dependencies
   add_custom_command (
     OUTPUT ${bin}/${sut}.F90 ${bin}/${test}.pf  ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Vector.m4  > ${sut}.F90

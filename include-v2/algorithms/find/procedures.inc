@@ -17,7 +17,7 @@
       end function __MANGLE(find_basic)
 #endif      
       
-#ifdef __algorithm_predicate
+!#ifdef __algorithm_predicate
       function __MANGLE(find_if)(first, last, p) result(it)
          type(__iterator) :: it
          type(__iterator), intent(in) :: first
@@ -28,15 +28,14 @@
             end function p
          end interface
          
-         type(__iterator) :: iter
-         
-         iter = first
-         do while (iter /= last)
-            if (p(iter%at())) return
-            call iter%next()
+         it = first
+         do while (it /= last)
+            if (p(it%of())) return
+
+            call it%next()
          end do
          
-         iter = last
+         it = last
       end function __MANGLE(find_if)
 
       
@@ -50,16 +49,14 @@
             end function q
          end interface
          
-         type(__iterator) :: iter
-         
-         iter = first
-         do while (iter /= last)
-            if (.not. q(iter%at())) return
-            call iter%next()
+         it = first
+         do while (it /= last)
+            if (.not. q(it%of())) return
+            call it%next()
          end do
          
-         iter = last
+         it = last
       end function __MANGLE(find_if_not)
 
-#endif      
+!#endif      
    
