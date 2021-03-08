@@ -31,6 +31,7 @@ cpp_undef(kindlen_string)
 cpp_undef(default)
 
 cpp_undef(rank)
+cpp_undef(shape)
 cpp_undef(extents)
 cpp_undef(polymorphic)
 

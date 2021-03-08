@@ -258,17 +258,12 @@
          if (associated(v)) then
             n = this%map%erase(k)
             associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
-              iter = this%ordered_keys%erase(find_basic(b, e, v))
+              iter = this%ordered_keys%erase(find(b, e, v))
             end associate
          else
             n = 0
          end if
 
-      contains
-
-#define __find_iterator __MANGLE(VectorIterator)
-#define __find_value __Key_declare_result__
-#include "algorithms/find/procedures.inc"
       end function __MANGLE(erase_key)
 
 
@@ -369,13 +364,9 @@
 
          iter%reference => this
          associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
-           iter%key_iter = find_basic(b, e, key) ! STL::find()
+           iter%key_iter = find(b, e, key) ! STL::algorithms::find()
          end associate
 
-      contains
-#define __find_iterator __MANGLE(VectorIterator)
-#define __find_value __Key_declare_result__
-#include "algorithms/find/procedures.inc"
       end function __MANGLE(find)
 
 

@@ -989,6 +989,10 @@
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
 
+! undef internal template parameters
+#undef __guard
+#include "parameters/T/undef_internal.inc"
+
 
 #include "parameters/T/copy_vector_T_to_algorithm_T.inc"
 #define __algorithm_guard __IDENTITY(__vector_guard)
@@ -1004,9 +1008,5 @@
 #include "parameters/T/undef_algorithm_T.inc"
 
 
-
-! undef internal template parameters
-#undef __guard
-#include "parameters/T/undef_internal.inc"
 
 
