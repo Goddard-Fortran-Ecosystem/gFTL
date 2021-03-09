@@ -18,10 +18,6 @@
 #include "parameters/T/copy_vector_T_to_internal_T.inc"
 #define __guard __vector_guard
 
-! vector specifications A2
-! ABCD 1:   __omap_Key
-! ABCD 1:   __omap_T
-
 ! define derived generic template parameters from internal parameters.
 #include "parameters/T/define_derived_macros.inc"
    
@@ -210,30 +206,17 @@
 #undef __guard
 #include "parameters/T/undef_internal.inc"
 
-! vector specifications B1
-! ABCD 1:   __omap_Key
-! ABCD 1:   __omap_T
-
 #include "parameters/T/copy_vector_T_to_algorithm_T.inc"
-! vector specifications B2
-! ABCD 1:   __omap_Key
-! ABCD 1:   __omap_T
 #define __algorithm_guard __IDENTITY(__vector_guard)
 #define __algorithm_container __vector
 #define __algorithm_iterator __vector_iterator
 #define __algorithm_riterator __vector_riterator
 #include "algorithms/specification.inc"
-! vector specifications B3
-! ABCD 1:   __omap_Key
-! ABCD 1:   __omap_T
 #undef __algorithm_container
 #undef __algorithm_iterator
 #undef __algorithm_riterator
 #undef __algorithm_guard
 #include "parameters/T/undef_algorithm_T.inc"
-! vector specifications B4
-! ABCD 1:   __omap_Key
-! ABCD 1:   __omap_T
 
 
 
