@@ -50,19 +50,15 @@ foreach (T ${types})
   endif ()
 
   add_pfunit_ctest (${test}.x
-    TEST_SOURCES ${bin}/${test}.pf ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
+    TEST_SOURCES ${bin}/${test}.pf
+                 ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
+                 ${bin}/${test}Algorithms.pf
     OTHER_SOURCES ${other_sources}
     LINK_LIBRARIES gftl-v2
     )
-
-  add_pfunit_ctest (${test}Algorithms.x
-    TEST_SOURCES ${bin}/${test}Algorithms.pf
-    OTHER_SOURCES ${other_sources}
-    LINK_LIBRARIES gftl-v2
-    )
+  set_target_properties (${test}.x PROPERTIES Fortran_MODULE_DIRECTORY ${test}/mod)
 
   add_dependencies (tests ${test}.x)
-  add_dependencies (tests ${test}Algorithms.x)
 
 endforeach ()
 

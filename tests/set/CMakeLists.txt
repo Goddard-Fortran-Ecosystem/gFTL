@@ -44,6 +44,7 @@ foreach (T ${types})
     OTHER_SOURCES ${other_sources}
     LINK_LIBRARIES gftl-v2
     )
+  set_target_properties (test_${T}_set.x PROPERTIES Fortran_MODULE_DIRECTORY test_${T}_set/mod)
 
   add_dependencies (tests test_${T}_set.x)
 

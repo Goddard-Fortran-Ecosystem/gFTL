@@ -666,10 +666,10 @@ contains
       iter = v%insert(iter, two)
 
       @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      @assert_that(v%at(1), is(equal_to(one)))
-      @assert_that(v%at(2), is(equal_to(two)))
-      @assert_that(iter%of(0), is(equal_to(two)))
-      @assert_that(iter%of(-1), is(equal_to(one)))
+      ASSERT(v%at(1), one)
+      ASSERT(v%at(2), two)
+      ASSERT(iter%of(0), two)
+      ASSERT(iter%of(-1), one)
       
    end subroutine test_insert_middle
    
