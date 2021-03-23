@@ -34,7 +34,7 @@ add_subdirectory (include-v2)
 add_subdirectory (include)
 #add_subdirectory (examples)
 
-# No Fortran compiler is required to build gFTL, but the tests do
+# No Fortran compiler is required to build GFTL, but the tests do
 # require Fortran.  So we check for that before searching for the
 # testing framework.
 
@@ -46,7 +46,7 @@ if (CMAKE_Fortran_COMPILER)
   find_package (PFUNIT 4.1 QUIET)
   if (PFUNIT_FOUND)
     message("-- Detecting pFUnit: ${PFUNIT_DIR}")
-    project (gFTL-TEST
+    project (GFTL-TEST
       VERSION ${GFTL_VERSION}
       LANGUAGES Fortran
       )
@@ -61,12 +61,12 @@ if (CMAKE_Fortran_COMPILER)
 endif ()
 
 # The following is needed for external projects using *nix make when
-# parent project builds gFTL as a subproject.
+# parent project builds GFTL as a subproject.
 set (top_dir "GFTL-${GFTL_VERSION_MAJOR}.${GFTL_VERSION_MINOR}")
 set (GFTL_TOP_DIR "${CMAKE_INSTALL_PREFIX}/${top_dir}" CACHE PATH "")
 
 include(CMakePackageConfigHelpers)
-configure_package_config_file(GFTLConfig.cmake.in GFTLConfig.cmake
+configure_package_config_file(cmake/GFTLConfig.cmake.in GFTLConfig.cmake
   INSTALL_DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/GFTLConfig.cmake
   )
 write_basic_package_version_file(GFTLConfig-version.cmake
