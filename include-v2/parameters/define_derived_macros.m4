@@ -394,6 +394,10 @@ define(__T,`__`'_T()')
 #ifdef __T()_COPY
 #    define  __T()_COPY__(lhs,rhs)  __T()_COPY(lhs,rhs)
 #else
-#    define __T()_COPY__(lhs,rhs) lhs=rhs
+#    if __T()_type_id__ == __UNLIMITED_POLYMORPHIC__
+#        define __T()_COPY__(lhs,rhs) allocate(lhs, source=rhs)
+#    else
+#        define __T()_COPY__(lhs,rhs) lhs=rhs
+#    endif
 #endif
 

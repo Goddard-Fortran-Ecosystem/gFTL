@@ -97,7 +97,7 @@
 
       call v%resize(x%size())
       do i = 1, x%size()
-         __T_COPY__(v%buckets(i)%ptr%bucket_items, x%buckets(i)%ptr%bucket_items)
+         v%buckets(i)%ptr%bucket_items = x%buckets(i)%ptr%bucket_items
       end do
 
       return

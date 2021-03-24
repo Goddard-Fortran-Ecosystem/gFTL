@@ -34,7 +34,8 @@ foreach (T ${types})
 
   # TODO - should be split into separate commands to streamline dependencies
   add_custom_command (
-    OUTPUT ${bin}/${sut}.F90 ${bin}/${test}.pf  ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
+    OUTPUT ${bin}/${sut}.F90 ${bin}/${test}.pf
+           ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf ${bin}/${test}Algorithms.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Vector.m4  > ${sut}.F90
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_Vector.m4 > ${test}.pf
     COMMAND ${M4} -s -D_type=${T} ${src}/Test_VectorIterator.m4 > ${test}Iterator.pf

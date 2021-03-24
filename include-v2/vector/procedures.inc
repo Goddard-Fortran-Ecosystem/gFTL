@@ -332,7 +332,7 @@
       end do
       do i = 1, count
          j = pos%current_index + i - 1
-         __T_COPY__(this%elements(pos%current_index + i - 1)%item, value)
+         __T_COPY__(this%elements(j)%item, value)
       end do
 
       this%vsize = this%vsize + count
