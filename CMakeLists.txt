@@ -79,7 +79,7 @@ install (
   DESTINATION ${top_dir}/cmake
   )
 
-configure_file(GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
+configure_file(cmake/GFTL.mk.in ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk @ONLY)
 install (
   FILES ${CMAKE_CURRENT_BINARY_DIR}/GFTL.mk 
   DESTINATION "${top_dir}/include"

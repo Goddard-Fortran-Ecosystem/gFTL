@@ -49,7 +49,6 @@ foreach (T ${types})
     OTHER_SOURCES ${other_sources}
     LINK_LIBRARIES gftl-v2
     )
-  set_target_properties (${test}.x PROPERTIES Fortran_MODULE_DIRECTORY ${test}/mod)
   add_dependencies (tests ${test}.x)
 
 endforeach ()

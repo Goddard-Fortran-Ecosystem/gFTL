@@ -54,7 +54,6 @@ foreach (key ${keys})
       OTHER_SOURCES ${other_sources}
       LINK_LIBRARIES gftl-v2
       )
-    set_target_properties (test_${key}${T}_ordered_map.x PROPERTIES Fortran_MODULE_DIRECTORY test_${key}${T}_ordered_map/mod)
     add_dependencies (tests test_${key}${T}_ordered_map.x)
 
   endforeach ()
