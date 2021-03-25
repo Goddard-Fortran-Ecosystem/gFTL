@@ -17,7 +17,7 @@ set (SRCS
 
 set(CMAKE_Fortran_FLAGS_DEBUG "${CMAKE_Fortran_FLAGS_DEBUG} -O0 -traceback -assume realloc_lhs")
 
-include_directories (${gFTL_SOURCE_DIR}/include)
+include_directories (${GFTL_SOURCE_DIR}/include)
 include_directories (${PFUNIT}/mod)
 
 add_library(vectorSUT STATIC ${SRCS})

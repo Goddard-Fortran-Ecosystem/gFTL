@@ -1,5 +1,3 @@
-include_directories (${GFTL_BINARY_DIR}/tests/shared)
-
 set (instantiations
 
   "integer\;free"

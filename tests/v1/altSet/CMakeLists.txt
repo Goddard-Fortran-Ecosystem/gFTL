@@ -56,5 +56,5 @@ add_pfunit_ctest (altSet_tests
   )
 
 target_include_directories (altSet_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_include_directories (altSet_tests PRIVATE ${gFTL_SOURCE_DIR}/include)
+#target_include_directories (altSet_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
 add_dependencies (tests altSet_tests)

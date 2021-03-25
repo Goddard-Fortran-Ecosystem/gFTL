@@ -58,7 +58,7 @@ contains
 
       iter = find(v%begin(), v%end(), two)
 
-      @assert_that(iter%of(), is(equal_to(two)))
+      ASSERT(iter%of(), two)
    end subroutine test_find
 #endif
 
@@ -101,11 +101,11 @@ contains
 
       call reset_counter()
       iter = find_if(v%begin(), v%end(), p2)
-      @assert_that(iter%of(), is(equal_to(two)))
+      ASSERT(iter%of(), two)
       
       call reset_counter()
       iter = find_if(v%begin(), v%end(), p1)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
       
    end subroutine test_if
 
@@ -123,10 +123,10 @@ contains
 
       call reset_counter()
       iter = find_if_not(v%begin(), v%end(), p1)
-      @assert_that(iter%of(), is(equal_to(two)))
+      ASSERT(iter%of(), two)
       call reset_counter()
       iter = find_if_not(v%begin(), v%end(), p2)
-      @assert_that(iter%of(), is(equal_to(one)))
+      ASSERT(iter%of(), one)
       
    end subroutine test_if_not
 

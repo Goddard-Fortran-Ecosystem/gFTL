@@ -1,5 +1,3 @@
-find_program(M4 m4)
-
 # Note that a set of elements of type LOGICAL is not
 # supported.
 set (keys
@@ -23,35 +21,20 @@ set (types
   )
 
 
-function (m4_preprocess Key T infile outfile depends)
-  add_custom_command (
-    OUTPUT ${outfile}
-    COMMAND ${M4} -s -D_key=${Key} -D_type=${T} ${infile} > ${outfile}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${infile} ${depends}
-    )
-endfunction()
-
+set (src ${CMAKE_CURRENT_SOURCE_DIR})
+set (bin ${CMAKE_CURRENT_BINARY_DIR})
+set (incs "../shared/include")
 foreach (key ${keys})
   foreach (T ${types})
-    set (src ${CMAKE_CURRENT_SOURCE_DIR})
-    set (bin ${CMAKE_CURRENT_BINARY_DIR})
     set (sut ${key}${T}Map.F90)
 
-    m4_preprocess (${key} ${T} ${src}/Map.m4 ${sut} "${T}_T.inc")
-  set (depends "${src}/${T}_T.inc;${src}/test_${T}_T.inc")
-#    set (depends "${src}/${key}.inc;${src}/${T}.inc;${src}/test_${T}_T.inc;${src}/test_${key}_Key.inc")
-    m4_preprocess (${key} ${T} ${src}/Test_Map.m4 Test_${key}${T}Map.pf ${depends})
-
-    set (other_sources ${sut})
-    if (T STREQUAL Foo OR key STREQUAL Foo)
-      list (APPEND other_sources Foo.F90)
-    endif ()
+    m4_preprocess2 (${key} ${T} ${src}/Map.m4 ${sut})
+    m4_preprocess2 (${key} ${T} ${src}/Test_Map.m4 Test_${key}${T}Map.pf)
 
     add_pfunit_ctest (test_${key}${T}_map.x
       TEST_SOURCES ${bin}/Test_${key}${T}Map.pf
-      OTHER_SOURCES ${other_sources}
-      LINK_LIBRARIES gftl-v2
+      OTHER_SOURCES ${sut}
+      LINK_LIBRARIES test_shared gftl-v2
       )
     add_dependencies (tests test_${key}${T}_map.x)
 

@@ -1,2 +1,0 @@
-#define T __LOGICAL
-   

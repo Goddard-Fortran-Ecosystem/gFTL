@@ -633,7 +633,7 @@ contains
       iter = v%insert(iter, one)
       @assert_that(v%size(), is(1_GFTL_SIZE_KIND))
       @assert_that(v%at(1), is(equal_to(one)))
-      @assert_that(iter%of(0), is(equal_to(one)))
+      ASSERT(iter%of(0), one)
       
    end subroutine test_insert_empty
 
@@ -650,8 +650,8 @@ contains
       @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
       @assert_that(reason='A:', actual=v%at(1), matcher=is(equal_to(two)))
       @assert_that('B:', v%at(2), is(equal_to(one)))
-      @assert_that(iter%of(0), is(equal_to(two)))
-      @assert_that(iter%of(1), is(equal_to(one)))
+      ASSERT(iter%of(0), two)
+      ASSERT(iter%of(1), one)
       
    end subroutine test_insert_before
    
