@@ -41,11 +41,11 @@ add_custom_target(
   DEPENDS ${generated_incs}
   )
 
-add_dependencies (gftl generate-template-incs)
+add_dependencies (gftl-v1 generate-template-incs)
 
 file (COPY DIRECTORY . DESTINATION . FILES_MATCHING PATTERN "*.inc")
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/templates"
+install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/ DESTINATION "${dest}/include/v1/templates"
   FILES_MATCHING PATTERN "*.inc"
   PATTERN CMakeFiles EXCLUDE
   )

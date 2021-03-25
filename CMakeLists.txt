@@ -27,11 +27,9 @@ if (NOT TARGET tests)
 endif ()
 
 
-# v2
-add_subdirectory (include-v2)
-
-# v1 legacy
+# "source" code is all include files for gFTL:
 add_subdirectory (include)
+
 #add_subdirectory (examples)
 
 # No Fortran compiler is required to build GFTL, but the tests do
@@ -85,7 +83,7 @@ install (
   DESTINATION "${top_dir}/include"
   )
 
-install(EXPORT GFTL  FILE GFTLTargets.cmake
+install(EXPORT GFTL FILE GFTLTargets.cmake
   NAMESPACE GFTL::
   DESTINATION "${top_dir}/cmake"
   )

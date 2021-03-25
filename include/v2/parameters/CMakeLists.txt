@@ -128,7 +128,7 @@ add_custom_target(m4_type_includes ALL DEPENDS ${type_incs})
 add_dependencies(gftl-v2 m4_type_includes)
 
 foreach (parameter ${template_parameters})
-  install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${parameter} DESTINATION "${dest}/include/parameters"
+  install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${parameter} DESTINATION "${dest}/include/v2/parameters"
     FILES_MATCHING PATTERN "*.inc"
     PATTERN CMakeFiles EXCLUDE
     )
