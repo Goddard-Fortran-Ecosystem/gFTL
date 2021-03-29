@@ -30,6 +30,17 @@ module Test_{}_key(){}_type()Map
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+define({ASSERT},{
+#if defined(__GFORTRAN__)
+ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
+_type(),{FooPoly},@assertTrue({$1}=={$2}),
+_type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
+@assertEqual({$1},{$2}))
+#else
+@assert_that({$1},is(equal_to({$2})))
+#endif})
+
+
 contains
 
 
@@ -105,10 +116,10 @@ contains
       call m%insert(key_two, two)
 
       val => m%at(key_one)
-      @assert_that(val, is(equal_to(one)))
+      ASSERT(val, one)
 
       val => m%at(key_two)
-      @assert_that(val, is(equal_to(two)))
+      ASSERT(val, two)
 
    end subroutine test_at
 
@@ -130,7 +141,7 @@ contains
       call m%insert(key_two, two)
 
       iter = m%find(key_two)
-      @assert_that(iter%second(), is(equal_to(two)))
+      ASSERT(iter%second(), two)
 
       iter = m%find(key_one)
       @assertTrue(iter == m%end())
@@ -270,11 +281,11 @@ contains
 
       f = m%get(key_one, val)
       @assertTrue(f)
-      @assert_that(val, is(equal_to(one)))
+      ASSERT(val, one)
 
       f = m%get(key_two, val)
       @assertTrue(f)
-      @assert_that(val, is(equal_to(two)))
+      ASSERT(val, two)
 
    end subroutine testGet
 
@@ -304,10 +315,10 @@ contains
       call m%insert(key_two, two)
 
       val => m%at(key_one)
-      @assert_that(val, is(equal_to(one)))
+      ASSERT(val, one)
 
       val => m%at(key_two)
-      @assert_that(val, is(equal_to(two)))
+      ASSERT(val, two)
 
    end subroutine test_make_from_array_of_pairs
 #endif
