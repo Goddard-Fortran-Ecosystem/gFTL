@@ -11,5 +11,5 @@ a <  b:            __T_LT_SCALAR__(a,b)
 a >  b:            __T_GT_SCALAR__(a,b)
 
 FREE(x):           deallocate(x)
-COPY(dst,src):     dst=src
+COPY(dst,src):     allocate(dst, source=src)
 MOVE(dst,src):     call move_alloc(from=src,to=dst)

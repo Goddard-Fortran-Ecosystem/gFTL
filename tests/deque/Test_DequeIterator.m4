@@ -1,6 +1,7 @@
 changecom()
 changequote(`{',`}')
 module Test_{}_type()DequeIterator
+   use, intrinsic :: iso_fortran_env
    use funit
    use _type()Deque_mod
    ifelse(_type(),{Foo},{use Foo_mod})

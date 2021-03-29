@@ -1,6 +1,7 @@
 changecom()
 changequote(`{',`}')
 module Test_{}_type()Set
+   use, intrinsic :: iso_fortran_env
    use funit
    use _type()Set_mod
    ifelse(_type(),{Foo},{use Foo_mod})
@@ -18,8 +19,11 @@ module Test_{}_type()Set
    __T_declare_component__ :: three
 
 define({ASSERT},{
-#if (__T_type_id__ == __CHARACTER__) && defined(__GFORTRAN__)
-@assertEqual({$1},{$2})
+#if defined(__GFORTRAN__)
+ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
+_type(),{FooPoly},@assertTrue({$1}=={$2}),
+_type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
+@assertEqual({$1},{$2}))
 #else
 @assert_that({$1},is(equal_to({$2})))
 #endif})

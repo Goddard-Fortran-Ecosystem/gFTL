@@ -48,7 +48,7 @@ foreach( macro_file ${macro_files} )
 
     add_custom_command(
 	OUTPUT ${outfile}
-	COMMAND ${M4} -s -Dparam=${param} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${outfile}
+	COMMAND ${M4} -s -Dparam=${param} -I${GFTL_SOURCE_DIR}/include/v1/templates < ${infile} > ${outfile}
 	WORKING_DIRECTORY ${bin}
 	DEPENDS ${infile}
 	)

@@ -116,7 +116,7 @@ define(__T,`__`'_T()')
 #        undef __T()_NAME__
 #        define __T()_DECLARE__(type,kindlen) __IDENTITY(class(*))
 #        define __T()_NAME__(type,kindlen) __IDENTITY("class(*)")
-#        define __T()_polymorphic
+#        define __T()_polymorphic__
 #        define __T()_type__ *
 #        define __T()_name__ "*"
 #        if !defined(__T()_default__)
@@ -212,6 +212,7 @@ define(__T,`__`'_T()')
 #        define __T()_name__ __T()_name
 #    endif
 #    ifdef __T()_polymorphic
+#        define __T()_polymorphic__
 #        define __T()_DECLARE__(t,kindlen) class(__IDENTITY(t)__IDENTITY(kindlen))
 #        define __T()_NAME__(name,kindlen) "class("//name//kindlen//")"
 #    else
@@ -319,12 +320,12 @@ define(__T,`__`'_T()')
 #   define __T_deferred__
 #endif
 
-#if defined(__T()_deferred__) || defined(__T()_polymorphic) || (__T()_rank > 0)
+#if defined(__T()_deferred__) || defined(__T()_polymorphic__) || (__T()_rank > 0)
 #else
 #    define __T()_listable__
 #endif
 
-#if defined(__T()_deferred__) || defined(__T()_polymorphic) || (defined(__T()_rank) && !defined(__T()_shape))
+#if defined(__T()_deferred__) || defined(__T()_polymorphic__) || (defined(__T()_rank) && !defined(__T()_shape))
 #    define __T()_allocatable__
 #    define __T()_allocatable_attr__ , allocatable
 #    define __T()_allocatable_string__ ", allocatable"
@@ -347,6 +348,10 @@ define(__T,`__`'_T()')
 #    define __T()_declare_string__ __T()_NAME__(__T()_name__,__T()_kindlen_string__)//__T()_dimension_string__//__T()_allocatable_string__
 #endif
 
+! If user defines __T()_EQ we assume that it is elemental
+! for use in array comparisons.   If there is ever a reasonable
+! situation that violates this assumption, then a new token
+! will need to be added to deactivate this assumption.
 #ifdef __T()_EQ
 #    define __T()_EQ__(lhs,rhs) __T()_EQ(lhs,rhs)
 #elif defined(__T()_EQ_SCALAR__)
@@ -355,9 +360,9 @@ define(__T,`__`'_T()')
 #    elif defined(__T()_shape)
 #        define __T()_EQ__(lhs,rhs) all(__T()_EQ_SCALAR__([lhs],[rhs]))
 #    else
-! In theory == can be defined for deferred shape arrays as well,
-! but with Fortran short-circuit rules, this cannot be expresed in line.
-! One must first compare shape and then compare elements.
+! Must be careful about lack of short-circuit rules in Fortran.   Can only compare
+! arrays of same shape, so we use reshape to compare the first N elements (always safe) as well as comparing shapes.
+#        define __T()_EQ__(lhs,rhs) all(shape(lhs)==shape(rhs)).and.all(reshape(lhs,[min(size(lhs),size(rhs))])==reshape(lhs,[min(size(lhs),size(rhs))]))
 #    endif
 #endif
 
@@ -394,7 +399,7 @@ define(__T,`__`'_T()')
 #ifdef __T()_COPY
 #    define  __T()_COPY__(lhs,rhs)  __T()_COPY(lhs,rhs)
 #else
-#    if __T()_type_id__ == __UNLIMITED_POLYMORPHIC__
+#    if defined(__T()_polymorphic__)
 #        define __T()_COPY__(lhs,rhs) allocate(lhs, source=rhs)
 #    else
 #        define __T()_COPY__(lhs,rhs) lhs=rhs

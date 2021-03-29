@@ -2,6 +2,7 @@ changecom()
 changequote(`{',`}')
 module Test_{}_type()Vector
    use funit
+   use, intrinsic :: iso_fortran_env
    use _type()Vector_mod
    ifelse(_type(),{Foo},{use Foo_mod})
    ifelse(_type(),{FooPoly},{use Foo_mod})
@@ -19,8 +20,11 @@ module Test_{}_type()Vector
    __T_declare_component__ :: three
 
 define({ASSERT},{
-#if (__T_type_id__ == __CHARACTER__) && defined(__GFORTRAN__)
-@assertEqual({$1},{$2})
+#if defined(__GFORTRAN__)
+ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
+_type(),{FooPoly},@assertTrue({$1}=={$2}),
+_type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
+@assertEqual({$1},{$2}))
 #else
 @assert_that({$1},is(equal_to({$2})))
 #endif})
@@ -632,7 +636,7 @@ contains
       iter = v%begin()
       iter = v%insert(iter, one)
       @assert_that(v%size(), is(1_GFTL_SIZE_KIND))
-      @assert_that(v%at(1), is(equal_to(one)))
+      ASSERT(v%at(1), one)
       ASSERT(iter%of(0), one)
       
    end subroutine test_insert_empty
@@ -648,8 +652,8 @@ contains
       iter = v%insert(iter, two)
 
       @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      @assert_that(reason='A:', actual=v%at(1), matcher=is(equal_to(two)))
-      @assert_that('B:', v%at(2), is(equal_to(one)))
+      ASSERT(v%at(1), two)
+      ASSERT(v%at(2), one)
       ASSERT(iter%of(0), two)
       ASSERT(iter%of(1), one)
       

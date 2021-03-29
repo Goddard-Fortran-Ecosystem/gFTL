@@ -7,19 +7,34 @@ module Foo_mod
    public :: ChildOfFoo
    public :: operator(<)
 
+#ifndef __GFORTRAN__
    type, extends(Matchable) :: Foo
       integer :: i = -1
    contains
       procedure :: equals => equals_foo
       procedure :: describe_to => describe_to_foo
    end type Foo
-
    type, extends(Foo) :: ChildOfFoo
       real :: x = 0.
    contains
       procedure :: equals => equals_child_of_foo
       procedure :: describe_to => describe_to_child_of_foo
    end type ChildOfFoo
+#else
+   type :: Foo
+      integer :: i = -1
+   contains
+      procedure :: equals => equals_foo
+      generic :: operator(==) => equals
+!!$      procedure :: describe_to => describe_to_foo
+   end type Foo
+   type, extends(Foo) :: ChildOfFoo
+      real :: x = 0.
+   contains
+      procedure :: equals => equals_child_of_foo
+      procedure :: describe_to => describe_to_child_of_foo
+   end type ChildOfFoo
+#endif
 
    interface Foo
       module procedure new_Foo_default
@@ -52,7 +67,9 @@ contains
       type(Foo) :: f
       integer, intent(in) :: i
       f%i = i
+#ifndef __GFORTRAN__
       call f%set_type_name('Foo')
+#endif
    end function new_Foo
 
    function new_ChildOfFoo_default() result(f)
@@ -66,7 +83,9 @@ contains
       real, intent(in) :: x
       f%i = i
       f%x = x
+#ifndef __GFORTRAN__
       call f%set_type_name('ChildOfFoo')
+#endif
    end function new_ChildOfFoo
 
    
@@ -122,5 +141,12 @@ contains
 
       less = a%i < b%i
    end function less
+
+   logical function equals(a, b)
+      type(Foo), intent(in) :: a
+      type(Foo), intent(in) :: b
+
+      equals = a%i == b%i
+   end function equals
 
 end module Foo_mod

@@ -24,10 +24,8 @@
          type(__iterator), intent(in) :: last
          interface
             logical function p(item)
-#if __T > 0
-#else
-               import __T
-#endif
+               import
+               implicit none
                __T_declare_dummy__, intent(in) :: item
             end function p
          end interface
@@ -49,10 +47,8 @@
          type(__iterator), intent(in) :: last
          interface
             logical function q(item)
-#if __T > 0
-#else
-               import __T
-#endif
+               import
+               implicit none
                __T_declare_dummy__, intent(in) :: item
             end function q
          end interface

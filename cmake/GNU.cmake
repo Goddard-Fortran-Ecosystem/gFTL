@@ -8,4 +8,4 @@ set(cpp "-cpp")
 
 set(CMAKE_Fortran_FLAGS_DEBUG  "${no_optimize} ${check_all} ${traceback}")
 set(CMAKE_Fortran_FLAGS_RELEASE "-O3")
-set(CMAKE_Fortran_FLAGS "-g ${cpp} -ffree-line-length-255")
+set(CMAKE_Fortran_FLAGS "-g ${cpp} -ffree-line-length-none")

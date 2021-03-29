@@ -4,6 +4,7 @@ find_program(M4 m4)
 
 set (types
   integer
+  integer32
   logical
   character_len17
   deferred_string
@@ -11,7 +12,7 @@ set (types
   integer_shape_3
   real_rank_2_deferred_shape
   Foo
-#  FooPoly
+  FooPoly
   )
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})

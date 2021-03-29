@@ -41,7 +41,7 @@ foreach (type ${types} )
 
   add_custom_command (
     OUTPUT ${pfunitfile}
-    COMMAND ${M4} -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/templates < ${infile} > ${pfunitfile}
+    COMMAND ${M4} -s -Dparam=${type} -I${GFTL_SOURCE_DIR}/include/v1/templates < ${infile} > ${pfunitfile}
     WORKING_DIRECTORY ${bin}
     DEPENDS ${infile}
     )
@@ -56,5 +56,4 @@ add_pfunit_ctest (altSet_tests
   )
 
 target_include_directories (altSet_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-#target_include_directories (altSet_tests PRIVATE ${GFTL_SOURCE_DIR}/include)
 add_dependencies (tests altSet_tests)

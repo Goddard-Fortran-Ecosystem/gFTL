@@ -2,6 +2,7 @@
 # supported.
 set (types
   integer
+  integer32
   character_len17
   deferred_string
   Foo

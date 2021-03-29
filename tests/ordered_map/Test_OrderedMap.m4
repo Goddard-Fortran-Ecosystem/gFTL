@@ -1,6 +1,7 @@
 changecom()
 changequote(`{',`}')
 module Test_{}_key(){}_type()OrderedMap
+   use, intrinsic :: iso_fortran_env
    use funit
    use _key(){}_type()OrderedMap_mod
    ifelse(_type(),{Foo},{use Foo_mod},_key(),{Foo},{use Foo_mod})

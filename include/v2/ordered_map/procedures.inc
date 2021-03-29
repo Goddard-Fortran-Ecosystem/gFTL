@@ -258,7 +258,7 @@
          if (associated(v)) then
             n = this%map%erase(k)
             associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
-              iter = this%ordered_keys%erase(find(b, e, v))
+              iter = this%ordered_keys%erase(find(b, e, k))
             end associate
          else
             n = 0

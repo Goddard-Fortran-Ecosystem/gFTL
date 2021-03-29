@@ -1,6 +1,7 @@
 changecom()
 
 module _type()Vector_mod
+   use, intrinsic :: iso_fortran_env
    ifelse(_type(),`Foo',`  use Foo_mod')
    ifelse(_type(),`FooPoly',`   use Foo_mod')
 
