@@ -151,7 +151,7 @@
       iter = this%tree%find(p)
       res = (iter /= this%tree%end())
       if (res) then
-         pair_ptr => iter%at()
+         pair_ptr => iter%of()
          value => pair_ptr%second
       end if
 
@@ -193,7 +193,7 @@
 
       call this%tree%insert(p, iter=iter, is_new=is_new)
       if (.not. is_new) then
-         pair_ptr => iter%at()
+         pair_ptr => iter%of()
          res => pair_ptr%second
       else
          res => null()
@@ -408,7 +408,7 @@
 
       it=this%tree%begin()
       do while (it%good())
-        p => it%at()
+        p => it%of()
         write(*, *)p%first, ' => ',p%secord,'+'
         call it%next
       end do

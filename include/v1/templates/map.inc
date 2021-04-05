@@ -199,6 +199,7 @@
 #undef __set
 #undef __siterator
 #undef __set_needs_default_compare
+
 #include "templates/tmpltail.inc"
 #include "templates/all_macros_undefs.inc"
 

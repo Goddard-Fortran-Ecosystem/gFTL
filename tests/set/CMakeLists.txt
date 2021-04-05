@@ -24,9 +24,10 @@ foreach (T ${types})
   m4_preprocess (${T} ${src}/Test_Set.m4 ${test}.pf)
 #  m4_preprocess (${T} ${src}/Test_SetIterator.m4 Test_${T}SetIterator.pf ${depends})
 #  m4_preprocess (${T} ${src}/Test_SetRIterator.m4 Test_${T}SetRIterator.pf ${depends})
+  m4_preprocess (${T} ${src}/Test_SetAlgorithms.m4 ${test}Algorithms.pf)
 
   add_pfunit_ctest (${test}.x
-    TEST_SOURCES ${bin}/${test}.pf #${bin}/Test_${T}SetIterator.pf ${bin}/Test_${T}SetRIterator.pf
+    TEST_SOURCES ${bin}/${test}.pf ${bin}/${test}Algorithms.pf #${bin}/${test}Iterator.pf
     OTHER_SOURCES ${sut}
     LINK_LIBRARIES test_shared gftl-v2
     )

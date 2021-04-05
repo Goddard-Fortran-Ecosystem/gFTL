@@ -1,7 +1,7 @@
    ! =======================
    !  value
    ! =======================
-   function __MANGLE(iter_at)(this) result(value)
+   function __MANGLE(iter_of)(this) result(value)
       class(__set_iterator), intent(in) :: this
       __T_declare_result__, pointer :: value
 
@@ -11,7 +11,7 @@
          value => null()
       end if
 
-   end function __MANGLE(iter_at)
+   end function __MANGLE(iter_of)
 
    ! =======================
    !  next

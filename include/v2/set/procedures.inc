@@ -235,7 +235,7 @@
 
       iter = first
       do while (iter /= last)
-         call this%insert(iter%at())
+         call this%insert(iter%of())
          call iter%next()
       end do
 
@@ -676,8 +676,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end())
-         ptr_a => iter_a%at()
-         ptr_b => iter_b%at()
+         ptr_a => iter_a%of()
+         ptr_b => iter_b%of()
 
          if (.not. __MANGLE(order_eq)(ptr_a,ptr_b)) return
 
@@ -716,8 +716,8 @@
       iter_a = a%begin()
       iter_b = b%begin()
       do while (iter_a /= a%end() .and. iter_b /= b%end())
-         ptr_a => iter_a%at()
-         ptr_b => iter_b%at()
+         ptr_a => iter_a%of()
+         ptr_b => iter_b%of()
 
          ! a < b ?
          lt = __T_LT__(ptr_a, ptr_b)
@@ -784,7 +784,7 @@
 
       iter = other%begin()
       do while (iter /= other%end())
-         ptr => iter%at()
+         ptr => iter%of()
          call this%insert(ptr)
          call iter%next()
       end do
@@ -825,8 +825,8 @@
 
       iter = source%begin()
       do while (iter /= source%end())
-         if (this%count(iter%at()) == 0) then
-            call this%insert(iter%at())
+         if (this%count(iter%of()) == 0) then
+            call this%insert(iter%of())
             iter = source%erase(iter)
          else
             ! already in result
@@ -891,3 +891,15 @@
    ! undef internal template parameters
 #undef __guard
 #include "parameters/T/undef_internal.inc"
+
+#include "parameters/T/copy_set_T_to_algorithm_T.inc"
+#define __algorithm_guard __IDENTITY(__set_guard)
+#define __algorithm_container __set
+#define __algorithm_iterator __set_iterator
+#include "algorithms/procedures.inc"   
+#undef __algorithm_container
+#undef __algorithm_iterator
+#undef __algorithm_T
+#undef __algorithm_guard
+#include "parameters/T/undef_algorithm_T.inc"
+   

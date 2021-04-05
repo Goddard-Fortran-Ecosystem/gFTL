@@ -5,7 +5,7 @@
         type(__map_pair), pointer :: p
          class(__map_iterator), target, intent(in) :: this
 
-         p => this%set_iter%at()
+         p => this%set_iter%of()
 
       end function __MANGLE(iter_at)
 
