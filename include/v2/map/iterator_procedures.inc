@@ -1,13 +1,13 @@
 ! =======================
-!  Pair: at()
+!  Pair: of()
 ! =======================
-     function __MANGLE(iter_at)(this) result(p)
+     function __MANGLE(iter_of)(this) result(p)
         type(__map_pair), pointer :: p
          class(__map_iterator), target, intent(in) :: this
 
          p => this%set_iter%of()
 
-      end function __MANGLE(iter_at)
+      end function __MANGLE(iter_of)
 
 ! =======================
 !  key: first() 
@@ -18,7 +18,7 @@
 
          type(__map_pair), pointer :: p
 
-         p => this%at()
+         p => this%of()
          if (associated(p)) then
             first => p%first
          else
@@ -36,7 +36,7 @@
 
          type(__map_pair), pointer :: p
 
-         p => this%at()
+         p => this%of()
          if (associated(p)) then
             second => p%second
          else

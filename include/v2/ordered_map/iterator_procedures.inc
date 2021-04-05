@@ -12,7 +12,7 @@
             key => this%key_iter%of()
             if (associated(key)) then
                map_iter = this%reference%map%find(key)
-               p => map_iter%at()
+               p => map_iter%of()
             else
                p => null()
             end if

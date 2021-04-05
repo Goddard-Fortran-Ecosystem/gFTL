@@ -115,7 +115,7 @@ contains
       call m%insert(key_one, one)
       call m%insert(key_two, two)
 
-      val => m%at(key_one)
+      val => m%of(key_one)
       ASSERT(val, one)
 
       val => m%at(key_two)

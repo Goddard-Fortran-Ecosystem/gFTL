@@ -1,5 +1,5 @@
    ! =======================
-   !  value
+   !  iter_of
    ! =======================
    function __MANGLE(iter_of)(this) result(value)
       class(__set_iterator), intent(in) :: this
@@ -14,7 +14,7 @@
    end function __MANGLE(iter_of)
 
    ! =======================
-   !  next
+   !  iter_next
    ! =======================
    subroutine __MANGLE(iter_next)(this)
       class(__set_iterator), intent(inout) :: this
@@ -24,7 +24,7 @@
    end subroutine __MANGLE(iter_next)
 
    ! =======================
-   !  prev
+   !  iter_prev
    ! =======================
    subroutine __MANGLE(iter_prev)(this)
       class(__set_iterator), intent(inout) :: this

@@ -3,7 +3,7 @@
       type(__MANGLE(SetIterator)) :: set_iter
       class(__map), pointer :: reference
    contains
-      procedure :: at => __MANGLE(iter_at)
+      procedure :: of => __MANGLE(iter_of)
       procedure :: first => __MANGLE(iter_first)
       procedure :: second => __MANGLE(iter_second)
       procedure :: next => __MANGLE(iter_next)
