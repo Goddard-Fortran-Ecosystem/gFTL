@@ -15,3 +15,5 @@
 
    public :: operator(==)
    public :: operator(/=)
+
+#include "algorithms/public.inc"

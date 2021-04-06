@@ -1,9 +1,7 @@
-   interface find
-#ifdef __T_EQ__
+  interface find
       module procedure __MANGLE(find_basic)
-#endif
    end interface find
-
+   
 !#ifdef __find_predicate
    interface find_if
       module procedure __MANGLE(find_if)

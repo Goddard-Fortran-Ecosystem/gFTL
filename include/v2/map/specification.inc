@@ -7,16 +7,30 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
+#define __pair __map_pair
+#define __pair_guard __IDENTITY(__map_guard)__IDENTITY(p_)
+#include "parameters/Key/copy_map_Key_to_internal_Key.inc"
+#include "parameters/T/copy_map_T_to_internal_T.inc"
+#include "parameters/Key/define_derived_macros.inc"
+#include "parameters/T/define_derived_macros.inc"
+
+#if (defined(__Key_LT__) || defined(__Key_EQ__)) && (defined(__T_LT__) || defined(__T_EQ__))
+!  aloha
+#    define __map_pair_EQ(lhs,rhs) (lhs==rhs)
+#endif
+#if defined(__Key_LT__) && defined(__T_LT__)
+#    define __map_pair_LT(lhs,rhs) (lhs<rhs)
+#endif
+ 
+#include "parameters/Key/undef_derived_macros.inc"
+#include "parameters/T/undef_derived_macros.inc"
+#include "parameters/Key/undef_internal.inc"
+#include "parameters/T/undef_internal.inc"
+
 #include "parameters/T1/copy_map_Key_to_pair_T1.inc"
 #include "parameters/T2/copy_map_T_to_pair_T2.inc"
 
-#define __pair __map_pair
-#define __pair_guard __IDENTITY(__map_guard)__IDENTITY(p_)
-   
 #include "pair/specification.inc"
-
-#undef __pair
-#undef __pair_guard
 
 #include "parameters/T1/undef_pair_T1.inc"   
 #include "parameters/T2/undef_pair_T2.inc"   
@@ -116,6 +130,7 @@
 
 #include "map/iterator_specification.inc"
 
+   
 
    ! undef derived template parameters
 #include "parameters/Key/undef_derived_macros.inc"
@@ -125,3 +140,22 @@
 #include "parameters/Key/undef_internal.inc"
 #include "parameters/T/undef_internal.inc"
 
+#include "parameters/T/copy_map_pair_to_algorithm_T.inc"
+#define __algorithm_guard __IDENTITY(__map_guard)
+#define __algorithm_container __map
+#define __algorithm_iterator __map_iterator
+#include "algorithms/specification.inc"
+#undef __algorithm_container
+#undef __algorithm_riterator
+#undef __algorithm_guard
+#include "parameters/T/undef_algorithm_T.inc"
+   
+#undef __pair
+#undef __pair_guard
+
+#ifdef __pair_EQ
+#    undef __map_pair_EQ
+#endif
+#ifdef __pair_LT
+#    undef __map_pair_LT
+#endif

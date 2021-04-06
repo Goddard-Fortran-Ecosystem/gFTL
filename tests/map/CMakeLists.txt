@@ -29,9 +29,10 @@ foreach (key ${keys})
 
     m4_preprocess2 (${key} ${T} ${src}/Map.m4 ${sut})
     m4_preprocess2 (${key} ${T} ${src}/Test_Map.m4 Test_${key}${T}Map.pf)
+    m4_preprocess2 (${key} ${T} ${src}/Test_MapAlgorithms.m4 Test_${key}${T}MapAlg.pf)
 
     add_pfunit_ctest (test_${key}${T}_map.x
-      TEST_SOURCES ${bin}/Test_${key}${T}Map.pf
+      TEST_SOURCES ${bin}/Test_${key}${T}Map.pf ${bin}/Test_${key}${T}MapAlg.pf
       OTHER_SOURCES ${sut}
       LINK_LIBRARIES test_shared gftl-v2
       )

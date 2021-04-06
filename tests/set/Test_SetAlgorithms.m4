@@ -105,11 +105,12 @@ contains
 
       call reset_counter()
       iter = find_if(s%begin(), s%end(), p2)
-      ASSERT(iter%of(), two)
+      @assert_that(counter, is(2))
       
       call reset_counter()
       iter = find_if(s%begin(), s%end(), p1)
-      ASSERT(iter%of(), one)
+      @assert_that(counter, is(1))
+
       
    end subroutine test_if
 
@@ -127,10 +128,11 @@ contains
 
       call reset_counter()
       iter = find_if_not(s%begin(), s%end(), p1)
-      ASSERT(iter%of(), two)
+      @assert_that(counter, is(2))
+
       call reset_counter()
       iter = find_if_not(s%begin(), s%end(), p2)
-      ASSERT(iter%of(), one)
+      @assert_that(counter, is(1))
       
    end subroutine test_if_not
 

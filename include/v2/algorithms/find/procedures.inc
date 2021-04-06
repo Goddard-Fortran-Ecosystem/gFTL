@@ -14,7 +14,16 @@
          
          iter = last
 
-      end function __MANGLE(find_basic)
+       end function __MANGLE(find_basic)
+#else
+       ! Stub function to satisfy need to have something for the public interface
+       function __MANGLE(find_basic)(i) result(j)
+         type :: Unusable
+         end type Unusable
+         type(Unusable) :: i
+         integer :: j
+         j = 1
+       end function __MANGLE(find_basic)
 #endif      
       
 !#ifdef __algorithm_predicate
