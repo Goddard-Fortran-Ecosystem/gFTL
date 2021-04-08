@@ -15,8 +15,8 @@
 
    contains
 
-      procedure :: prev => __MANGLE(iter_prev)
       procedure :: next => __MANGLE(iter_next)
+      procedure :: prev => __MANGLE(iter_prev)
 
 !!$      procedure :: back_inserter => __MANGLE(back_inserter)
 !!$      procedure :: front_inserter => __MANGLE(front_inserter)

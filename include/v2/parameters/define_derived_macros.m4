@@ -78,10 +78,10 @@ define(__T,`__`'_T()')
 
 #    define __T()_DECLARE__(type,kindlen) __IDENTITY(type)__IDENTITY(kindlen)
 #    define __T()_NAME__(type,kindlen) __IDENTITY(type)//__IDENTITY(kindlen)
-#    if __T() == __COMPLEX
-
+#    if __T()_type_id__ == __COMPLEX__
 #        define __T()_type__ complex
 #        define __T()_EQ_SCALAR__(a,b) a == b
+#        define __T()_NE_SCALAR__(a,b) a /= b
 #        define __T()_name__ "complex"
 #        if __T()_kind__ == 16
 #            define __T()_KINDLEN__(context) (kind=REAL16)

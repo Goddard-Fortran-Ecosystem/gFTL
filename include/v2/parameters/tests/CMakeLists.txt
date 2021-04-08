@@ -10,6 +10,7 @@ set (types
   integer32
   real
   complex
+  complex32
   fixed_string
   deferred_string
   unlimited

@@ -1,7 +1,7 @@
-declare string:    "complex"//""//""//""
-declare component: complex
-declare result:    complex
-declare dummy:     complex
+declare string:    "complex"//"(kind=REAL32)"//""//""
+declare component: complex(kind=REAL32)
+declare result:    complex(kind=REAL32)
+declare dummy:     complex(kind=REAL32)
 
 a == b:            a == b
 a NE b:            a /= b
