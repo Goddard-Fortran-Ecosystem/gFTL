@@ -105,27 +105,45 @@ end function
 
 | procedure |  action |
 |-|-|
-[at](#at) | access specified element |
+[of](#of) | access specified element |
+[at](#at) | access specified element with bounds checking |
 [front](#front) | access first element |
-[back](#back) | access alst element |
+[back](#back) | access last element |
 
 
-#### at
+#### of
 
 1. No bounds checking
+
 ``` f90
-function at(this, i)
+function of(v, i)
+   <T>, pointer :: of
+   class(Vector), target, intent(in) :: v
+   integer(kind=size_kind), intent(in) :: i
+end function of
+```
+`at` is also overloaded for convenience:
+``` f90
+function at(v, i)
    <T>, pointer :: at
-   class(Vector), target, intent(in) :: this
+   class(Vector), target, intent(in) :: v
    integer(kind=size_kind), intent(in) :: i
 end function at
 ```
 
 2. No bounds checking, default integer
 ``` f90
-function at(this, i)
+function of(v, i)
+   <T>, pointer :: of
+   class(Vector), target, intent(in) :: v
+   integer, intent(in) :: i
+end function of
+```
+`at` is also overloaded for convenience:
+``` f90
+function at(v, i)
    <T>, pointer :: at
-   class(Vector), target, intent(in) :: this
+   class(Vector), target, intent(in) :: v
    integer, intent(in) :: i
 end function at
 ```
@@ -134,7 +152,7 @@ end function at
 ``` f90
 function at(v, i, rc)
    <T>, pointer :: at
-   class(Vector), target, intent(in) :: this
+   class(Vector), target, intent(in) :: v
    integer(kind=size_kind), intent(in) :: i
    integer, intent(out) :: rc
 end function at
@@ -144,7 +162,7 @@ end function at
 ``` f90
 function at(v, i, rc) 
    <T>, pointer :: at
-   class(Vector), target, intent(in) :: this
+   class(Vector), target, intent(in) :: v
    integer, intent(in) :: i
    integer, intent(out) :: rc
 end function at
@@ -173,10 +191,10 @@ end function back
 
 | procedure |  action |
 |-|-|
-[begin](#begin) | returns iterator to the beginning |
-[end](#end) | returns iterator to end |
-[rbegin](#rbegin) | returns reverse iterator to the beginning
-[rend](#rend) | returns iterator to end |
+[begin](#begin) | returns [iterator](random_access_iterator.md) to beginning |
+[end](#end) | returns [iterator](random_access_iterator.) to end |
+[rbegin](#rbegin) | returns [reverse iterator](vector_riterator.md) to reverse beginning
+[rend](#rend) | returns [reverse iterator](vector_riterator.md) to reverse end |
 
 #### begin
 
@@ -238,8 +256,8 @@ end function rend
 
 #### clear
 ```f90
-subroutine clear(this)
-   class(vector), intent(inout) :: this
+subroutine clear(v)
+   class(vector), intent(inout) :: v
 end subroutine clear
 ```
 
@@ -247,8 +265,8 @@ Examples:
 
 #### insert
 ```f90
-subroutine insert(this, pos, value)
-   <class(vector), intent(inout) :: this
+subroutine insert(v, pos, value)
+   <class(vector), intent(inout) :: v
    type(iterator), intent(in) : pos
    <T>, intent(in) :: value
 end subroutine insert
@@ -257,17 +275,17 @@ end subroutine insert
 #### erase
 1. Erase one element
 ```f90
-function erase(this, pos) result(iter)
+function erase(v, pos) result(iter)
    type(iterator) :: iter
-   <class(vector), intent(inout) :: this
+   <class(vector), intent(inout) :: v
    type(iterator), intent(in) : pos
 end function erase
 ```
 
 2. Remove elements in range [first, last)
 ```f90
-function erase(this, first, last) result(iter)
-   <class(vector), intent(inout) :: this
+function erase(v, first, last) result(iter)
+   class(vector), intent(inout) :: v
    type(iterator), intent(in) : first
    type(iterator), intent(in) : last
    type(iterator) :: iter
@@ -278,8 +296,8 @@ end function erase
 #### push_back
 
 ``` f90
-subroutine push_back(this, value)
-   class(vector), intent(inout) :: this
+subroutine push_back(v, value)
+   class(vector), intent(inout) :: v
    <T>, intent(in) :: value
 end subroutine push_back
 ```
@@ -287,8 +305,8 @@ end subroutine push_back
 #### pop_back
 
 ``` f90
-subroutine pop_back(this)
-   class(vector), intent(inout) :: this
+subroutine pop_back(v)
+   class(vector), intent(inout) :: v
 end subroutine pop_back
 ```
 
@@ -297,8 +315,8 @@ end subroutine pop_back
 1. Resize to count elements, optional value; count is kind=size_kind
 
 ``` f90
-subroutine resize(this, count, unused, value, rc)
-   class(vector), intent(inout) :: this
+subroutine resize(v, count, unused, value, rc)
+   class(vector), intent(inout) :: v
    integer(kind=size_kind), intent(in) :: count
    class(KeywordEnforcer), optional, intent(in) :: unused
    <T>, optional, intent(in) :: value
@@ -309,8 +327,8 @@ end subroutine resise
 2. Resize to count elements, optional value.  count is default integer.
 
 ``` f90
-subroutine resize(this, count, unused, value, rc)
-   class(vector), intent(inout) :: this
+subroutine resize(v, count, unused, value, rc)
+   class(vector), intent(inout) :: v
    integer, intent(in) :: count
    class(KeywordEnforcer), optional, intent(in) :: unused
    <T>, optional, intent(in) :: value
@@ -323,8 +341,8 @@ end subroutine resise
 1. Swap elements with another container
 
 ``` f90
-subroutine swap(this, x)
-   class(vector), intent(inout) :: this
+subroutine swap(v, x)
+   class(vector), intent(inout) :: v
    type(vector), intent(inout) :: x
 end subroutine swap
 ```
@@ -351,7 +369,7 @@ logical funciton equal_to(a, b)
 end function equal_to
 ```
 
-#### operator(==)
+#### operator(/=)
 
 ``` f90
 logical funciton not_equal_to(a, b)
