@@ -28,13 +28,14 @@
 ! instead of the more elegant approach possible in C.
 
    
-#define __LOGICAL__          1   
-#define __INTEGER__          2
-#define __REAL__             3
-#define __COMPLEX__          4
-#define __CHARACTER__        5
-#define __DOUBLE_PRECISION__ 6
+#define __LOGICAL__               1   
+#define __INTEGER__               2
+#define __REAL__                  3
+#define __COMPLEX__               4
+#define __CHARACTER__             5
+#define __DOUBLE_PRECISION__      6
 #define __UNLIMITED_POLYMORPHIC__ 7
+#define __DOUBLE_COMPLEX__        8
 
 #define __LOGICAL   8
 
@@ -56,10 +57,11 @@
 #define __COMPLEX64    __COMPLEX+6
 #define __COMPLEX128   __COMPLEX+7
 
-#define __CHARACTER          40
-#define __CHARACTER_DEFERRED 41
-#define __DOUBLE_PRECISION   48
+#define __CHARACTER             40
+#define __CHARACTER_DEFERRED    41
+#define __DOUBLE_PRECISION      48
 #define __UNLIMITED_POLYMORPHIC 56
+#define __DOUBLE_COMPLEX        64
 
 
 ! Attributes
