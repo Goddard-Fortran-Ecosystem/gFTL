@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.4.0] - 2021-04-09
+
 ### Added
 
 - Entirely revamped interfaces as prelude to v2.0.   Generally much closer to C++ STL than
