@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- enabled double precision complex in v2 interfaces.
+
 ## [1.4.0] - 2021-04-09
 
 ### Added

@@ -78,28 +78,35 @@ define(__T,`__`'_T()')
 
 #    define __T()_DECLARE__(type,kindlen) __IDENTITY(type)__IDENTITY(kindlen)
 #    define __T()_NAME__(type,kindlen) __IDENTITY(type)//__IDENTITY(kindlen)
-#    if __T()_type_id__ == __COMPLEX__
+#    if (__T()_type_id__ == __COMPLEX__) | (__T()_type_id__ == __DOUBLE_COMPLEX__)
 #        define __T()_type__ complex
+#        define __T()_name__ "complex"
 #        define __T()_EQ_SCALAR__(a,b) a == b
 #        define __T()_NE_SCALAR__(a,b) a /= b
-#        define __T()_name__ "complex"
-#        if __T()_kind__ == 16
-#            define __T()_KINDLEN__(context) (kind=REAL16)
-#            define __T()_kindlen_string__ "(kind=REAL16)"
-#        elif __T()_kind__ == 32
-#            define __T()_KINDLEN__(context) (kind=REAL32)
-#            define __T()_kindlen_string__ "(kind=REAL32)"
-#        elif __T()_kind__ == 64
-#            define __T()_KINDLEN__(context) (kind=REAL64)
-#            define __T()_kindlen_string__ "(kind=REAL64)"
-#        elif __T()_kind__ == 128
-#            define __T()_KINDLEN__(context) (kind=REAL128)
-#            define __T()_kindlen_string__ "(kind=REAL128)"
-#        endif
-#        if !defined(__T()_default__)
-#            define __T()_default_scalar__ (0.,0.)
-#        endif
-
+#        if __T()_type_id__ == __COMPLEX__
+#            if __T()_kind__ == 16
+#                define __T()_KINDLEN__(context) (kind=REAL16)
+#                define __T()_kindlen_string__ "(kind=REAL16)"
+#            elif __T()_kind__ == 32
+#                define __T()_KINDLEN__(context) (kind=REAL32)
+#                define __T()_kindlen_string__ "(kind=REAL32)"
+#            elif __T()_kind__ == 64
+#                define __T()_KINDLEN__(context) (kind=REAL64)
+#                define __T()_kindlen_string__ "(kind=REAL64)"
+#            elif __T()_kind__ == 128
+#                define __T()_KINDLEN__(context) (kind=REAL128)
+#                define __T()_kindlen_string__ "(kind=REAL128)"
+#            endif
+#            if !defined(__T()_default__)
+#                define __T()_default_scalar__ (0.,0.)
+#           endif
+#       else
+#            define __T()_KINDLEN__(context) (kind=kind(1.d0))
+#            define __T()_kindlen_string__ "(kind=kind(1.d0))"
+#            if !defined(__T()_default__)
+#                define __T()_default_scalar__ (0.d0,0.d0)
+#           endif
+#       endif
 #    elif __T()_type_id__ == __LOGICAL__
 
 #        define __T()_type__ logical
