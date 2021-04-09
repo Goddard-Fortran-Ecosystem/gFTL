@@ -10,8 +10,10 @@ set (types
   integer
   integer32
   real
+  double
   complex
   complex32
+  double_complex
   fixed_string
   deferred_string
   unlimited

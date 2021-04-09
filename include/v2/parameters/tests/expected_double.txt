@@ -1,0 +1,15 @@
+declare string:    "double precision"//""//""//""
+declare component: double precision
+declare result:    double precision
+declare dummy:     double precision
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src
