@@ -4,50 +4,149 @@ module Foo_mod
    private
 
    public :: Foo
-   public :: assertEqual
+   public :: ChildOfFoo
+   public :: operator(<)
 
-   type Foo
-      integer :: i
+#ifndef __GFORTRAN__
+   type, extends(Matchable) :: Foo
+      integer :: i = -1
    contains
-      procedure :: equal
-      generic :: operator(==) => equal
-!!$      procedure :: copy
-!!$      generic :: assignment(=) => copy
+      procedure :: equals => equals_foo
+      procedure :: describe_to => describe_to_foo
    end type Foo
+   type, extends(Foo) :: ChildOfFoo
+      real :: x = 0.
+   contains
+      procedure :: equals => equals_child_of_foo
+      procedure :: describe_to => describe_to_child_of_foo
+   end type ChildOfFoo
+#else
+   type :: Foo
+      integer :: i = -1
+   contains
+      procedure :: equals => equals_foo
+      generic :: operator(==) => equals
+!!$      procedure :: describe_to => describe_to_foo
+   end type Foo
+   type, extends(Foo) :: ChildOfFoo
+      real :: x = 0.
+   contains
+      procedure :: equals => equals_child_of_foo
+      procedure :: describe_to => describe_to_child_of_foo
+   end type ChildOfFoo
+#endif
 
    interface Foo
-      module procedure newFoo
+      module procedure new_Foo_default
+      module procedure new_Foo
    end interface Foo
 
-   interface assertEqual
-      module procedure assertEqual_FooFoo
-   end interface assertEqual
+   interface ChildOfFoo
+      module procedure new_ChildOfFoo_default
+      module procedure new_ChildOfFoo
+   end interface ChildOfFoo
+
+   type(Foo) :: zero
+   type(ChildOfFoo) :: one
+   type(Foo) :: two
+   type(ChildOfFoo) :: three
+
+   interface operator(<)
+      module procedure less
+   end interface operator(<)
 
 contains
 
-   function newFoo(i) result(f)
-      type (Foo) :: f
+
+   function new_Foo_default() result(f)
+      type(Foo) :: f
+      f = Foo(-1)
+   end function new_Foo_Default
+   
+   function new_Foo(i) result(f)
+      type(Foo) :: f
       integer, intent(in) :: i
       f%i = i
-   end function newFoo
+#ifndef __GFORTRAN__
+      call f%set_type_name('Foo')
+#endif
+   end function new_Foo
+
+   function new_ChildOfFoo_default() result(f)
+      type(ChildOfFoo) :: f
+      f = ChildOfFoo(-1,0.)
+   end function new_ChildOfFoo_default
    
+   function new_ChildOfFoo(i, x) result(f)
+      type(ChildOfFoo) :: f
+      integer, intent(in) :: i
+      real, intent(in) :: x
+      f%i = i
+      f%x = x
+#ifndef __GFORTRAN__
+      call f%set_type_name('ChildOfFoo')
+#endif
+   end function new_ChildOfFoo
 
-   logical function equal(a, b)
-      class (Foo), intent(in) :: a
-      class (Foo), intent(in) :: b
-      equal = (a%i == b%i)
-   end function equal
+   
+   logical function equals_foo(this, other)
+      class(Foo), intent(in) :: this
+      class(*), intent(in) :: other
 
+      select type (other)
+      type is (Foo)
+         equals_foo = this%i == other%i
+      class default
+         equals_foo = .false.
+      end select
 
-   subroutine assertEqual_FooFoo(a, b, message, location)
-      class (Foo), intent(in) :: a
-      class (Foo), intent(in) :: b
-      character(len=*), optional, intent(in) :: message
-      type (SourceLocation), optional, intent(in) :: location
+   end function equals_foo
 
-      call assertEqual(a%i, b%i, message, location)
+   subroutine describe_to_foo(this, description)
+      class(Foo), intent(in) :: this
+      class(MatcherDescription), intent(inout) :: description
+
+      character(100) :: buffer
+      write(buffer,'(a,i0,a)') 'Foo(', this%i, ')'
+
+      call description%append_text(trim(buffer))
       
-   end subroutine assertEqual_FooFoo
+   end subroutine describe_to_foo
+         
+   logical function equals_child_of_foo(this, other)
+      class(ChildOfFoo), intent(in) :: this
+      class(*), intent(in) :: other
 
+      select type (other)
+      type is (ChildOfFoo)
+         equals_child_of_foo = (this%Foo == other%Foo) .and. this%x == other%x
+      class default
+         equals_child_of_foo = .false.
+      end select
+   end function equals_child_of_foo
+
+   subroutine describe_to_child_of_foo(this, description)
+      class(ChildOfFoo), intent(in) :: this
+      class(MatcherDescription), intent(inout) :: description
+
+      character(100) :: buffer
+      write(buffer,'(a,i0,a1,g0,a)') 'ChildOfFoo(', this%i, ",", this%x, ')'
+      call description%append_text(trim(buffer))
+      
+   end subroutine describe_to_child_of_foo
+
+   logical function less(a, b)
+      type(Foo), intent(in) :: a
+      type(Foo), intent(in) :: b
+
+      less = a%i < b%i
+   end function less
+
+   logical function equals(a, b)
+      type(Foo), intent(in) :: a
+      type(Foo), intent(in) :: b
+
+      equals = a%i == b%i
+   end function equals
 
 end module Foo_mod

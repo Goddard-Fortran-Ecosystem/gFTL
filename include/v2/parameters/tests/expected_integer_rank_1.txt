@@ -1,0 +1,15 @@
+declare string:    "integer"//""//", dimension(:)"//", allocatable"
+declare component: integer, dimension(:), allocatable
+declare result:    integer, dimension(:)
+declare dummy:     integer, dimension(:)
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           deallocate(x)
+COPY(dst,src):     dst=src
+MOVE(dst,src):     call move_alloc(from=src,to=dst)

@@ -1,0 +1,15 @@
+declare string:    "character"//"(len=17)"//""//""
+declare component: character(len=17)
+declare result:    character(len=17)
+declare dummy:     character(len=17)
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src
