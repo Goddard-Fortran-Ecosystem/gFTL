@@ -3,6 +3,7 @@ set (found "found_integer.inc")
 
 
 find_program(CPP cpp)
+message(STATUS "cpp is ${CPP}")
 
 set (types
   logical
@@ -42,7 +43,7 @@ foreach(type ${types})
 
   add_custom_command (
     OUTPUT ${actual}
-    COMMAND ${CPP} -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+    COMMAND ${CPP} -E -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
     # Strip all empty lines and comments
     COMMAND ${FILTER} ${tmp} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
