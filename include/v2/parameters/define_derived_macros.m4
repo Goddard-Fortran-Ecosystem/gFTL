@@ -130,8 +130,8 @@ define(__T,`__`'_T()')
 #        define __T()_NE_SCALAR__(a,b) a /= b
 #        define __T()_LE_SCALAR__(a,b) a <= b
 #        define __T()_GE_SCALAR__(a,b) a >= b
-#        define __T()_LT_SCALAR__(a,b) a <  b
-#        define __T()_GT_SCALAR__(a,b) a >  b
+#        define __T()_LT_SCALAR__(a,b) a < b
+#        define __T()_GT_SCALAR__(a,b) a > b
 
 #        if __T()_type_id__ == __INTEGER__
 
