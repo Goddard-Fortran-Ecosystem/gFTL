@@ -20,10 +20,10 @@
        ! And has to involve iterator type to avoid ambiguity with reverse iterator
        ! and analogous construct for other containers.
        function __MANGLE(find_basic)(do_not_use,unused) result(j)
-          type :: keywordenforcer
+          type :: __MANGLE(keywordenforcer)
              integer :: placeholder
-         end type Keywordenforcer
-         type(keywordenforcer) :: j
+         end type __MANGLE(Keywordenforcer)
+         type(__MANGLE(keywordenforcer)) :: j
          type(__iterator), intent(in) :: do_not_use
          type(keywordenforcer), intent(in) :: unused
 
