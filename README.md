@@ -1,6 +1,41 @@
 [![Build Status](https://travis-ci.com/Goddard-Fortran-Ecosystem/gFTL.svg?branch=master)](https://travis-ci.com/Goddard-Fortran-Ecosystem/gFTL)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+# v2.0 is coming
+
+Starting with the current release, new containers and changed
+interfaces are availale through the gftl-v2 library.  When v2.0 is
+ultimately released, these will become the default, and users that
+want to stick with the original interfaces will need to choose
+gftl-v1.
+
+## New containers:
+
+* deque
+* queue
+* stack
+* ordered-map
+* pair (now a proper container unto itself)
+* ptr (to allow proper semantics)
+
+## Other new capabilities:
+
+Preliminary work on algorithms analog.  Currently this is limited
+to `find`, `find_if`, and `find_if_not`.  More to come.
+
+## Changes
+
+The changes to the interfaces in 2.0 are generally to improve aligment
+with C++ STL.  In particular, interfaces that can throw exceptions in
+STL now have an extra "rc" argument that Fortran users should check.
+The intent is to provide better documentation in this iteration as
+well, with preliminary interface documenation to be found in
+`./include/v2/vector.md` and `./include/v2/map.md`.  (Contributions
+and corrections very much welcomed on this front!)
+
+
+
+
 # The problem
 
 Fortran only provides one type of container: *array*.  While Fortran

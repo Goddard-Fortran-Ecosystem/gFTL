@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+### Added
+
+- Entirely revamped interfaces as prelude to v2.0.   Generally much closer to C++ STL than
+  previous releases.   v1 interfaces are still the default and will be maintained after v2.0.
+- Includes new containers:
+  . ptr
+  . deque
+  . stack
+  . queue
+  . ordered-map
+- Beginnings of real documentation - see `./include/v2/vector/vector.md` and
+  `./include/v2/map/map.md`
+  
+
 ## [1.3.1] - 2021-02-06
 
 ### Changed
@@ -34,6 +48,45 @@
 - Reintroduced workarounds for older ifort and gfortran compilers.
   Annoyingly the workaround for one breaks the other.
   
+=======
+## [2.0.0] - ????
+
+## Fixed
+- +/- operators on vector reverse iterators were incorrectly implemented in v1.
+
+## Changed
+- Changed location of GFTLConfig.cmake
+
+    Now installed in a more conventional location:
+    ```./lib/cmake/GFTL/GFTLConfig.cmake```
+    Previous location was really a windows convention (first attempt).
+    Also now using
+      . ```configure_package_config_file()
+      . ```write_basic_package_version_file()```
+
+- Moved ./cmake_utils to ./cmake
+- Relocated config related files to ./cmake
+- Added namespace ```gFTL::``` for externa project use  
+- Cleaned up CMake logic in include dirs.
+- Only search for testing if Fortran compiler is detected.  gFTL does
+  not require a Fortran compiler for installation, but Fortran is
+  required to build the tests.  Previously, gFTL artificially included
+  Fortran in the project LANGUAGES option to sidestep the issue.
+- Moved legacy include to include-v1
+- Changed capitalization of installation from GFTL to gFTL.
+  Users should now use ```find_package(gFTL)```
+- Vector template
+  . relational operators are module procedures rather than class methods
+  . arithmetic operators are module procedures rathen than class methods
+  . introduced a few iterator module procedures: advance, begin, distance, end, next, previous
+
+## Added
+- Support for type names.
+
+  This is to allow useful diagnostics via DTIO.
+  
+
+>>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 ## [1.2.5] - 2020-04-06
 
 ### Fixed

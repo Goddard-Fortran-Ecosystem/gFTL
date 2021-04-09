@@ -1,0 +1,15 @@
+declare string:    "real"//""//""//""
+declare component: real
+declare result:    real
+declare dummy:     real
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            a <= b
+a >= b:            a >= b
+a <  b:            a < b
+a >  b:            a > b
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src

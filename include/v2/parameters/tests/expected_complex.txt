@@ -1,0 +1,15 @@
+declare string:    "complex"//""//""//""
+declare component: complex
+declare result:    complex
+declare dummy:     complex
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            __T_LE_SCALAR__(a,b)
+a >= b:            __T_GE_SCALAR__(a,b)
+a <  b:            __T_LT_SCALAR__(a,b)
+a >  b:            __T_GT_SCALAR__(a,b)
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src

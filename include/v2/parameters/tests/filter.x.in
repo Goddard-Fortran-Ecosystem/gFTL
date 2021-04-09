@@ -1,0 +1,7 @@
+#!/bin/bash
+
+INPUTFILE=$1
+OUTPUTFILE=$2
+
+@AWK@ '/<start>/,/<stop>/' $INPUTFILE | @AWK@ 'NR>2 {print last} {last=$0}' > $OUTPUTFILE
+

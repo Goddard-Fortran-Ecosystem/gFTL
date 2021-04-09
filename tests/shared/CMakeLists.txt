@@ -1,9 +1,3 @@
-set (SRCS
-  Foo.F90
-  ChildOfFoo.F90
-  pFUnitSupplement.F90
-)
-
-add_library(shared ${SRCS})
-target_include_directories (shared PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(shared GFTL::gftl PFUNIT::funit)
+add_library (test_shared Foo.F90)
+target_link_libraries(test_shared PRIVATE PFUNIT::funit)
+target_include_directories(test_shared INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR})

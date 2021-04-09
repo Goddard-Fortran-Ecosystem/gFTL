@@ -1,0 +1,15 @@
+declare string:    "class(*)"//""//", allocatable"
+declare component: class(*), allocatable
+declare result:    class(*)
+declare dummy:     class(*)
+
+a == b:            __T_EQ_SCALAR__(a,b)
+a NE b:            __T_NE_SCALAR__(a,b)
+a <= b:            __T_LE_SCALAR__(a,b)
+a >= b:            __T_GE_SCALAR__(a,b)
+a <  b:            __T_LT_SCALAR__(a,b)
+a >  b:            __T_GT_SCALAR__(a,b)
+
+FREE(x):           deallocate(x)
+COPY(dst,src):     allocate(dst, source=src)
+MOVE(dst,src):     call move_alloc(from=src,to=dst)
