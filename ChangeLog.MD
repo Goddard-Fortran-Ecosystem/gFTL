@@ -2,10 +2,15 @@
 
 ## Unreleased
 
+
 ### Fixed
 
 - Last minute fixes for gfortran missed a duplicate type declaration
   caught by NAG.
+
+### Added
+
+- enabled double precision complex in v2 interfaces.
 
 ## [1.4.0] - 2021-04-09
 
