@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+- Last minute fixes for gfortran missed a duplicate type declaration
+  caught by NAG.
+
 ## [1.4.0] - 2021-04-09
 
 ### Added
