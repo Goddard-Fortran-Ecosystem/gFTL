@@ -17,12 +17,17 @@
        end function __MANGLE(find_basic)
 #else
        ! Stub function to satisfy need to have something for the public interface
-       function __MANGLE(find_basic)(i) result(j)
-         type :: Unusable
-         end type Unusable
-         type(Unusable) :: i
-         integer :: j
-         j = 1
+       ! And has to involve iterator type to avoid ambiguity with reverse iterator
+       ! and analogous construct for other containers.
+       function __MANGLE(find_basic)(unused, do_not_use) result(j)
+          type :: keywordenforcer
+             integer :: placeholder
+         end type Keywordenforcer
+         type(keywordenforcer) :: j
+         type(keywordenforcer), optional, intent(in) :: unused
+         type(__iterator), intent(in) :: do_not_use
+
+         j%placeholder = -1
        end function __MANGLE(find_basic)
 #endif      
       
