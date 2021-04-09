@@ -154,20 +154,6 @@
       end subroutine __MANGLE(insert_pair)
 
 ! =======================
-!  
-! =======================
-      function __MANGLE(get)(this, key, value) result(res)
-      logical :: res
-      class(__omap), target, intent(in) :: this
-      __Key_declare_dummy__ :: key
-      __T_declare_result__, pointer, intent(out) :: value
-
-      res = this%map%get(key, value)
-
-      return
-      end function __MANGLE(get)
-
-! =======================
 !  set
 ! =======================
       subroutine __MANGLE(set_)(this, key, value)

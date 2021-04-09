@@ -93,7 +93,6 @@
       generic :: erase => erase_key
       generic :: erase => erase_range
       procedure :: clear => __MANGLE(clear)
-      procedure :: get => __MANGLE(get)
       procedure :: set => __MANGLE(set_)
 
       procedure :: begin => __MANGLE(begin)

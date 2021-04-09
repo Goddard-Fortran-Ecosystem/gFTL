@@ -247,12 +247,12 @@ contains
 @test
    subroutine testIsSet()
       type (Map) :: m
-      logical :: f
+      integer :: rc
       __T_declare_result__, pointer :: val
 
       call m%set(key_one,one)
-      f = m%get(key_one, val)
-      @assertTrue(f)
+      val => m%at(key_one, rc)
+      @assert_that(rc, is(SUCCESS))
 
    end subroutine testIsSet
 
@@ -260,34 +260,34 @@ contains
 @test
    subroutine testNotSet()
       type (Map) :: m
-      logical :: f
+      integer :: rc
       __T_declare_result__, pointer :: val
 
       call m%set(key_one,one)
-      f = m%get(key_two, val)
-      @assertFalse(f)
+      val => m%at(key_two, rc)
+      @assert_that(rc, is(OUT_OF_RANGE))
 
    end subroutine testNotSet
 
 
 @test
-   subroutine testGet()
+   subroutine testAt()
       type (Map), target :: m
-      logical :: f
+      integer :: rc
       __T_declare_result__, pointer :: val
 
       call m%set(key_one,one)
       call m%set(key_two,two)
 
-      f = m%get(key_one, val)
-      @assertTrue(f)
+      val => m%at(key_one, rc)
+      @assert_that(rc, is(SUCCESS))
       ASSERT(val, one)
 
-      f = m%get(key_two, val)
-      @assertTrue(f)
+      val => m%at(key_two, rc)
+      @assert_that(rc, is(SUCCESS))
       ASSERT(val, two)
 
-   end subroutine testGet
+   end subroutine testAt
 
 
    ! The following test crashes under gfortran 4.9 and 5.0.

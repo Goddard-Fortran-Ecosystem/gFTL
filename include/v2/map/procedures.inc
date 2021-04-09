@@ -153,30 +153,6 @@
       end subroutine __MANGLE(insert_pair)
 
 ! =======================
-!  get
-! =======================
-      function __MANGLE(get)(this, key, value) result(res)
-      logical :: res
-      class(__map), target, intent(in) :: this
-      __Key_declare_dummy__ :: key
-      __T_declare_result__, pointer, intent(out) :: value
-      type(__map_pair) :: p
-      type(__MANGLE(__map_set_iterator)) :: iter
-      type(__map_pair), pointer :: pair_ptr
-      
-      __Key_COPY__(p%first, key)
-
-      iter = this%tree%find(p)
-      res = (iter /= this%tree%end())
-      if (res) then
-         pair_ptr => iter%of()
-         value => pair_ptr%second
-      end if
-
-      return
-      end function __MANGLE(get)
-
-! =======================
 !  set
 ! =======================
       subroutine __MANGLE(set_)(this, key, value)
@@ -237,6 +213,7 @@
          rc = OUT_OF_RANGE
       else
          res => iter%second()
+         rc = SUCCESS
       end if
 
       return

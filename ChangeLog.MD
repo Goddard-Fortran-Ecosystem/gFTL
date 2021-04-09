@@ -2,7 +2,20 @@
 
 ## Unreleased
 
-<<<<<<< HEAD
+### Added
+
+- Entirely revamped interfaces as prelude to v2.0.   Generally much closer to C++ STL than
+  previous releases.   v1 interfaces are still the default and will be maintained after v2.0.
+- Includes new containers:
+  . ptr
+  . deque
+  . stack
+  . queue
+  . ordered-map
+- Beginnings of real documentation - see `./include/v2/vector/vector.md` and
+  `./include/v2/map/map.md`
+  
+
 ## [1.3.1] - 2021-02-06
 
 ### Changed
