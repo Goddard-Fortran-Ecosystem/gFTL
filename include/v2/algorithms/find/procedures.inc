@@ -19,13 +19,13 @@
        ! Stub function to satisfy need to have something for the public interface
        ! And has to involve iterator type to avoid ambiguity with reverse iterator
        ! and analogous construct for other containers.
-       function __MANGLE(find_basic)(unused, do_not_use) result(j)
+       function __MANGLE(find_basic)(do_not_use,unused) result(j)
           type :: keywordenforcer
              integer :: placeholder
          end type Keywordenforcer
          type(keywordenforcer) :: j
-         type(keywordenforcer), optional, intent(in) :: unused
          type(__iterator), intent(in) :: do_not_use
+         type(keywordenforcer), intent(in) :: unused
 
          j%placeholder = -1
        end function __MANGLE(find_basic)
