@@ -1,0 +1,15 @@
+declare string:    "complex"//"(kind=kind(1.d0))"//""//""
+declare component: complex(kind=kind(1.d0))
+declare result:    complex(kind=kind(1.d0))
+declare dummy:     complex(kind=kind(1.d0))
+
+a == b:            a == b
+a NE b:            a /= b
+a <= b:            __T_LE_SCALAR__(a,b)
+a >= b:            __T_GE_SCALAR__(a,b)
+a <  b:            __T_LT_SCALAR__(a,b)
+a >  b:            __T_GT_SCALAR__(a,b)
+
+FREE(x):           
+COPY(dst,src):     dst=src
+MOVE(dst,src):     dst=src
