@@ -6,6 +6,7 @@ module Test_{}_type()Vector
    use _type()Vector_mod
    ifelse(_type(),{Foo},{use Foo_mod})
    ifelse(_type(),{FooPoly},{use Foo_mod})
+   ifelse(_type(),{AbstractBar},{use AbstractBar_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"
@@ -223,7 +224,8 @@ contains
    end subroutine test_pop_back
 
    
-   @test
+#ifdef __T_default__
+   @test(ifdef=__T_default__)
    subroutine test_vector_fill_default_value()
       type(Vector) :: v
       __T_declare_component__ :: default
@@ -254,6 +256,7 @@ contains
 #endif
       
    end subroutine test_vector_fill_default_value
+#endif
 
    @test
    subroutine test_vector_fill()

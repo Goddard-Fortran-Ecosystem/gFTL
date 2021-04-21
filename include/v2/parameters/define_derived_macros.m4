@@ -61,10 +61,6 @@ define(__T,`__`'_T()')
    !     __T()_kind__
    !     __T()_kindlen_string__
 
-#if defined(__T()_default)
-#   define __T()_default__ __T()_default
-#endif
-
 #if __T() > 0
    ! Instrinsic types
 
@@ -226,8 +222,8 @@ define(__T,`__`'_T()')
 #        define __T()_DECLARE__(t,kindlen) type(__IDENTITY(t)__IDENTITY(kindlen))
 #        define __T()_NAME__(name,kindlen) "type("//name//kindlen//")"
 #    endif
-#    if !defined(__T()_default__)
-#        define __T()_default_scalar__ __T()()
+#    if defined(__T()_default)
+#       define __T()_default_scalar__ __T()_default
 #    endif
 
 #endif
@@ -318,9 +314,9 @@ define(__T,`__`'_T()')
 #    define __T()_dimension_component__
 #    define __T()_dimension_dummy__
 #    define __T()_dimension_string__ ""
-#        ifndef __T()_default__
-#            define __T()_default__ __T()_default_scalar__
-#        endif
+#    ifdef __T()_default_scalar__
+#        define __T()_default__ __T()_default_scalar__
+#    endif
 #endif
 
 #if defined(__T()_deferred) && !defined(__T()_deferred__)

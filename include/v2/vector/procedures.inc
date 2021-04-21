@@ -286,7 +286,13 @@
 
       idx = merge(i, this%vsize+i, i > 0)
 
+#ifdef __T_allocatable__
+      if (allocated(this%elements(idx)%item)) then
+         __T_FREE__(this%elements(idx)%item)
+      end if
+#else
       __T_FREE__(this%elements(idx)%item)
+#endif      
       __T_COPY__(this%elements(idx)%item, value)
 
       return
@@ -467,10 +473,13 @@
                return
             endif
 #endif
-            if (.not. (__T_EQ__(lhs%elements(i)%item,rhs%elements(i)%item))) then
-               equal = .false.
-               return
-            end if
+            associate (l => lhs%elements(i)%item, r => rhs%elements(i)%item)
+              if (.not. (__T_EQ__(l,r))) then
+                 equal = .false.
+                 return
+              end if
+            end associate
+
 #else
 ! then must have a less-than operator
             if ((__T_LT__(lhs%elements(i)%item,rhs%elements(i)%item))) then
@@ -657,9 +666,11 @@
                __T_COPY__(this%elements(i)%item, value)
             end do
          else
+#if defined(__T_default__)
             do i = oldSize + 1, count
                __T_COPY__(this%elements(i)%item, __T_default__)
             end do
+#endif
          end if
       endif
 
@@ -891,7 +902,9 @@
          integer(kind=GFTL_SIZE_KIND) :: i
          
          do i=1, this%vsize
-            if (__T_EQ__(this%elements(i)%item, value)) return
+            associate (q => this%elements(i)%item)
+              if (__T_EQ__(q, value)) return
+            end associate
          end do
          i=0
 

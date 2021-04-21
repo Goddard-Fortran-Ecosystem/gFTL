@@ -6,6 +6,7 @@ module Test_{}_type()VectorIterator
    use _type()Vector_mod
    ifelse(_type(),{Foo},{use Foo_mod})
    ifelse(_type(),{FooPoly},{use Foo_mod})
+   ifelse(_type(),{AbstractBar},{use AbstractBar_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"

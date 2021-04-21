@@ -207,7 +207,8 @@ contains
    end subroutine test_pop_back
 
    
-   @test
+#ifdef __T_default__
+   @test(ifdef=__T_default__)
    subroutine test_deque_fill_default_value()
       type(Deque), target :: v
       __T_declare_component__ :: default
@@ -236,8 +237,8 @@ contains
       ASSERT(v%at(2), default)
       ASSERT(v%at(3), default)
 #endif
-      
    end subroutine test_deque_fill_default_value
+#endif
 
    @test
    subroutine test_deque_fill()
