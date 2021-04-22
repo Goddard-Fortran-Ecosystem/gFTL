@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Corrected uninitialized value problem with v2 maps.  Detected
+  by NAG with aggressive debug flags.
 - Corrected logic for default value for vectors of (polymorphic)
   abstract objects.
 - Corrected logic for standard GFortran workarounds for fHamcrest tests.
