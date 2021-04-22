@@ -68,8 +68,7 @@
       function __MANGLE(new_map_empty)() result(m)
          type (__map) :: m
 
-         if (.false.) print*,shape(m) ! avoid compiler warnings about unused
-         
+         m%tree = __MANGLE(Set)()
       end function __MANGLE(new_map_empty)
 
       function __MANGLE(new_map_copy)(x) result(m)
@@ -85,6 +84,7 @@
          
          integer :: i
 
+         m = __map()
          do i = 1, size(il)
             call m%insert(il(i))
          end do

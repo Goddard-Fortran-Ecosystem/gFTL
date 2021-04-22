@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Fixed
+
+- Corrected uninitialized value problem with v2 maps.  Detected
+  by NAG with aggressive debug flags.
+- Corrected logic for default value for vectors of (polymorphic)
+  abstract objects.
+- Corrected logic for standard GFortran workarounds for fHamcrest tests.
+
+### Changed
+
+- Simplified various expressions involving type operations.   Intel 2021.1 was choking
+  on an external use case but seems happier if intemediate variables are introduced
+  within expressions involving user defined `==` and `<`.   Some attempt was made to use
+  `ASSOCIATE` instead, but NAG 7.0 had trouble with one of those.    A reproducer for
+  the Intel problem has been created and will be submitted.
+
+
 ## [1.4.1] - 2021-04-09
 
 ### Fixed
