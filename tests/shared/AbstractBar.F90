@@ -32,9 +32,8 @@ module AbstractBar_mod
    type, abstract :: AbstractBar
       integer :: i = -1
    contains
-      procedure :: equals => equals_bar
+      procedure(equals), deferred :: equals
       generic :: operator(==) => equals
-!!$      procedure :: describe_to => describe_to_foo
    end type AbstractBar
 
    type, extends(AbstractBar) :: ConcreteBarA
@@ -48,7 +47,7 @@ module AbstractBar_mod
    contains
       procedure :: equals => equals_concrete_bar_B
       procedure :: describe_to => describe_to_concrete_bar_B
-   end type ConcreteBarA
+   end type ConcreteBarB
 #endif
 
    interface ConcreteBarA
@@ -69,6 +68,14 @@ module AbstractBar_mod
    interface operator(<)
       module procedure less
    end interface operator(<)
+
+   abstract interface
+      logical function equals(this, other)
+         import AbstractBar
+         class(AbstractBar), intent(in) :: this
+         class(*), intent(in) :: other
+      end function equals
+   end interface
 
 contains
 

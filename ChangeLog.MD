@@ -6,6 +6,7 @@
 
 - Corrected logic for default value for vectors of (polymorphic)
   abstract objects.
+- Corrected logic for standard GFortran workarounds for fHamcrest tests.
 
 ### Changed
 
