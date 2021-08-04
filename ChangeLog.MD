@@ -3,7 +3,7 @@
 ## Unreleased
 
 ### Fixed
-
+- Added support for compiling on Windows with Intel compiler.
 - Corrected uninitialized value problem with v2 maps.  Detected
   by NAG with aggressive debug flags.
 - Corrected logic for default value for vectors of (polymorphic)
