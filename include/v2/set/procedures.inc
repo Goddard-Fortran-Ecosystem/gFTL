@@ -155,13 +155,12 @@
       type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: is_new
       type(__set_iterator), optional, intent(out) :: iter
-      type(__set_node), pointer :: new
+      type(__set_node), target, allocatable :: new
       type(__set_node), pointer :: parent
 
       type(__set_node), pointer :: r
 
-      if (present(unused)) print*,shape(unused)
-
+      call dump_at_line(this, __LINE__)
       if (present(iter)) iter%tree => this
 
       if (allocated(this%root)) then
@@ -188,9 +187,9 @@
 
          allocate(new)
          if (present(iter)) iter%node => new
-         new%parent => parent
+         call new%set_parent(parent)
          __T_COPY__(new%value, value)
-         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%value)),new)
+         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%get_value())),new)
          call this%rebalance(parent, .true.)
       else
          allocate(this%root)
@@ -202,7 +201,10 @@
          end if
       endif
       this%tsize = this%tsize + 1
+      call dump_at_line(this, __LINE__)
       return
+      if (present(unused)) print*,shape(unused)
+
    end subroutine __MANGLE(insert_single)
 
 
@@ -558,38 +560,38 @@
       type(__set_node), pointer :: parent, other, child0, child1
       type(__set_node), pointer :: otherchild, otherparent
 
-      parent => pos%parent
-      other => pos
-      call this%advpos(other, side)
-      child0 => pos%get_child(side)
-      child1 => pos%get_child(1-side)
-      otherchild => other%get_child(side)
-      otherparent => other%parent
-      other%parent => parent
-      if (associated(parent)) then
-         call parent%set_child(parent%which_child(pos), other)
-      else
-!!! TODO: needs more thought
-!!$         this%root => other
-         allocate(this%root, source=other)
-      endif
-      call other%set_child(1-side, child1)
-      if (associated(child1)) child1%parent => other
-      if (associated(other, target=child0)) then
-         call this%rebalance(other, .false.)
-      else
-         call other%set_child(side, child0)
-         child0%parent => other
-         call otherparent%set_child(1-side, otherchild)
-         if (associated(otherchild)) otherchild%parent => otherparent
-         call this%rebalance(otherparent, .false.)
-      endif
-!!! TODO: needs more thought
-!!$      pos%left => null()
-!!$      pos%right => null()
-      deallocate(pos%left)
-      deallocate(pos%right)
-      deallocate(pos)
+!!$      parent => pos%parent
+!!$      other => pos
+!!$      call this%advpos(other, side)
+!!$      child0 => pos%get_child(side)
+!!$      child1 => pos%get_child(1-side)
+!!$      otherchild => other%get_child(side)
+!!$      otherparent => other%parent
+!!$      other%parent => parent
+!!$      if (associated(parent)) then
+!!$         call parent%set_child(parent%which_child(pos), other)
+!!$      else
+!!$!!! TODO: needs more thought
+!!$  !!$         this%root => other
+!!$         allocate(this%root, source=other)
+!!$      endif
+!!$      call other%set_child(1-side, child1)
+!!$      if (associated(child1)) child1%parent => other
+!!$      if (associated(other, target=child0)) then
+!!$         call this%rebalance(other, .false.)
+!!$      else
+!!$         call other%set_child(side, child0)
+!!$         child0%parent => other
+!!$         call otherparent%set_child(1-side, otherchild)
+!!$         if (associated(otherchild)) otherchild%parent => otherparent
+!!$         call this%rebalance(otherparent, .false.)
+!!$      endif
+!!$!!! TODO: needs more thought
+!!$  !!$      pos%left => null()
+!!$  !!$      pos%right => null()
+!!$      deallocate(pos%left)
+!!$      deallocate(pos%right)
+!!$      deallocate(pos)
       return
    end subroutine __MANGLE(erase_nonleaf)
 
@@ -634,24 +636,68 @@
       integer, intent(in) :: dir
       type(__set_node), pointer :: parent, child, grandchild => null()
 
+      class(__base_node), allocatable :: t_pos, t_child, t_grandchild
+      integer :: pos_side
+      
       parent => pos%parent
       child => pos%get_child(1-dir)
-      if (associated(child)) grandchild => child%get_child(dir)
+
       if (associated(parent)) then
-         call parent%set_child(parent%which_child(pos), child)
+         pos_side = pos%which_side_am_i()
+         select case (pos_side)
+         case (__LEFT)
+            call move_alloc(from=parent%left, to=t_pos)
+         case (__RIGHT)
+            call move_alloc(from=parent%right, to=t_pos)
+         end select
       else
-!!! TODO - root?
-!!$         this%root => child
-         allocate(this%root, source=child)
+         ! pos is root so we use tmp as a fake parent
+         call move_alloc(from=this%root, to=t_pos) ! side is arbitrary (maybe)
       endif
-      pos%parent => child
-      call pos%set_child(1-dir, grandchild)
+
       if (associated(child)) then
-         child%parent => parent
-         call child%set_child(dir, pos)
-         if (associated(grandchild)) grandchild%parent => pos
-      endif
-      call pos%update_height()
+          select case (dir)
+          case (__LEFT)
+             call move_alloc(from=pos%left, to=t_child)
+          case (__RIGHT)
+             call move_alloc(from=pos%right, to=t_child)
+          end select
+       end if
+       grandchild => child%get_child(dir)
+
+       if (associated(grandchild)) then
+!!$          select case(dir)
+!!$          case (__LEFT)
+!!$             call move_alloc(..., to=pos%right)
+!!$          case (__RIGHT)
+!!$             call move_alloc(..., to=pos%left)
+!!$          end select
+       end if
+
+
+       ! fix up pointers to parents
+       if (associated(child)) then
+          call child%set_parent(parent)
+       end if
+
+       if (associated(child)) then
+          call pos%set_parent(child)
+       end if
+
+       if (associated(grandchild)) then
+          call grandchild%set_parent(pos)
+       end if
+
+
+!!$      pos%parent => child
+!!$      call pos%set_child(1-dir, grandchild)
+!!$      if (associated(child)) then
+!!$         child%parent => parent
+!!$         call child%set_child(dir, pos)
+!!$         if (associated(grandchild)) grandchild%parent => pos
+!!$      endif
+!!$      call pos%update_height()
+
       if (associated(child)) call child%update_height()
       return
    end subroutine __MANGLE(rot)
@@ -876,6 +922,43 @@
    end subroutine __MANGLE(swap)
 
 
+   subroutine dump_at_line(this, line)
+      type(__set), target, intent(in) :: this
+      integer, intent(in) :: line
+
+      type(__set_node), pointer :: node
+      print*
+      print*,'At line: ', line
+      if (this%size() > 0) then
+         write(*,'(a1)',advance='no') '('
+         node => this%root
+         call dump(node)
+         write(*,'(a1)',advance='no') ')'
+      end if
+   end subroutine dump_at_line
+
+   recursive subroutine dump(node)
+      type(__set_node), target, intent(in) :: node
+      type(__set_node), pointer :: left, right
+
+      write(*,'(i2.0,1x)',advance='no') node%value
+      if (node%has_child(__LEFT)) then
+         write(*,'(a1)',advance='no') '('
+         call dump(node%get_child(__LEFT))
+         write(*,'(a1)',advance='no') ')'
+      else
+         write(*,'(" * ")',advance='no')
+      end if
+         
+      if (node%has_child(__RIGHT)) then
+         write(*,'(a1)',advance='no') '('
+         call dump(node%get_child(__RIGHT))
+         write(*,'(a1)',advance='no') ')'
+      else
+         write(*,'(" * ")',advance='no')
+      end if
+   end subroutine dump
+      
 
 #include "set/iterator_procedures.inc"
 
