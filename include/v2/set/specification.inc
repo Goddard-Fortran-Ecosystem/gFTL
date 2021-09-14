@@ -15,6 +15,7 @@
 
 #define __LEFT 0
 #define __RIGHT 1
+#define __base_node __MANGLE(BaseNode)
 #define __set_node __MANGLE(Node)
 
    ! Structure constructors
@@ -29,7 +30,7 @@
 #endif
    end interface __set
 
-#include "set/node_specifiation.inc"   
+#include "set/node_specification.inc"   
    type :: __set
       private
       class(__set_node), allocatable :: root
@@ -122,6 +123,7 @@
 #undef __LEFT
 #undef __RIGHT
 #undef __set_node
+#undef __base_node
 
 ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"

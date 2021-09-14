@@ -27,7 +27,6 @@
       type(__set) :: s
 
       s%tsize = 0
-      s%root => null()
    end function __MANGLE(new_set_empty)
 
 
@@ -59,7 +58,7 @@
    logical function __MANGLE(empty)(this) result(empty)
       class(__set), intent(in) :: this
 
-      empty = .not. associated(this%root)
+      empty = .not. allocated(this%root)
 
    end function __MANGLE(empty)
 
@@ -142,7 +141,7 @@
    subroutine __MANGLE(clear)(this)
       class(__set), intent(inout) :: this
 
-      if (associated(this%root)) deallocate(this%root)
+      if (allocated(this%root)) deallocate(this%root)
       this%tsize = 0
       return
    end subroutine __MANGLE(clear)
@@ -165,7 +164,7 @@
 
       if (present(iter)) iter%tree => this
 
-      if (associated(this%root)) then
+      if (allocated(this%root)) then
 #ifdef __set_multi
          parent => this%find_node(value, .true.)
 #else
@@ -377,9 +376,9 @@
       do while (iter /= last)
          pos => iter%node
          call iter%next()
-         if (associated(pos%right)) then
+         if (pos%has_child(__RIGHT)) then
             call this%erase_nonleaf(pos, __RIGHT)
-         else if (associated(pos%left)) then
+         else if (pos%has_child(__LEFT)) then
             call this%erase_nonleaf(pos, __LEFT)
          else
             parent => pos%parent
@@ -387,7 +386,9 @@
                call parent%set_child(parent%which_child(pos), null())
                call this%rebalance(parent, .false.)
             else
-               this%root => null()
+!!! TODO - will this come out in the wash?
+!!$               this%root => null()
+               deallocate(this%root)
             endif
             deallocate(pos)
          endif
@@ -474,7 +475,7 @@
 !!$      if (present(pos)) then
 !!$         if (associated(pos%left)) call this%write_formatted(pos%left)
 !!$         write(*, *)pos%value, loc(pos), loc(pos%parent), loc(pos%left),  &
-!!$              &       loc(pos%right), pos%height
+!!$              &       loc(pos%right), pos%get_height()
 !!$         if (associated(pos%right)) call this%write_formatted(pos%right)
 !!$      else
 !!$         write(*, *)'size=',this%getsize()
@@ -500,8 +501,8 @@
             if (.not. last .and. (                                           &
                  &     (__MANGLE(order_eq)(find_node%value,value)))) return
             side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%value))
-            if (.not.associated(find_node%child(side))) return
-            find_node => find_node%child(side)
+            if (.not.associated(find_node%get_child(side))) return
+            find_node => find_node%get_child(side)
          end do
       end if
 
@@ -523,18 +524,19 @@
       do while (associated(curr))
          hl=0
          hr=0
-         if (associated(curr%left)) hl=curr%left%height
-         if (associated(curr%right)) hr=curr%right%height
+         if (curr%has_child(__LEFT)) hl=curr%left%get_height()
+         if (curr%has_child(__RIGHT)) hr=curr%right%get_height()
+
          unbalanced=abs(hl-hr)>1
          if (unbalanced) then
             side=merge(__LEFT, __RIGHT, hl > hr)
-            child => curr%child(side)
+            child => curr%get_child(side)
             chl=0
             chr=0
-            if (associated(child%left)) chl=child%left%height
-            if (associated(child%right)) chr=child%right%height
+            if (child%has_child(__LEFT)) chl=child%left%get_height()
+            if (child%has_child(__RIGHT)) chr=child%right%get_height()
             if (chr/=chl) then
-               childside=merge(__LEFT, __RIGHT, chl>chr)
+               childside=merge(__LEFT, __RIGHT, chl > chr)
                if (side/=childside) call this%rot(child, 1-childside)
                call this%rot(curr, 1-side)
             endif
@@ -559,15 +561,17 @@
       parent => pos%parent
       other => pos
       call this%advpos(other, side)
-      child0 => pos%child(side)
-      child1 => pos%child(1-side)
-      otherchild => other%child(side)
+      child0 => pos%get_child(side)
+      child1 => pos%get_child(1-side)
+      otherchild => other%get_child(side)
       otherparent => other%parent
       other%parent => parent
       if (associated(parent)) then
          call parent%set_child(parent%which_child(pos), other)
       else
-         this%root => other
+!!! TODO: needs more thought
+!!$         this%root => other
+         allocate(this%root, source=other)
       endif
       call other%set_child(1-side, child1)
       if (associated(child1)) child1%parent => other
@@ -580,8 +584,11 @@
          if (associated(otherchild)) otherchild%parent => otherparent
          call this%rebalance(otherparent, .false.)
       endif
-      pos%left => null()
-      pos%right => null()
+!!! TODO: needs more thought
+!!$      pos%left => null()
+!!$      pos%right => null()
+      deallocate(pos%left)
+      deallocate(pos%right)
       deallocate(pos)
       return
    end subroutine __MANGLE(erase_nonleaf)
@@ -596,21 +603,21 @@
       type(__set_node), pointer :: prev
 
       if (.not.associated(pos)) then
-         if (.not.associated(this%root)) return
+         if (.not. allocated(this%root)) return
          pos => this%root
-         do while (associated(pos%child(1-dir)))
-            pos => pos%child(1-dir)
+         do while (associated(pos%get_child(1-dir)))
+            pos => pos%get_child(1-dir)
          end do
-      else if (associated(pos%child(dir))) then
-         pos => pos%child(dir)
-         do while (associated(pos%child(1-dir)))
-            pos => pos%child(1-dir)
+      else if (associated(pos%get_child(dir))) then
+         pos => pos%get_child(dir)
+         do while (associated(pos%get_child(1-dir)))
+            pos => pos%get_child(1-dir)
          end do
       else
          prev => pos
          pos => pos%parent
          do while (associated(pos))
-            if (.not.associated(pos%child(dir), prev)) exit
+            if (.not.associated(pos%get_child(dir), prev)) exit
             prev => pos
             pos => pos%parent
          end do
@@ -628,12 +635,14 @@
       type(__set_node), pointer :: parent, child, grandchild => null()
 
       parent => pos%parent
-      child => pos%child(1-dir)
-      if (associated(child)) grandchild => child%child(dir)
+      child => pos%get_child(1-dir)
+      if (associated(child)) grandchild => child%get_child(dir)
       if (associated(parent)) then
          call parent%set_child(parent%which_child(pos), child)
       else
-         this%root => child
+!!! TODO - root?
+!!$         this%root => child
+         allocate(this%root, source=child)
       endif
       pos%parent => child
       call pos%set_child(1-dir, grandchild)
@@ -852,12 +861,12 @@
       class(__set), target, intent(inout) :: this
       type(__set), target, intent(inout) :: x
 
-      type(__set_node), pointer :: tmp
+      class(__set_node), allocatable :: tmp
       integer(kind=GFTL_SIZE_KIND) :: tsize
 
-      tmp => this%root
-      this%root => x%root
-      x%root => tmp
+      call move_alloc(from=this%root, to=tmp)
+      call move_alloc(from=x%root, to=this%root)
+      call move_alloc(from=tmp, to=x%root)
 
       tsize = this%tsize
       this%tsize = x%tsize
@@ -874,6 +883,7 @@
 #undef __LEFT
 #undef __RIGHT
 #undef __set_node
+#undef __base_node
 
    ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"
