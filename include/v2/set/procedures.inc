@@ -17,6 +17,7 @@
 #define __LEFT 0
 #define __RIGHT 1
 
+#define __base_node __MANGLE(BaseNode)
 #define __set_node __MANGLE(Node)
 
 #include "set/node_procedures.inc"
@@ -803,18 +804,6 @@
 
    end subroutine __MANGLE(copy_list)
 #endif
-   ! =======================
-   !  finalize_set()
-   ! =======================
-   recursive subroutine __MANGLE(finalize_set)(this)
-      type(__set), intent(inout) :: this
-
-      if (associated(this%root)) deallocate(this%root)
-
-      return
-   end subroutine __MANGLE(finalize_set)
-
-
    ! Suboptimal implementation
    subroutine __MANGLE(merge)(this, source)
       class(__set), intent(inout) :: this

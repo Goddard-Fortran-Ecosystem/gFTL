@@ -29,24 +29,10 @@
 #endif
    end interface __set
 
-   type :: __set_node
-      type(__set_node), pointer :: parent => null()
-      type(__set_node), pointer :: left => null()
-      type(__set_node), pointer :: right => null()
-      integer :: height=1
-      __T_declare_component__ :: value
-   contains
-      procedure :: child => __MANGLE(child)
-      procedure :: which_child => __MANGLE(which_child)
-      procedure :: set_child => __MANGLE(set_child)
-      procedure, private :: update_height => __MANGLE(update_height)
-      final :: __MANGLE(finalize_node)
-   end type __set_node
-      
-
+#include "set/node_specifiation.inc"   
    type :: __set
       private
-      type(__set_node), pointer :: root => null()
+      class(__set_node), allocatable :: root
       integer(kind=GFTL_SIZE_KIND) :: tsize = 0
    contains
       procedure :: empty => __MANGLE(empty)
@@ -102,7 +88,6 @@
       ! key_compare() and value_compare() are the same thing for Set.
       procedure :: key_compare => __MANGLE(value_compare)
       procedure :: value_compare => __MANGLE(value_compare)
-      final :: __MANGLE(finalize_set)
 
    end type __set
 
