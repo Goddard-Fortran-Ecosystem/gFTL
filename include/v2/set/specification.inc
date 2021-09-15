@@ -33,7 +33,7 @@
 #include "set/node_specification.inc"   
    type :: __set
       private
-      class(__set_node), allocatable :: root
+      class(__base_node), allocatable :: root
       integer(kind=GFTL_SIZE_KIND) :: tsize = 0
    contains
       procedure :: empty => __MANGLE(empty)

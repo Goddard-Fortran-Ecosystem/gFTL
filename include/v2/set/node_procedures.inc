@@ -77,7 +77,7 @@
       case (__LEFT)
          call move_alloc(from=node, to=this%left)
       case (__RIGHT)
-         call move_allooc(from=node, to=this%right)
+         call move_alloc(from=node, to=this%right)
       end select
 
       return
