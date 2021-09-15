@@ -3,7 +3,7 @@
    type :: __set_iterator
       private
       type(__set), pointer :: tree => null()
-      class(__base_node), pointer :: node => null()
+      type(__set_node), pointer :: node => null()
    contains
       procedure :: of => __MANGLE(iter_of)
       procedure :: next => __MANGLE(iter_next)

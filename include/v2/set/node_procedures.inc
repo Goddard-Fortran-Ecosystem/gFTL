@@ -1,3 +1,17 @@
+   ! =======================
+   !  to_node()
+   ! =======================
+   function __MANGLE(to_node)(this) result(node)
+      class(__set_node), target, intent(in) :: this
+      type(__set_node), pointer :: node
+
+      select type(this)
+      type is (__set_node)
+         node => this
+      end select
+
+   end function __MANGLE(to_node)
+
 
    ! =======================
    !  get_parent()

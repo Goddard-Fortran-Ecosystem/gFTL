@@ -156,9 +156,9 @@
       logical, optional, intent(out) :: is_new
       type(__set_iterator), optional, intent(out) :: iter
       type(__set_node), target, allocatable :: new
-      class(__base_node), pointer :: parent
+      type(__set_node), pointer :: parent
 
-      class(__base_node), pointer :: r
+      class(__set_node), pointer :: r
 
       call dump_at_line(this, __LINE__)
       if (present(iter)) iter%tree => this
@@ -193,8 +193,11 @@
          call this%rebalance(parent, .true.)
       else
          allocate(__set_node :: this%root)
-         if (present(iter)) iter%node => this%root
-         r => this%root
+         if (present(iter)) iter%node => this%root%to_node()
+         select type (q => this%root)
+         type is (__set_node)
+            r => q
+         end select
          call r%set_value(value)
 !!$         __T_COPY__(r%value, value)
          if (present(is_new)) then
@@ -370,7 +373,7 @@
       type(__set_iterator), intent(in) :: first
       type(__set_iterator), intent(in) :: last
       type(__set_node), pointer :: parent
-      class(__base_node), pointer :: pos
+      type(__set_node), pointer :: pos
 
       type (__set_iterator) :: iter
 
@@ -493,13 +496,13 @@
    !  find_node
    ! =======================
    function __MANGLE(find_node)(this, value, last) result(find_node)
-      class(__base_node), pointer :: find_node
+      type(__set_node), pointer :: find_node
       class(__set), target, intent(in) :: this
       __T_declare_dummy__, intent(in) :: value
       logical, intent(in) :: last
       integer :: side
 
-      find_node => this%root
+      find_node => this%root%to_node()
       if (associated(find_node)) then
          do
             if (.not. last .and. (                                           &
@@ -559,8 +562,7 @@
    ! =======================
    subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(inout) :: this
-!!$      type(__set_node), pointer, intent(inout) :: pos
-      class(__base_node), pointer, intent(inout) :: pos
+      type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: side
       type(__set_node), pointer :: parent, other, child0, child1
       type(__set_node), pointer :: otherchild, otherparent
@@ -611,7 +613,7 @@
 
       if (.not.associated(pos)) then
          if (.not. allocated(this%root)) return
-         pos => this%root
+         pos => this%root%to_node()
          do while (associated(pos%get_child(1-dir)))
             pos => pos%get_child(1-dir)
          end do
@@ -934,7 +936,7 @@
       class(__set), target, intent(inout) :: this
       type(__set), target, intent(inout) :: x
 
-      class(__set_node), allocatable :: tmp
+      class(__base_node), allocatable :: tmp
       integer(kind=GFTL_SIZE_KIND) :: tsize
 
       call move_alloc(from=this%root, to=tmp)
@@ -957,7 +959,7 @@
       print*
       print*,'At line: ', line
       if (this%size() > 0) then
-         node => this%root
+         node => this%root%to_node()
          call dump(node)
       end if
    end subroutine dump_at_line
