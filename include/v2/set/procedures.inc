@@ -644,7 +644,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
    ! =======================
    subroutine __MANGLE(rot)(this, pos, dir)
       class(__set), intent(inout) :: this
-      type(__set_node), pointer, intent(in) :: pos
+      type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: dir
       type(__set_node), pointer :: parent, child, grandchild => null()
 

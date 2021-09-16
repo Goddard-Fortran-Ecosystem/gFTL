@@ -170,8 +170,11 @@
          if (associated(left, target=child)) then
             side = __LEFT
             return
+         else
+            side = __RIGHT
+            return
          end if
-      else
+      else ! must be at least one child when this procedure is called
          side = __RIGHT
       end if
       return
