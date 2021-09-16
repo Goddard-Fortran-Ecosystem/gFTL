@@ -92,14 +92,13 @@
       end subroutine I_deallocate_child
 
       function I_get_value(this) result(value)
-         import __base_node
-         import __set_node
+         import ! have to import all to get __T as we don't know if it is intrinsic
          __T_declare_result__, pointer :: value
          class(__base_node), target, intent(in) :: this
       end function I_get_value
 
       subroutine I_set_value(this, value)
-         import __base_node
+         import ! have to import all to get __T as we don't know if it is intrinsic
          class(__base_node), intent(inout) :: this
          __T_declare_dummy__, intent(in) :: value
       end subroutine I_set_value

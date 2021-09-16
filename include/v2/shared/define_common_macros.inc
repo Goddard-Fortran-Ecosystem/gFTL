@@ -5,7 +5,8 @@
 ! Per-container name mangling   
 #    define __IDENTITY(x) x
 #    define __COMMA(x) , x
-#    define __MANGLE(proc) __IDENTITY(proc)__IDENTITY(_)__IDENTITY(__guard)
+#    define __MANGLE(proc) __IDENTITY(__guard)__IDENTITY(proc)
+!#    define __MANGLE(proc) __IDENTITY(proc)__IDENTITY(_)__IDENTITY(__guard)
 
 ! Fortran portability support
 #    ifdef  gftl_size_kind

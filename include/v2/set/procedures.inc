@@ -477,6 +477,11 @@
       logical, intent(in) :: last
       integer :: side
 
+      if (.not. allocated(this%root)) then
+         find_node => null()
+         return
+      end if
+
       find_node => this%root%to_node()
       if (associated(find_node)) then
          do
@@ -976,26 +981,26 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       type(__set_node), pointer :: left, right
       type(__set_node), pointer :: parent
 
-      if (associated(node%parent)) then
-         write(*,'(i0,":",i0)',advance='no') node%value, node%parent%value
-      else
-         write(*,'(i0,1x)',advance='no') node%value
-      end if
-      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
-         write(*,'(" (")', advance='no')
-         if (node%has_child(__LEFT)) then
-            call dump(node%get_child(__LEFT))
-         else
-            write(*,'(" *")', advance='no')
-         end if
-         write(*,'(" ")', advance='no')
-         if (node%has_child(__RIGHT)) then
-            call dump(node%get_child(__RIGHT))
-         else
-            write(*,'(" * ")', advance='no')
-         end if
-         write(*,'(" )")', advance='no')
-      end if
+!!$      if (associated(node%parent)) then
+!!$         write(*,'(i0,":",i0)',advance='no') node%value, node%parent%value
+!!$      else
+!!$         write(*,'(i0,1x)',advance='no') node%value
+!!$      end if
+!!$      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
+!!$         write(*,'(" (")', advance='no')
+!!$         if (node%has_child(__LEFT)) then
+!!$            call dump(node%get_child(__LEFT))
+!!$         else
+!!$            write(*,'(" *")', advance='no')
+!!$         end if
+!!$         write(*,'(" ")', advance='no')
+!!$         if (node%has_child(__RIGHT)) then
+!!$            call dump(node%get_child(__RIGHT))
+!!$         else
+!!$            write(*,'(" * ")', advance='no')
+!!$         end if
+!!$         write(*,'(" )")', advance='no')
+!!$      end if
 
    end subroutine dump
       
