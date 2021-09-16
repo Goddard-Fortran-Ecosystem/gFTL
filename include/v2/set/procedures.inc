@@ -160,7 +160,6 @@
 
       class(__set_node), pointer :: r
 
-      call dump_at_line(this, __LINE__)
       if (present(iter)) iter%tree => this
 
       if (allocated(this%root)) then
@@ -199,13 +198,11 @@
             r => q
          end select
          call r%set_value(value)
-!!$         __T_COPY__(r%value, value)
          if (present(is_new)) then
             is_new = .true.
          end if
       endif
       this%tsize = this%tsize + 1
-      call dump_at_line(this, __LINE__)
       return
       if (present(unused)) print*,shape(unused)
 
@@ -388,16 +385,14 @@
          else if (pos%has_child(__LEFT)) then
             call this%erase_nonleaf(pos, __LEFT)
          else
+
             parent => pos%get_parent()
             if (associated(parent)) then
-               call parent%set_child(parent%which_child(pos), null())
+               call parent%deallocate_child(parent%which_child(pos))
                call this%rebalance(parent, .false.)
             else
-!!! TODO - will this come out in the wash?
-!!$               this%root => null()
                deallocate(this%root)
             endif
-            deallocate(pos)
          endif
          this%tsize=this%tsize-1
       end do
@@ -472,26 +467,6 @@
    end function __MANGLE(upper_bound)
 
 
-!!$   ! =======================
-!!$   !  write_formatted
-!!$   ! =======================
-!!$   recursive subroutine __MANGLE(write_formatted)(this, pos)
-!!$      class(__set), intent(in) :: this
-!!$      type(__set_node), pointer, intent(in), optional :: pos
-!!$
-!!$      if (present(pos)) then
-!!$         if (associated(pos%left)) call this%write_formatted(pos%left)
-!!$         write(*, *)pos%value, loc(pos), loc(pos%parent), loc(pos%left),  &
-!!$              &       loc(pos%right), pos%get_height()
-!!$         if (associated(pos%right)) call this%write_formatted(pos%right)
-!!$      else
-!!$         write(*, *)'size=',this%getsize()
-!!$         write(*, *)'root=',loc(this%root)
-!!$         call this%write_formatted(this%root)
-!!$      endif
-!!$      return
-!!$   end subroutine __MANGLE(write_formatted)
-!!$
    ! =======================
    !  find_node
    ! =======================
@@ -533,9 +508,7 @@
          hr=0
          if (curr%has_child(__LEFT)) hl=curr%left%get_height()
          if (curr%has_child(__RIGHT)) hr=curr%right%get_height()
-
          unbalanced=abs(hl-hr)>1
-         print*,__FILE__,__LINE__,'unbalanced? ', unbalanced, hl, hr
          if (unbalanced) then
             side = merge(__LEFT, __RIGHT, hl > hr)
             child => curr%get_child(side)
@@ -545,7 +518,6 @@
             if (child%has_child(__RIGHT)) chr = child%right%get_height()
             if (chr /= chl) then
                child_side=merge(__LEFT, __RIGHT, chl > chr)
-               print*,__FILE__,__LINE__, 'same side?',side, child_side
                if (side /= child_side) call this%rot(child, 1-child_side)
                call this%rot(curr, 1-side)
             endif
@@ -560,45 +532,78 @@
    ! =======================
    !  erase_nonleaf
    ! =======================
-   subroutine __MANGLE(erase_nonleaf)(this, pos, side)
+subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(inout) :: this
       type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: side
       type(__set_node), pointer :: parent, other, child0, child1
       type(__set_node), pointer :: otherchild, otherparent
+      class(__base_node), allocatable :: tmp_other, tmp_pos
+      
+      parent => pos%parent
+      other => pos
+      call this%advpos(other, side)
+      child0 => pos%get_child(side)
+      child1 => pos%get_child(1-side)
+      otherchild => other%get_child(side)
+      otherparent => other%parent
 
-!!$      parent => pos%parent
-!!$      other => pos
-!!$      call this%advpos(other, side)
-!!$      child0 => pos%get_child(side)
-!!$      child1 => pos%get_child(1-side)
-!!$      otherchild => other%get_child(side)
-!!$      otherparent => other%parent
-!!$      other%parent => parent
-!!$      if (associated(parent)) then
-!!$         call parent%set_child(parent%which_child(pos), other)
-!!$      else
-!!$!!! TODO: needs more thought
-!!$  !!$         this%root => other
-!!$         allocate(this%root, source=other)
-!!$      endif
-!!$      call other%set_child(1-side, child1)
-!!$      if (associated(child1)) child1%parent => other
-!!$      if (associated(other, target=child0)) then
-!!$         call this%rebalance(other, .false.)
-!!$      else
-!!$         call other%set_child(side, child0)
-!!$         child0%parent => other
-!!$         call otherparent%set_child(1-side, otherchild)
-!!$         if (associated(otherchild)) otherchild%parent => otherparent
-!!$         call this%rebalance(otherparent, .false.)
-!!$      endif
-!!$!!! TODO: needs more thought
-!!$  !!$      pos%left => null()
-!!$  !!$      pos%right => null()
-!!$      deallocate(pos%left)
-!!$      deallocate(pos%right)
-!!$      deallocate(pos)
+      select case (other%which_side_am_i())
+      case (__LEFT)
+         call move_alloc(from=otherparent%left, to=tmp_other)
+      case (__RIGHT)
+         call move_alloc(from=otherparent%right, to=tmp_other)
+      end select
+
+      call tmp_other%set_parent(parent) 
+      if (associated(parent)) then
+         select case (pos%which_side_am_i())
+         case (__LEFT)
+            call move_alloc(from=parent%left, to=tmp_pos)
+            call move_alloc(from=tmp_other, to=parent%left)
+         case (__RIGHT)
+            call move_alloc(from=parent%right, to=tmp_pos)
+            call move_alloc(from=tmp_other, to=parent%right)
+         end select
+      else
+         call move_alloc(from=this%root, to=tmp_pos)
+         call move_alloc(from=tmp_other, to=this%root)
+      endif
+
+      if (associated(child1)) then
+         select type (q => tmp_pos)
+         type is (__set_node)
+            select case(side)
+            case (__LEFT)
+               call move_alloc(from=q%right, to=other%right)
+               call other%right%set_parent(other)
+            case (__RIGHT)
+               call move_alloc(from=q%left, to=other%left)
+               call other%left%set_parent(other)
+            end select
+         end select
+      end if
+
+      if (associated(other, target=child0)) then ! degenerate
+         call this%rebalance(other, .false.)
+      else
+         select type (q => tmp_pos)
+         type is (__set_node)
+            select case (side)
+            case (__LEFT)
+               call move_alloc(from=q%left, to=other%left)
+               call other%left%set_parent(other)
+            case (__RIGHT)
+               call move_alloc(from=q%right, to=other%right)
+               call other%right%set_parent(other)
+            end select
+         end select
+         if (associated(otherchild)) call otherchild%set_parent(otherparent)
+         call this%rebalance(otherparent, .false.)
+      end if
+
+      ! pos has been gutted.  We can delete the rest.
+      deallocate(tmp_pos)
       return
    end subroutine __MANGLE(erase_nonleaf)
 
@@ -894,11 +899,11 @@
       type(__set), target, intent(inout) :: source
 
       type(__set_iterator) :: iter
-!!$      type(__set_node), pointer :: parent
 
       iter = source%begin()
       do while (iter /= source%end())
          if (this%count(iter%of()) == 0) then
+            
             call this%insert(iter%of())
             iter = source%erase(iter)
          else
@@ -956,12 +961,14 @@
       integer, intent(in) :: line
 
       type(__set_node), pointer :: node
+
       print*
       print*,'At line: ', line
       if (this%size() > 0) then
          node => this%root%to_node()
          call dump(node)
       end if
+      print*
    end subroutine dump_at_line
 
    recursive subroutine dump(node)
@@ -970,24 +977,26 @@
       type(__set_node), pointer :: parent
 
       if (associated(node%parent)) then
-         write(*,'(i0,":",i0,1x,"( ")',advance='no') node%value, node%parent%value
+         write(*,'(i0,":",i0)',advance='no') node%value, node%parent%value
       else
-         write(*,'(i0,1x,"( ")',advance='no') node%value
+         write(*,'(i0,1x)',advance='no') node%value
       end if
-      if (node%has_child(__LEFT)) then
-         call dump(node%get_child(__LEFT))
-      else
-         write(*,'("* ")',advance='no')
+      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
+         write(*,'(" (")', advance='no')
+         if (node%has_child(__LEFT)) then
+            call dump(node%get_child(__LEFT))
+         else
+            write(*,'(" *")', advance='no')
+         end if
+         write(*,'(" ")', advance='no')
+         if (node%has_child(__RIGHT)) then
+            call dump(node%get_child(__RIGHT))
+         else
+            write(*,'(" * ")', advance='no')
+         end if
+         write(*,'(" )")', advance='no')
       end if
-         
-      if (node%has_child(__RIGHT)) then
-         write(*,'(a1)',advance='no') '('
-         call dump(node%get_child(__RIGHT))
-         write(*,'(a1)',advance='no') ')'
-      else
-         write(*,'(" * ")',advance='no')
-      end if
-      write(*,'(" )")',advance='no')
+
    end subroutine dump
       
 

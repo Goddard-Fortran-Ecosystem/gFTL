@@ -17,6 +17,9 @@
   within expressions involving user defined `==` and `<`.   Some attempt was made to use
   `ASSOCIATE` instead, but NAG 7.0 had trouble with one of those.    A reproducer for
   the Intel problem has been created and will be submitted.
+- Set container now uses ALLOCATABLE for children rather than pointers.   This makes
+  some internal algorithms a bit painful to implement, but avoids the need for explicit
+  FINAL methods which appear to expose buggy compilers.  (Hard to isolate though.)
 
 
 ## [1.4.1] - 2021-04-09

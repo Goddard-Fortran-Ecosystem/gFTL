@@ -98,6 +98,24 @@
       
    end subroutine __MANGLE(set_child)
 
+   ! =======================
+   !  deallocate_child()
+   ! =======================
+   subroutine __MANGLE(deallocate_child)(this, side)
+      class(__set_node), intent(inout) :: this
+      integer, intent(in) :: side
+
+      select case (side)
+      case (__LEFT)
+         deallocate(this%left)
+      case (__RIGHT)
+         deallocate(this%right)
+      end select
+
+      return
+      
+   end subroutine __MANGLE(deallocate_child)
+
 
    ! =======================
    !  set_value()
