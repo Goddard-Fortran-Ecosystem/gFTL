@@ -4,7 +4,7 @@
 # v2.0 is coming
 
 Starting with the current release, new containers and changed
-interfaces are availale through the gftl-v2 library.  When v2.0 is
+interfaces are available through the gftl-v2 library.  When v2.0 is
 ultimately released, these will become the default, and users that
 want to stick with the original interfaces will need to choose
 gftl-v1.
