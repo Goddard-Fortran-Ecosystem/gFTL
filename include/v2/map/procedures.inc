@@ -44,7 +44,6 @@
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
 #include "set/procedures.inc"
-!#include "altset/procedures.inc"
 
 #undef __set
 #undef __set_iterator

@@ -85,9 +85,6 @@ cpp_copy_parameter (T __set_T T/copy_T_to_set_T.inc)
 cpp_copy_parameter (__set_T __T T/copy_set_T_to_internal_T.inc)
 process_m4 (set_T cpp_undef.m4 T/undef_set_T.inc)
 
-# altset
-cpp_copy_parameter (__set_T __vector_T T/copy_set_T_to_vector_T.inc)
-
 # map
 cpp_copy_parameter (Key __map_Key Key/copy_Key_to_map_Key.inc)
 cpp_copy_parameter (__map_Key __pair_T1 T1/copy_map_Key_to_pair_T1.inc)
@@ -120,8 +117,6 @@ cpp_copy_parameter (__vector_T __algorithm_T T/copy_vector_T_to_algorithm_T.inc)
 cpp_copy_parameter (__set_T __algorithm_T T/copy_set_T_to_algorithm_T.inc)
 cpp_copy_parameter (__map_pair __algorithm_T T/copy_map_pair_to_algorithm_T.inc)
 process_m4 (algorithm_T cpp_undef.m4 T/undef_algorithm_T.inc)
-
-
 
 add_subdirectory(tests EXCLUDE_FROM_ALL)
 
