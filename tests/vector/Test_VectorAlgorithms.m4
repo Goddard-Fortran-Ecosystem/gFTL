@@ -6,6 +6,7 @@ module Test_{}_type()VectorAlgorithms
    use _type()Vector_mod
    ifelse(_type(),{Foo},{use Foo_mod})
    ifelse(_type(),{FooPoly},{use Foo_mod})
+   ifelse(_type(),{AbstractBar},{use AbstractBar_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"
@@ -23,6 +24,7 @@ define({ASSERT},{
 #if defined(__GFORTRAN__)
 ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
 _type(),{FooPoly},@assertTrue({$1}=={$2}),
+_type(),{AbstractBar},@assertTrue({$1}=={$2}),
 _type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
 @assertEqual({$1},{$2}))
 #else

@@ -4,11 +4,13 @@
          type(__iterator), intent(in) :: first
          type(__iterator), intent(in) :: last
          __T_declare_dummy__, intent(in) :: value
-         
 
+         __T_declare_result__, pointer :: ptr
+         
          iter = first
          do while (iter /= last)
-            if (__T_EQ__(iter%of(),value)) return
+            ptr => iter%of()
+            if (__T_EQ__(ptr,value)) return
             call iter%next()
          end do
          

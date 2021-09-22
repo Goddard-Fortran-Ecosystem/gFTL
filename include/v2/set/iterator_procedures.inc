@@ -6,7 +6,7 @@
       __T_declare_result__, pointer :: value
 
       if (associated(this%node)) then
-         value  => this%node%value
+         value  => this%node%get_value()
       else
          value => null()
       end if

@@ -13,6 +13,7 @@ set (types
   real_rank_2_deferred_shape
   Foo
   FooPoly
+  AbstractBar
   )
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})

@@ -17,6 +17,7 @@
 #define __LEFT 0
 #define __RIGHT 1
 
+#define __base_node __MANGLE(BaseNode)
 #define __set_node __MANGLE(Node)
 
 #include "set/node_procedures.inc"
@@ -26,7 +27,6 @@
       type(__set) :: s
 
       s%tsize = 0
-      s%root => null()
    end function __MANGLE(new_set_empty)
 
 
@@ -58,7 +58,7 @@
    logical function __MANGLE(empty)(this) result(empty)
       class(__set), intent(in) :: this
 
-      empty = .not. associated(this%root)
+      empty = .not. allocated(this%root)
 
    end function __MANGLE(empty)
 
@@ -98,7 +98,7 @@
       find%node => this%find_node(value, .false.)
 
       if (associated(find%node)) then
-         if (.not. __MANGLE(order_eq)(find%node%value,value)) then
+         if (.not. __MANGLE(order_eq)(find%node%get_value(),value)) then
             find%node => null()
          end if
       end if
@@ -141,7 +141,7 @@
    subroutine __MANGLE(clear)(this)
       class(__set), intent(inout) :: this
 
-      if (associated(this%root)) deallocate(this%root)
+      if (allocated(this%root)) deallocate(this%root)
       this%tsize = 0
       return
    end subroutine __MANGLE(clear)
@@ -155,26 +155,24 @@
       type (KeywordEnforcer), optional :: unused
       logical, optional, intent(out) :: is_new
       type(__set_iterator), optional, intent(out) :: iter
-      type(__set_node), pointer :: new
+      type(__set_node), target, allocatable :: new
       type(__set_node), pointer :: parent
 
-      type(__set_node), pointer :: r
-
-      if (present(unused)) print*,shape(unused)
+      class(__set_node), pointer :: r
 
       if (present(iter)) iter%tree => this
 
-      if (associated(this%root)) then
+      if (allocated(this%root)) then
 #ifdef __set_multi
          parent => this%find_node(value, .true.)
 #else
          parent => this%find_node(value, .false.)
-         if (__MANGLE(order_eq)(parent%value, value)) then
+         if (__MANGLE(order_eq)(parent%get_value(), value)) then
             if (present(iter)) then
                iter%node => parent
             else
                __T_FREE__(parent%value)
-               __T_COPY__(parent%value, value)
+               call parent%set_value(value)
             endif
             if (present(is_new)) then
                is_new = .false.
@@ -188,21 +186,26 @@
 
          allocate(new)
          if (present(iter)) iter%node => new
-         new%parent => parent
+         call new%set_parent(parent)
          __T_COPY__(new%value, value)
-         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%value)),new)
+         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%get_value())),new)
          call this%rebalance(parent, .true.)
       else
-         allocate(this%root)
-         if (present(iter)) iter%node => this%root
-         r => this%root
-         __T_COPY__(r%value, value)
+         allocate(__set_node :: this%root)
+         if (present(iter)) iter%node => this%root%to_node()
+         select type (q => this%root)
+         type is (__set_node)
+            r => q
+         end select
+         call r%set_value(value)
          if (present(is_new)) then
             is_new = .true.
          end if
       endif
       this%tsize = this%tsize + 1
       return
+      if (present(unused)) print*,shape(unused)
+
    end subroutine __MANGLE(insert_single)
 
 
@@ -366,7 +369,8 @@
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(in) :: first
       type(__set_iterator), intent(in) :: last
-      type(__set_node), pointer :: pos, parent
+      type(__set_node), pointer :: parent
+      type(__set_node), pointer :: pos
 
       type (__set_iterator) :: iter
 
@@ -376,19 +380,19 @@
       do while (iter /= last)
          pos => iter%node
          call iter%next()
-         if (associated(pos%right)) then
+         if (pos%has_child(__RIGHT)) then
             call this%erase_nonleaf(pos, __RIGHT)
-         else if (associated(pos%left)) then
+         else if (pos%has_child(__LEFT)) then
             call this%erase_nonleaf(pos, __LEFT)
          else
-            parent => pos%parent
+
+            parent => pos%get_parent()
             if (associated(parent)) then
-               call parent%set_child(parent%which_child(pos), null())
+               call parent%deallocate_child(parent%which_child(pos))
                call this%rebalance(parent, .false.)
             else
-               this%root => null()
+               deallocate(this%root)
             endif
-            deallocate(pos)
          endif
          this%tsize=this%tsize-1
       end do
@@ -463,26 +467,6 @@
    end function __MANGLE(upper_bound)
 
 
-!!$   ! =======================
-!!$   !  write_formatted
-!!$   ! =======================
-!!$   recursive subroutine __MANGLE(write_formatted)(this, pos)
-!!$      class(__set), intent(in) :: this
-!!$      type(__set_node), pointer, intent(in), optional :: pos
-!!$
-!!$      if (present(pos)) then
-!!$         if (associated(pos%left)) call this%write_formatted(pos%left)
-!!$         write(*, *)pos%value, loc(pos), loc(pos%parent), loc(pos%left),  &
-!!$              &       loc(pos%right), pos%height
-!!$         if (associated(pos%right)) call this%write_formatted(pos%right)
-!!$      else
-!!$         write(*, *)'size=',this%getsize()
-!!$         write(*, *)'root=',loc(this%root)
-!!$         call this%write_formatted(this%root)
-!!$      endif
-!!$      return
-!!$   end subroutine __MANGLE(write_formatted)
-!!$
    ! =======================
    !  find_node
    ! =======================
@@ -493,14 +477,19 @@
       logical, intent(in) :: last
       integer :: side
 
-      find_node => this%root
+      if (.not. allocated(this%root)) then
+         find_node => null()
+         return
+      end if
+
+      find_node => this%root%to_node()
       if (associated(find_node)) then
          do
             if (.not. last .and. (                                           &
-                 &     (__MANGLE(order_eq)(find_node%value,value)))) return
-            side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%value))
-            if (.not.associated(find_node%child(side))) return
-            find_node => find_node%child(side)
+                 &     (__MANGLE(order_eq)(find_node%get_value(),value)))) return
+            side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%get_value()))
+            if (.not.associated(find_node%get_child(side))) return
+            find_node => find_node%get_child(side)
          end do
       end if
 
@@ -515,26 +504,26 @@
       type(__set_node), pointer, intent(in) :: pos
       logical, intent(in) :: once
       type(__set_node), pointer :: curr, child
-      integer :: hl, hr, chl, chr, side, childside
+      integer :: hl, hr, chl, chr, side, child_side
       logical :: unbalanced
 
       curr => pos
       do while (associated(curr))
          hl=0
          hr=0
-         if (associated(curr%left)) hl=curr%left%height
-         if (associated(curr%right)) hr=curr%right%height
+         if (curr%has_child(__LEFT)) hl=curr%left%get_height()
+         if (curr%has_child(__RIGHT)) hr=curr%right%get_height()
          unbalanced=abs(hl-hr)>1
          if (unbalanced) then
-            side=merge(__LEFT, __RIGHT, hl > hr)
-            child => curr%child(side)
-            chl=0
-            chr=0
-            if (associated(child%left)) chl=child%left%height
-            if (associated(child%right)) chr=child%right%height
-            if (chr/=chl) then
-               childside=merge(__LEFT, __RIGHT, chl>chr)
-               if (side/=childside) call this%rot(child, 1-childside)
+            side = merge(__LEFT, __RIGHT, hl > hr)
+            child => curr%get_child(side)
+            chl = 0
+            chr = 0
+            if (child%has_child(__LEFT)) chl = child%left%get_height()
+            if (child%has_child(__RIGHT)) chr = child%right%get_height()
+            if (chr /= chl) then
+               child_side=merge(__LEFT, __RIGHT, chl > chr)
+               if (side /= child_side) call this%rot(child, 1-child_side)
                call this%rot(curr, 1-side)
             endif
          endif
@@ -548,40 +537,78 @@
    ! =======================
    !  erase_nonleaf
    ! =======================
-   subroutine __MANGLE(erase_nonleaf)(this, pos, side)
+subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(inout) :: this
       type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: side
       type(__set_node), pointer :: parent, other, child0, child1
       type(__set_node), pointer :: otherchild, otherparent
-
+      class(__base_node), allocatable :: tmp_other, tmp_pos
+      
       parent => pos%parent
       other => pos
       call this%advpos(other, side)
-      child0 => pos%child(side)
-      child1 => pos%child(1-side)
-      otherchild => other%child(side)
+      child0 => pos%get_child(side)
+      child1 => pos%get_child(1-side)
+      otherchild => other%get_child(side)
       otherparent => other%parent
-      other%parent => parent
+
+      select case (other%which_side_am_i())
+      case (__LEFT)
+         call move_alloc(from=otherparent%left, to=tmp_other)
+      case (__RIGHT)
+         call move_alloc(from=otherparent%right, to=tmp_other)
+      end select
+
+      call tmp_other%set_parent(parent) 
       if (associated(parent)) then
-         call parent%set_child(parent%which_child(pos), other)
+         select case (pos%which_side_am_i())
+         case (__LEFT)
+            call move_alloc(from=parent%left, to=tmp_pos)
+            call move_alloc(from=tmp_other, to=parent%left)
+         case (__RIGHT)
+            call move_alloc(from=parent%right, to=tmp_pos)
+            call move_alloc(from=tmp_other, to=parent%right)
+         end select
       else
-         this%root => other
+         call move_alloc(from=this%root, to=tmp_pos)
+         call move_alloc(from=tmp_other, to=this%root)
       endif
-      call other%set_child(1-side, child1)
-      if (associated(child1)) child1%parent => other
-      if (associated(other, target=child0)) then
+
+      if (associated(child1)) then
+         select type (q => tmp_pos)
+         type is (__set_node)
+            select case(side)
+            case (__LEFT)
+               call move_alloc(from=q%right, to=other%right)
+               call other%right%set_parent(other)
+            case (__RIGHT)
+               call move_alloc(from=q%left, to=other%left)
+               call other%left%set_parent(other)
+            end select
+         end select
+      end if
+
+      if (associated(other, target=child0)) then ! degenerate
          call this%rebalance(other, .false.)
       else
-         call other%set_child(side, child0)
-         child0%parent => other
-         call otherparent%set_child(1-side, otherchild)
-         if (associated(otherchild)) otherchild%parent => otherparent
+         select type (q => tmp_pos)
+         type is (__set_node)
+            select case (side)
+            case (__LEFT)
+               call move_alloc(from=q%left, to=other%left)
+               call other%left%set_parent(other)
+            case (__RIGHT)
+               call move_alloc(from=q%right, to=other%right)
+               call other%right%set_parent(other)
+            end select
+         end select
+         if (associated(otherchild)) call otherchild%set_parent(otherparent)
          call this%rebalance(otherparent, .false.)
-      endif
-      pos%left => null()
-      pos%right => null()
-      deallocate(pos)
+      end if
+
+      ! pos has been gutted.  We can delete the rest.
+      deallocate(tmp_pos)
       return
    end subroutine __MANGLE(erase_nonleaf)
 
@@ -595,21 +622,21 @@
       type(__set_node), pointer :: prev
 
       if (.not.associated(pos)) then
-         if (.not.associated(this%root)) return
-         pos => this%root
-         do while (associated(pos%child(1-dir)))
-            pos => pos%child(1-dir)
+         if (.not. allocated(this%root)) return
+         pos => this%root%to_node()
+         do while (associated(pos%get_child(1-dir)))
+            pos => pos%get_child(1-dir)
          end do
-      else if (associated(pos%child(dir))) then
-         pos => pos%child(dir)
-         do while (associated(pos%child(1-dir)))
-            pos => pos%child(1-dir)
+      else if (associated(pos%get_child(dir))) then
+         pos => pos%get_child(dir)
+         do while (associated(pos%get_child(1-dir)))
+            pos => pos%get_child(1-dir)
          end do
       else
          prev => pos
          pos => pos%parent
          do while (associated(pos))
-            if (.not.associated(pos%child(dir), prev)) exit
+            if (.not.associated(pos%get_child(dir), prev)) exit
             prev => pos
             pos => pos%parent
          end do
@@ -622,28 +649,96 @@
    ! =======================
    subroutine __MANGLE(rot)(this, pos, dir)
       class(__set), intent(inout) :: this
-      type(__set_node), pointer, intent(in) :: pos
+      type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: dir
       type(__set_node), pointer :: parent, child, grandchild => null()
 
+      class(__base_node), allocatable :: A, B, C
+      integer :: pos_side
+      
       parent => pos%parent
-      child => pos%child(1-dir)
-      if (associated(child)) grandchild => child%child(dir)
+
       if (associated(parent)) then
-         call parent%set_child(parent%which_child(pos), child)
+         pos_side = pos%which_side_am_i()
+         select case (pos_side)
+         case (__LEFT)
+            call move_alloc(from=parent%left, to=A)
+         case (__RIGHT)
+            call move_alloc(from=parent%right, to=A)
+         end select
       else
-         this%root => child
+         call move_alloc(from=this%root, to=A)
       endif
-      pos%parent => child
-      call pos%set_child(1-dir, grandchild)
+
+      child => pos%get_child(1-dir)
       if (associated(child)) then
-         child%parent => parent
-         call child%set_child(dir, pos)
-         if (associated(grandchild)) grandchild%parent => pos
+         select case (1-dir)
+         case (__LEFT)
+            call move_alloc(from=pos%left, to=B)
+         case (__RIGHT)
+            call move_alloc(from=pos%right, to=B)
+         end select
+      else
+         error stop "isn't there always a child for rot?"
+      end if
+      
+      grandchild => child%get_child(dir)
+      if (associated(grandchild)) then
+         select case (dir)
+         case (__LEFT)
+            call move_alloc(from=child%left, to=C)
+         case (__RIGHT)
+            call move_alloc(from=child%right, to=C)
+         end select
+      end if
+
+      if (associated(grandchild)) then
+         select type (A)
+         type is (__set_node)
+            select case (1-dir)
+            case (__LEFT)
+               call move_alloc(from=C, to=A%left)
+            case (__RIGHT)
+               call move_alloc(from=C, to=A%right)
+            end select
+         end select
+         call grandchild%set_parent(pos)
+      end if
+
+      if (associated(child)) then
+         select type (B)
+         type is (__set_node)
+            select case (dir)
+            case (__LEFT)
+               call move_alloc(from=A, to=B%left)
+            case (__RIGHT)
+               call move_alloc(from=A, to=B%right)
+            end select
+         end select
+         call pos%set_parent(child)
+      end if
+      
+      if (associated(parent)) then
+         select case (pos_side)
+         case (__LEFT)
+            call move_alloc(from=B, to=parent%left)
+         case (__RIGHT)
+            call move_alloc(from=B, to=parent%right)
+         end select
+      else
+         call move_alloc(from=B, to=this%root)
       endif
+      call child%set_parent(parent)
+
       call pos%update_height()
       if (associated(child)) call child%update_height()
       return
+   contains
+
+      subroutine cheat(a,b)
+         type(__set_node), allocatable :: a, b
+         call move_alloc(from=a, to=b)
+      end subroutine cheat
    end subroutine __MANGLE(rot)
 
    logical function __MANGLE(value_compare)(this, x, y) result(value_compare)
@@ -803,29 +898,17 @@
 
    end subroutine __MANGLE(copy_list)
 #endif
-   ! =======================
-   !  finalize_set()
-   ! =======================
-   recursive subroutine __MANGLE(finalize_set)(this)
-      type(__set), intent(inout) :: this
-
-      if (associated(this%root)) deallocate(this%root)
-
-      return
-   end subroutine __MANGLE(finalize_set)
-
-
    ! Suboptimal implementation
    subroutine __MANGLE(merge)(this, source)
       class(__set), intent(inout) :: this
       type(__set), target, intent(inout) :: source
 
       type(__set_iterator) :: iter
-!!$      type(__set_node), pointer :: parent
 
       iter = source%begin()
       do while (iter /= source%end())
          if (this%count(iter%of()) == 0) then
+            
             call this%insert(iter%of())
             iter = source%erase(iter)
          else
@@ -863,12 +946,12 @@
       class(__set), target, intent(inout) :: this
       type(__set), target, intent(inout) :: x
 
-      type(__set_node), pointer :: tmp
+      class(__base_node), allocatable :: tmp
       integer(kind=GFTL_SIZE_KIND) :: tsize
 
-      tmp => this%root
-      this%root => x%root
-      x%root => tmp
+      call move_alloc(from=this%root, to=tmp)
+      call move_alloc(from=x%root, to=this%root)
+      call move_alloc(from=tmp, to=x%root)
 
       tsize = this%tsize
       this%tsize = x%tsize
@@ -878,6 +961,49 @@
    end subroutine __MANGLE(swap)
 
 
+   subroutine dump_at_line(this, line)
+      type(__set), target, intent(in) :: this
+      integer, intent(in) :: line
+
+      type(__set_node), pointer :: node
+
+      print*
+      print*,'At line: ', line
+      if (this%size() > 0) then
+         node => this%root%to_node()
+         call dump(node)
+      end if
+      print*
+   end subroutine dump_at_line
+
+   recursive subroutine dump(node)
+      type(__set_node), target, intent(in) :: node
+      type(__set_node), pointer :: left, right
+      type(__set_node), pointer :: parent
+
+!!$      if (associated(node%parent)) then
+!!$         write(*,'(i0,":",i0)',advance='no') node%value, node%parent%value
+!!$      else
+!!$         write(*,'(i0,1x)',advance='no') node%value
+!!$      end if
+!!$      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
+!!$         write(*,'(" (")', advance='no')
+!!$         if (node%has_child(__LEFT)) then
+!!$            call dump(node%get_child(__LEFT))
+!!$         else
+!!$            write(*,'(" *")', advance='no')
+!!$         end if
+!!$         write(*,'(" ")', advance='no')
+!!$         if (node%has_child(__RIGHT)) then
+!!$            call dump(node%get_child(__RIGHT))
+!!$         else
+!!$            write(*,'(" * ")', advance='no')
+!!$         end if
+!!$         write(*,'(" )")', advance='no')
+!!$      end if
+
+   end subroutine dump
+      
 
 #include "set/iterator_procedures.inc"
 
@@ -885,6 +1011,7 @@
 #undef __LEFT
 #undef __RIGHT
 #undef __set_node
+#undef __base_node
 
    ! undef derived template parameters
 #include "parameters/T/undef_derived_macros.inc"

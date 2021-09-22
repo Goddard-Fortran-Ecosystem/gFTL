@@ -390,7 +390,10 @@
          type(__omap_pair), intent(in) :: a
          type(__omap_pair), intent(in) :: b
 
-         less_than = __Key_LT__(a%first,b%first)
+         associate (ka => a%first, kb => b%first)
+           less_than = __Key_LT__(ka, kb)
+         end associate
+           
 
          return
       end function __MANGLE(key_less_than)

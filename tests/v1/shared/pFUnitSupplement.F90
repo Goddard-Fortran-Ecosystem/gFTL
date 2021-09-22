@@ -9,7 +9,6 @@
 
 
 module pFUnitSupplement_mod
-   use funit, only: shadowAssert => assertEqual
    use funit, only: SourceLocation
    use funit, only: throw
    use iso_fortran_env, only: INT64
@@ -28,6 +27,7 @@ contains
 
 
    subroutine assertEqual_unlimited(a, b, location)
+      use funit, only: shadowAssert => assertEqual
       class (*), intent(in) :: a
       class (*), intent(in) :: b
       type (SourceLocation), intent(in) :: location
@@ -35,8 +35,10 @@ contains
       select type (pa => a)
 
       type is (integer)
+         print*,__FILE__,__LINE__
          select type (pb => b)
          type is (integer)
+            print*,__FILE__,__LINE__
             call shadowAssert(pa, pb, location=location)
          type is (integer(kind=INT64))
             call shadowAssert(pa, pb, location=location)

@@ -40,17 +40,24 @@
       type(__pair), target, intent(in) :: a
       type(__pair), target, intent(in) :: b
 
+#if !(defined(__T1_EQ__) | defined(__T2_EQ__))
+      logical :: lt, gt
+#endif      
 #if defined(__T1_EQ__)
       equal = __T1_EQ__(a%first,b%first)
 #else
-      equal = .not. (__T1_LT__(a%first,b%first) .or. __T1_LT__(a%first,b%first))
+      lt = __T1_LT__(a%first,b%first)
+      gt = __T1_LT__(b%first,a%first)
+      equal = .not. (lt .or. gt)
 #endif
       if (.not. equal) return
       
 #if defined(__T2_EQ__)
       equal = __T2_EQ__(a%second,a%second)
 #else
-      equal = .not. (__T2_LT__(a%second,b%second) .or. __T1_LT__(a%second,b%second))
+      lt = __T2_LT__(a%second,b%second)
+      gt = __T2_LT__(b%second,a%second)
+      equal = .not. (lt .or. gt)
 #endif
 
       return
@@ -78,10 +85,15 @@
       type(__pair), intent(in) :: a
       type(__pair), intent(in) :: b
 
-      lt = __T1_LT__(a%first, b%first)
+      logical :: gt
+      logical :: lt1, lt2
 
+      lt = __T1_LT__(a%first, b%first)
       if (lt) return
-      lt = .not. (__T1_LT__(b%first, a%first)) .and. (__T2_LT__(a%second, b%second))
+
+      lt1 = __T1_LT__(b%first, a%first)
+      lt2 = __T2_LT__(a%second, b%second)
+      lt = (.not. lt1) .and. lt2
       
    end function __MANGLE(less_than)
 
