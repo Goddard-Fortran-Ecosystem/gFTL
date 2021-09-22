@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## [1.5.0] - 2021-09-22
+
+This will be the final (non bugfix) release of version 1.
+
+Future version 2 releases will break backwards compatibility by making
+the v2 containers default, but v1 containers will still be accessible with
+minimal changes.
+
+Documentation for v2 containers should be completed soon, but as
+always, the comparable C++ STL documentation is generally quite close
+modulo Fortran syntax.
+
+
 ### Fixed
 - Added support for compiling on Windows with Intel compiler.
 - Corrected uninitialized value problem with v2 maps.  Detected
@@ -21,6 +34,12 @@
   some internal algorithms a bit painful to implement, but avoids the need for explicit
   FINAL methods which appear to expose buggy compilers.  (Hard to isolate though.)
 
+### Deleted
+
+- Deleted altSet support in v2 containers.  This was always intendend
+  as a workaround for limitations in FINAL implementation by various
+  compilers.  But v2 set now uses allocatable containers and sidesteps
+  this.  (Also, altset was never completed in v2 containers anyway.)
 
 ## [1.4.1] - 2021-04-09
 
