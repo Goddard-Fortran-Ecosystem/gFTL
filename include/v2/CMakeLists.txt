@@ -26,7 +26,7 @@ endif()
 add_subdirectory(shared)
 add_subdirectory(parameters)
 
-foreach (template ptr pair vector deque queue stack set altset map ordered_map algorithms)
+foreach (template ptr pair vector deque queue stack set map ordered_map algorithms)
   install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${template} DESTINATION "${dest}/include/v2"
     PATTERN CMakeLists.txt EXCLUDE
     PATTERN *~ EXCLUDE
