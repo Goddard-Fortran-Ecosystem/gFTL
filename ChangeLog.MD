@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## [1.5.1] - 2021-09-28
+
+### Fixed
+
+- RECURSIVE needed in some procedures for advanced use cases.
+
+
 ## [1.5.0] - 2021-09-22
 
 This will be the final (non bugfix) release of version 1.

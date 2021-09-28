@@ -138,7 +138,7 @@
    ! =======================
    !  clear
    ! =======================
-   subroutine __MANGLE(clear)(this)
+   recursive subroutine __MANGLE(clear)(this)
       class(__set), intent(inout) :: this
 
       if (allocated(this%root)) deallocate(this%root)
