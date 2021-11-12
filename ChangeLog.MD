@@ -1,6 +1,8 @@
 # Change Log
 
 ## Unreleased
+- On Windows M4 program is now downloaded from SourceForge during CMake configuration
+  if it is not found.
 
 ## [1.5.0] - 2021-09-22
 
