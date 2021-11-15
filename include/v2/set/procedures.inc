@@ -358,6 +358,8 @@
 #else
          n = 1
 #endif
+      else
+         n = 0
       end if
    end function __MANGLE(erase_value)
 
@@ -385,7 +387,6 @@
          else if (pos%has_child(__LEFT)) then
             call this%erase_nonleaf(pos, __LEFT)
          else
-
             parent => pos%get_parent()
             if (associated(parent)) then
                call parent%deallocate_child(parent%which_child(pos))
@@ -596,14 +597,18 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
          type is (__set_node)
             select case (side)
             case (__LEFT)
+               if (associated(otherchild)) call move_alloc(from=other%left, to=otherparent%right)
                call move_alloc(from=q%left, to=other%left)
                call other%left%set_parent(other)
             case (__RIGHT)
+               if (associated(otherchild)) call move_alloc(from=other%right, to=otherparent%left)
                call move_alloc(from=q%right, to=other%right)
                call other%right%set_parent(other)
             end select
          end select
-         if (associated(otherchild)) call otherchild%set_parent(otherparent)
+         if (associated(otherchild)) then
+            call otherchild%set_parent(otherparent)
+         end if
          call this%rebalance(otherparent, .false.)
       end if
 
@@ -966,9 +971,11 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       integer, intent(in) :: line
 
       type(__set_node), pointer :: node
+      class(__base_node), pointer :: lch, rch
 
-      print*
-      print*,'At line: ', line
+      lch => this%root%get_child(__LEFT)
+      rch => this%root%get_child(__RIGHT)
+!!$      print*,'At line: ', line, lch%get_height(), rch%get_height()
       if (this%size() > 0) then
          node => this%root%to_node()
          call dump(node)
@@ -976,6 +983,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       print*
    end subroutine dump_at_line
 
+#ifdef __DEBUG__   
    recursive subroutine dump(node)
       type(__set_node), target, intent(in) :: node
       type(__set_node), pointer :: left, right
@@ -984,26 +992,26 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
 !!$      if (associated(node%parent)) then
 !!$         write(*,'(i0,":",i0)',advance='no') node%value, node%parent%value
 !!$      else
-!!$         write(*,'(i0,1x)',advance='no') node%value
+         write(*,'(i0,1x)',advance='no') node%value
 !!$      end if
-!!$      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
-!!$         write(*,'(" (")', advance='no')
-!!$         if (node%has_child(__LEFT)) then
-!!$            call dump(node%get_child(__LEFT))
-!!$         else
-!!$            write(*,'(" *")', advance='no')
-!!$         end if
-!!$         write(*,'(" ")', advance='no')
-!!$         if (node%has_child(__RIGHT)) then
-!!$            call dump(node%get_child(__RIGHT))
-!!$         else
-!!$            write(*,'(" * ")', advance='no')
-!!$         end if
-!!$         write(*,'(" )")', advance='no')
-!!$      end if
+      if (node%has_child(__LEFT) .or. node%has_child(__RIGHT)) then
+         write(*,'(" (")', advance='no')
+         if (node%has_child(__LEFT)) then
+            call dump(node%get_child(__LEFT))
+         else
+            write(*,'(" *")', advance='no')
+         end if
+         write(*,'(" ")', advance='no')
+         if (node%has_child(__RIGHT)) then
+            call dump(node%get_child(__RIGHT))
+         else
+            write(*,'(" * ")', advance='no')
+         end if
+         write(*,'(" )")', advance='no')
+      end if
 
    end subroutine dump
-      
+#endif      
 
 #include "set/iterator_procedures.inc"
 
