@@ -2,7 +2,7 @@
 
 if(WIN32)
   set(no_optimize "-Od")
-  set(check_all "-check:all)
+  set(check_all "-check:all")
   set(debug_info "-Zi")
   set(save_temps "-Qsave-temps")
   set(disable_warning_for_long_names "-Qdiag-disable:5462")
