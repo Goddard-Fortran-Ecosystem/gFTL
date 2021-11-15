@@ -966,6 +966,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
    end subroutine __MANGLE(swap)
 
 
+#ifdef __DEBUG__   
    subroutine dump_at_line(this, line)
       type(__set), target, intent(in) :: this
       integer, intent(in) :: line
@@ -983,7 +984,6 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       print*
    end subroutine dump_at_line
 
-#ifdef __DEBUG__   
    recursive subroutine dump(node)
       type(__set_node), target, intent(in) :: node
       type(__set_node), pointer :: left, right
