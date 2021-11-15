@@ -14,9 +14,18 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif ()
 
 # For BSD systems use GNU m4
-find_program( M4 NAMES "gm4" "m4")
+find_program( M4 NAMES "gm4" "m4" PATHS "${CMAKE_CURRENT_BINARY_DIR}/m4/bin")
 if( NOT M4 )
-  message( SEND_ERROR "m4 program not found" )
+  if( WIN32 )
+    message( STATUS "Downloading M4 program from SourceForge")
+    file(DOWNLOAD "https://downloads.sourceforge.net/gnuwin32/m4-1.4.14-1-bin.zip" "${CMAKE_CURRENT_BINARY_DIR}/m4-bin.zip" )
+    file(DOWNLOAD "http://downloads.sourceforge.net/gnuwin32/m4-1.4.14-1-dep.zip" "${CMAKE_CURRENT_BINARY_DIR}/m4-dep.zip" )
+    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_BINARY_DIR}/m4-bin.zip" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/m4" PATTERNS "bin")
+    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_BINARY_DIR}/m4-dep.zip" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/m4" PATTERNS "bin")
+    set(M4 "${CMAKE_CURRENT_BINARY_DIR}/m4/bin/m4.exe")
+  else ()
+    message( SEND_ERROR "m4 program not found" )
+  endif()
 endif()
 
 # Some preprocessing tests can be run without the
