@@ -276,7 +276,7 @@
 ! =======================
 !  clear
 ! =======================
-      subroutine __MANGLE(clear)(this)
+      recursive subroutine __MANGLE(clear)(this)
       class(__omap), intent(inout) :: this
 
       call this%map%clear()

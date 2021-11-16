@@ -4,6 +4,25 @@
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
 
+## [1.5.2] - 2021-11-14
+
+### Fixed
+
+- Bug in set::erase() where certan scenarios resulted in
+  an incorrect (and inconsistent) state.
+  
+- Missing quotes in Intel.cmake for Windows builds.  Recent CMake versions
+  detect this even in Linux builds.
+  
+
+
+## [1.5.1] - 2021-09-28
+
+### Fixed
+
+- RECURSIVE needed in some procedures for advanced use cases.
+
+
 ## [1.5.0] - 2021-09-22
 
 This will be the final (non bugfix) release of version 1.
