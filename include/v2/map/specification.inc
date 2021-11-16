@@ -144,7 +144,7 @@
 #define __algorithm_iterator __map_iterator
 #include "algorithms/specification.inc"
 #undef __algorithm_container
-#undef __algorithm_riterator
+#undef __algorithm_iterator
 #undef __algorithm_guard
 #include "parameters/T/undef_algorithm_T.inc"
    
