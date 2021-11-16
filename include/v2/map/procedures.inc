@@ -272,7 +272,7 @@
 ! =======================
 !  clear
 ! =======================
-      subroutine __MANGLE(clear)(this)
+      recursive subroutine __MANGLE(clear)(this)
       class(__map), intent(inout) :: this
 
       call this%tree%clear()
