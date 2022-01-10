@@ -40,7 +40,7 @@
       type(__pair), target, intent(in) :: a
       type(__pair), target, intent(in) :: b
 
-#if !(defined(__T1_EQ__) | defined(__T2_EQ__))
+#if (!defined(__T1_EQ__) | !defined(__T2_EQ__))
       logical :: lt, gt
 #endif      
 #if defined(__T1_EQ__)

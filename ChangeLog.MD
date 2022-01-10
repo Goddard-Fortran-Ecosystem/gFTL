@@ -1,6 +1,20 @@
 # Change Log
 
 ## Unreleased
+
+## [1.5.4] - 2022-01-10
+
+### Fixed
+
+- Minor bug in Pair template that is exposed under certain combinations
+  of key/value types.   If key has "==" but "value" does not, then some
+  local variable declarations are skipped that are needed.
+  
+- Declarion of Ptr argument in Pointer template.   Still not ready 
+  for production use though.
+
+### Changed
+
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
 
