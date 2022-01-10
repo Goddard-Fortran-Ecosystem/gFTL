@@ -4,6 +4,12 @@
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
 
+## [1.5.3] - 2021-11-16
+
+### Fixed
+
+- Fixed typo in `#undef` that was creating noisy compiler warnings.  (@ZedThree)
+
 ## [1.5.2] - 2021-11-14
 
 ### Fixed
