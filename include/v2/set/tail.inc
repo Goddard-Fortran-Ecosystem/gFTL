@@ -3,6 +3,9 @@
 #ifdef __set
 #    undef __set
 #endif
+#ifdef __set_constructor
+#    undef __set_constructor
+#endif
 #ifdef __set_iterator
 #    undef __set_iterator
 #endif

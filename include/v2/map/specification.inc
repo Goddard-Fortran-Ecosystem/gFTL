@@ -39,6 +39,7 @@
    ! Cannot use __MANGLE() for these definitions because the guard
    ! prefix will be different in the other context.
 #define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#define __set_constructor __IDENTITY(__map_guard)__IDENTITY(__map_set_constructor)
 #define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
 #define __set_T __map_pair
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
@@ -47,6 +48,7 @@
 #include "set/specification.inc"
 
 #undef __set
+#undef __set_constructor
 #undef __set_iterator
 #undef __set_guard
 #include "parameters/T/undef_set_T.inc"
@@ -59,11 +61,11 @@
 #include "parameters/Key/define_derived_macros.inc"
 #include "parameters/T/define_derived_macros.inc"
 
-   interface __map
+   interface __map_constructor
       module procedure __MANGLE(new_map_empty)
       module procedure __MANGLE(new_map_copy)
       module procedure __MANGLE(new_map_initializer_list)
-   end interface __map
+   end interface __map_constructor
 
    type :: __map
       private

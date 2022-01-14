@@ -18,17 +18,6 @@
 #define __base_node __MANGLE(BaseNode)
 #define __set_node __MANGLE(Node)
 
-   ! Structure constructors
-   interface __set
-      module procedure __MANGLE(new_set_empty)
-!!$      module procedure __MANGLE(new_set_range)
-      module procedure __MANGLE(new_set_copy)
-!!$      module procedure __MANGLE(new_set_move)
-
-#ifdef __T_listable__
-      module procedure __MANGLE(new_set_initializer_list)
-#endif
-   end interface __set
 
 #include "set/node_specification.inc"   
    type :: __set
@@ -91,6 +80,17 @@
       procedure :: value_compare => __MANGLE(value_compare)
 
    end type __set
+
+   ! Structure constructors
+   interface __set_constructor
+      module procedure __MANGLE(new_set_empty)
+!!$      module procedure __MANGLE(new_set_range)
+      module procedure __MANGLE(new_set_copy)
+!!$      module procedure __MANGLE(new_set_move)
+#ifdef __T_listable__
+      module procedure __MANGLE(new_set_initializer_list)
+#endif
+   end interface __set_constructor
 
    interface swap
       module procedure __MANGLE(swap)

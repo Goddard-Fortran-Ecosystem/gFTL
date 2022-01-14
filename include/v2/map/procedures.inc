@@ -38,6 +38,7 @@
 
 
 #define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#define __set_constructor __IDENTITY(__map_guard)__IDENTITY(__map_set_constructor)
 #define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
 #define __set_T __map_pair
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
@@ -46,6 +47,7 @@
 #include "set/procedures.inc"
 
 #undef __set
+#undef __set_constructor
 #undef __set_iterator
 #include "parameters/T/undef_set_T.inc"
 #undef __set_guard
@@ -67,7 +69,7 @@
       function __MANGLE(new_map_empty)() result(m)
          type (__map) :: m
 
-         m%tree = __MANGLE(Set)()
+         m%tree = __MANGLE(__map_set_constructor)()
       end function __MANGLE(new_map_empty)
 
       function __MANGLE(new_map_copy)(x) result(m)
@@ -83,7 +85,7 @@
          
          integer :: i
 
-         m = __map()
+         m = __map_constructor()
          do i = 1, size(il)
             call m%insert(il(i))
          end do

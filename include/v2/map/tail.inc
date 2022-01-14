@@ -4,6 +4,9 @@
 #ifdef __map
 #    undef __map
 #endif
+#ifdef __map_constructor
+#    undef __map_constructor
+#endif
 #ifdef __map_iterator
 #    undef __map_iterator
 #endif
@@ -16,6 +19,9 @@
 
 #ifdef __map_set
 #  undef __map_set
+#endif
+#ifdef __map_set_constructor
+#  undef __map_set_constructor
 #endif
 #ifdef __map_set_node
 #  undef __map_set_node

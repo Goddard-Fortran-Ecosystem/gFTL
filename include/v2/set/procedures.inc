@@ -898,7 +898,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(out) :: this
       __T_declare_dummy__, intent(in) :: il(:)
 
-      this = __set ()
+      this = __set_constructor ()
       call this%insert(il)
 
    end subroutine __MANGLE(copy_list)

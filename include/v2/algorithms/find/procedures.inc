@@ -34,18 +34,18 @@
 #endif      
       
 !#ifdef __algorithm_predicate
+      
+       logical function __MANGLE(predicate)(item)
+          implicit none
+          __T_declare_dummy__, intent(in) :: item
+       end function __MANGLE(predicate)
+
       function __MANGLE(find_if)(first, last, p) result(it)
          type(__iterator) :: it
          type(__iterator), intent(in) :: first
          type(__iterator), intent(in) :: last
-         interface
-            logical function p(item)
-               import
-               implicit none
-               __T_declare_dummy__, intent(in) :: item
-            end function p
-         end interface
-         
+         procedure(__MANGLE(predicate)) :: p
+
          it = first
          do while (it /= last)
             if (p(it%of())) return
@@ -61,13 +61,7 @@
          type(__iterator) :: it
          type(__iterator), intent(in) :: first
          type(__iterator), intent(in) :: last
-         interface
-            logical function q(item)
-               import
-               implicit none
-               __T_declare_dummy__, intent(in) :: item
-            end function q
-         end interface
+         procedure(__MANGLE(predicate)) :: q
          
          it = first
          do while (it /= last)

@@ -1,6 +1,7 @@
    private
    
    public :: __set
+   public :: __set_constructor
    public :: __set_iterator
    
    ! Non type-bound procedures

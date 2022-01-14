@@ -13,10 +13,12 @@
 #include "parameters/T/copy_omap_T_to_map_T.inc"
 
 #define __map __IDENTITY(__omap_guard)__IDENTITY(Map)
+#define __map_constructor __IDENTITY(__map)__IDENTITY(_c)
 #define __map_iterator __IDENTITY(__omap_guard)__IDENTITY(MapIterator)
 #define __map_pair __omap_pair
 
 #define __map_set __omap_set
+#define __map_set_constructor __IDENTITY(__omap_set)__IDENTITY(_c)
 #define __map_set_node __omap_set_node
 #define __map_set_iterator __omap_set_iterator
 #define __map_guard __IDENTITY(__omap_guard)__IDENTITY(I_)
@@ -24,10 +26,12 @@
 #include "map/specification.inc"
 
 #undef __map_set
+#undef __map_set_constructor
 #undef __map_set_node
 #undef __map_set_iterator
 
 #undef __map
+#undef __map_constructor
 #undef __map_pair
 #undef __map_iterator
 #undef __map_guard
