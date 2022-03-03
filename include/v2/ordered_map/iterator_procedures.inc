@@ -113,8 +113,11 @@
       subroutine __MANGLE(iter_advance_size_kind)(it, n)
          type(__omap_iterator), intent(inout) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
+         integer :: i
 
-         call it%add(n)
+         do i = 1, n
+            call it%next()
+         end do
 
          return
       end subroutine __MANGLE(iter_advance_size_kind)
@@ -122,8 +125,11 @@
       subroutine __MANGLE(iter_advance_default)(it, n)
          type(__omap_iterator), intent(inout) :: it
          integer, intent(in) :: n
-
-         call it%add(n)
+         integer :: i
+         
+         do i = 1, n
+            call it%next()
+         end do
 
          return
       end subroutine __MANGLE(iter_advance_default)
@@ -171,9 +177,13 @@
          type(__omap_iterator) :: new_it
          type(__omap_iterator), intent(in) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
+         integer :: i
 
          new_it = it
-         call new_it%add(n)
+         
+         do i = 1, n
+            call new_it%next()
+         end do
 
          return
       end function __MANGLE(iter_next_n_size_kind)
@@ -182,9 +192,12 @@
          type(__omap_iterator) :: new_it
          type(__omap_iterator), intent(in) :: it
          integer, intent(in) :: n
+         integer :: i
 
          new_it = it
-         call new_it%add(n)
+         do i = 1, n
+            call new_it%next()
+         end do
 
          return
       end function __MANGLE(iter_next_n_default)
@@ -206,9 +219,12 @@
          type(__omap_iterator) :: new_it
          type(__omap_iterator), intent(in) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
+         integer :: i
 
          new_it = it
-         call new_it%sub(n)
+         do i = 1, n
+            call new_it%prev()
+         end do
 
          return
       end function __MANGLE(iter_prev_n_size_kind)
@@ -217,9 +233,13 @@
          type(__omap_iterator) :: new_it
          type(__omap_iterator), intent(in) :: it
          integer, intent(in) :: n
+         integer :: i
 
          new_it = it
-         call new_it%sub(n)
+
+         do i = 1, n
+            call new_it%prev()
+         end do
 
          return
       end function __MANGLE(iter_prev_n_default)
