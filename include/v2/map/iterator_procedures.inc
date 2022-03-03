@@ -101,8 +101,11 @@
          type(__map_iterator), intent(inout) :: it
          integer(kind=__gftl_size_kind), intent(in) :: n
 
-         call it%add(n)
+      integer :: i
 
+      do i = 1, n
+         call it%next()
+      end do
          return
       end subroutine __MANGLE(iter_advance_size_kind)
 
