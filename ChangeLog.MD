@@ -1,8 +1,17 @@
 # Change Log
 
 ## Unreleased
+
+## [1.5.4] - 2022-03-07
+
+## Added
+
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
+  
+## Fixed
+
+- Some procedures for `map` and `ordered_map` had not been implemented and are now added in.  This was an oversight and thus being treated as a bug rather than a feature. 
 
 ## [1.5.3] - 2021-11-16
 
