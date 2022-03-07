@@ -22,7 +22,7 @@
 #include "parameters/T/define_derived_macros.inc"
 
    function __MANGLE(new_ptr)(trgt) result(p)
-      type (Ptr) :: p
+      type (__ptr) :: p
       __T_declare_component__, target, intent(in) :: trgt
       p%ptr => trgt
    end function __MANGLE(new_ptr)

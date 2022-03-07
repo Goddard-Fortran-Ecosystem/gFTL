@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.com/Goddard-Fortran-Ecosystem/gFTL.svg?branch=master)](https://travis-ci.com/Goddard-Fortran-Ecosystem/gFTL)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+This package generates containers (Vector, Set, Map, ...) with Fortran interfaces.   It is essentially a brute force analog of C++ STL.
+
 # v2.0 is coming
 
 Starting with the current release, new containers and changed

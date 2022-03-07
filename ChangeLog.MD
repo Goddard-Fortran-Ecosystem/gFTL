@@ -2,16 +2,31 @@
 
 ## Unreleased
 
-## [1.5.4] - 2022-03-07
 
-## Added
+## [1.5.5] - 2022-03-07
+
+
+### Changed
 
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
-  
-## Fixed
+
+### Fixed
 
 - Some procedures for `map` and `ordered_map` had not been implemented and are now added in.  This was an oversight and thus being treated as a bug rather than a feature. 
+
+
+## [1.5.4] - 2022-01-10
+
+### Fixed
+
+- Minor bug in Pair template that is exposed under certain combinations
+  of key/value types.   If key has "==" but "value" does not, then some
+  local variable declarations are skipped that are needed.
+  
+- Declarion of Ptr argument in Pointer template.   Still not ready 
+  for production use though.
+  
 
 ## [1.5.3] - 2021-11-16
 
@@ -173,8 +188,6 @@ modulo Fortran syntax.
 
   This is to allow useful diagnostics via DTIO.
   
-
->>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 ## [1.2.5] - 2020-04-06
 
 ### Fixed
