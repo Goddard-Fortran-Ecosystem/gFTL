@@ -31,15 +31,15 @@ jobs:
       OMPI_ALLOW_RUN_AS_ROOT: 1
       OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
       OMPI_MCA_btl_vader_single_copy_mechanism: none
-    if: matrix.compiler == 'gfortran-8':
-      env:
-        CC: gcc-8
-    if: matrix.compiler == 'gfortran-9':
-      env:
-        CC: gcc-9
-    if: matrix.compiler == 'gfortran-10':
-      env:
-        CC: gcc-10
+      if: matrix.compiler == 'gfortran-8':
+        env:
+          CC: gcc-8
+      if: matrix.compiler == 'gfortran-9':
+        env:
+          CC: gcc-9
+      if: matrix.compiler == 'gfortran-10':
+        env:
+          CC: gcc-10
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}
     steps:
