@@ -8,6 +8,10 @@
 
 - NVHPC compiler support
 
+### Removed
+
+- Removed `PGI.mk` and `NAG.mk` files which seem to be unneeded cruft
+
 ## [1.5.5] - 2022-03-07
 
 
