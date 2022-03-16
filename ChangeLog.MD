@@ -2,9 +2,11 @@
 
 ## Unreleased
 
+## [1.6.0] - 2022-03-16
+
 ### Added
 
-- Add `NVHPC.cmake` file for NVHPC support
+- NVHPC compiler support
 
 ### Removed
 
