@@ -54,6 +54,7 @@ jobs:
       - name: Compiler Versions
         run: |
           ${FC} --version
+          ${CC} --version
           cmake --version
       - name: Checkout
         uses: actions/checkout@v2
