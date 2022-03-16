@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+## [1.6.0] - 2022-03-16
+
+### Added
+
+- NVHPC compiler support
 
 ## [1.5.5] - 2022-03-07
 
