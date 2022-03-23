@@ -1,4 +1,4 @@
-# Compiler specific flags for PGI Fortran compiler
+# Compiler specific flags for NVIDIA Fortran compiler
 
 set(traceback "-traceback")
 set(check_all "-Mbounds -Mchkstk")
