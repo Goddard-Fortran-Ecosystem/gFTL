@@ -694,7 +694,7 @@
    ! =======================
    !  downsize()
    ! =======================
-   subroutine __MANGLE(downsize)(this, newsize)
+   recursive subroutine __MANGLE(downsize)(this, newsize)
       class(__vector), intent(inout) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize  ! assumes newsize<=size()
       integer(kind=GFTL_SIZE_KIND) :: i
@@ -713,7 +713,7 @@
    ! =======================
    !  clear
    ! =======================
-   subroutine __MANGLE(clear)(this)
+   recursive subroutine __MANGLE(clear)(this)
       class(__vector), intent(inout) :: this
 
       call this%downsize(0_GFTL_SIZE_KIND)

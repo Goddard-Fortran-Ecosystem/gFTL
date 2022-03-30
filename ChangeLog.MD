@@ -3,6 +3,14 @@
 ## Unreleased
 
 
+## [1.5.6] - 2022-03-30
+
+### Fixed
+
+- Missing RECURSIVE on vector clear() method.   This can be a problem
+  in some use cases (yaFyaml) involving recursive data structures such
+  as sequence-of-sequence.
+
 ## [1.5.5] - 2022-03-07
 
 
