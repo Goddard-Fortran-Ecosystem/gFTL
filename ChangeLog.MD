@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## [1.6.1] - 2022-03-30
+
+### Fixed
+
+- Missing RECURSIVE on methods in vector template.  This is necessary
+  for some use cases involving recursive data structures.  In particular
+  sequences-of-sequences in yaFyaml.  GFortran has not yet implemented
+  default RECURSIVE, which is what actually makes this necessary.  (So not
+  technically a bug, but ...)
+  
 ## [1.6.0] - 2022-03-16
 
 ### Added
