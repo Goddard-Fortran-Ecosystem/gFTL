@@ -374,7 +374,7 @@
 !  copyFrom
 ! =======================
 
-      subroutine __MANGLE(deep_copy)(this, x)
+      recursive subroutine __MANGLE(deep_copy)(this, x)
          class(__omap), intent(out) :: this
          type(__omap), intent(in) :: x
 

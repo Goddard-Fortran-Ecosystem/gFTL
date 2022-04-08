@@ -68,7 +68,9 @@
       procedure :: merge  => __MANGLE(merge)
 
       procedure :: deep_copy => __MANGLE(deep_copy)
-      generic :: assignment(=) => deep_copy
+#ifdef __GFORTRAN__
+!!$      generic :: assignment(=) => deep_copy
+#endif
 #ifdef __T_listable__
       procedure :: copy_list => __MANGLE(copy_list)
       generic :: assignment(=) => copy_list
