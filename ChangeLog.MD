@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## [1.7.0] - 2022-04-08
+
+### Changed
+
+- Eliminated type-bound overload of `assignment(=)` for set, map, and ordered_map.  It was found that
+  it caused problems with ifort 2021.5.0 and not needed by other compilers after other recent changes.
+
+- Also made deep-copy RECURSIVE, as this is needed in the yaFyaml use
+  case.  RECURSIVE is of course now default in Fortran, but not all compilers
+  have implemented this consistently at this time.
+
 ## [1.6.0] - 2022-03-16
 
 ### Added
