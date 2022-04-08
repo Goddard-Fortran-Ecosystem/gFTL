@@ -875,12 +875,13 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
    ! =======================
    !   deep_copy (assignment)
    ! =======================
-   subroutine __MANGLE(deep_copy)(this, other)
+   recursive subroutine __MANGLE(deep_copy)(this, other)
       class(__set), target, intent(out) :: this
       class(__set), target, intent(in) :: other
 
       type(__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
+
 
       iter = other%begin()
       do while (iter /= other%end())
@@ -890,7 +891,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       end do
 
       this%tsize = other%tsize
-
+         
    end subroutine __MANGLE(deep_copy)
 
 #ifdef __T_listable__
@@ -898,7 +899,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(out) :: this
       __T_declare_dummy__, intent(in) :: il(:)
 
-      this = __set ()
+!!$      this = __set ()
       call this%insert(il)
 
    end subroutine __MANGLE(copy_list)
