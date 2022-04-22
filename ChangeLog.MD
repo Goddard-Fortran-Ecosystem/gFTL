@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Fixed
+
+- Fix misspelling of SUCCESS
+
 ## [1.7.0] - 2022-04-08
 
 ### Changed
