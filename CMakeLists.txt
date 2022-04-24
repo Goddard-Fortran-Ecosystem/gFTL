@@ -4,7 +4,7 @@ if (COMMAND cmake_policy)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.7.0
+  VERSION 1.7.1
   LANGUAGES NONE)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

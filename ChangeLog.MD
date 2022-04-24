@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+## [1.7.1] - 2022-04-24
+
+### Fixed
+
+- Corrected previous commit that eliminitade the non intrinsic
+  assignment for set, map, and `ordered_map` containers.  Just had not
+  thought through why these are needed: internal pointers are not
+  correctly established by intrinsic assignment.  I was too focused on
+  the nice property that allocatable components ar correctly
+  _deallocated_.   Use cases would sometimes work, because the compiler
+  was avoiding copies when using constructors. 
+
 ## [1.7.0] - 2022-04-08
 
 ### Changed
