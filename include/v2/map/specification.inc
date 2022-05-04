@@ -104,6 +104,7 @@
 !#ifdef _DUMP_MAP
 !      procedure :: dump => mapdump
 !#endif
+      procedure :: verify => __MANGLE(verify)
    end type __map
 
 
