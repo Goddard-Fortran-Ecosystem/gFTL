@@ -312,7 +312,7 @@
    ! =======================
    !  insert()
    ! =======================
-   function __MANGLE(insert_one)(this, pos, value) result(iter)
+   recursive function __MANGLE(insert_one)(this, pos, value) result(iter)
       type(__vector_iterator) :: iter
       class(__vector), target, intent(inout) :: this
       type(__vector_iterator), intent(in) :: pos
@@ -322,7 +322,7 @@
 
    end function __MANGLE(insert_one)
 
-   function __MANGLE(insert_count_size_kind)(this, pos, count, value) result(iter)
+   recursive function __MANGLE(insert_count_size_kind)(this, pos, count, value) result(iter)
       type(__vector_iterator) :: iter
       class(__vector), target, intent(inout) :: this
       type(__vector_iterator), intent(in) :: pos
@@ -591,7 +591,7 @@
    ! =======================
    !  push_back()
    ! =======================
-   subroutine __MANGLE(push_back)(this, value, unused, rc)
+   recursive subroutine __MANGLE(push_back)(this, value, unused, rc)
       class(__vector), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional, intent(in) :: unused

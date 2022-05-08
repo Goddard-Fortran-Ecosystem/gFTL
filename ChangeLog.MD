@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## [1.7.2] - 2022-05-08
+
+### Fixed
+
+- Patched (again) such that the assignment operator for Set invokes a deep copy.  Previously I mistakenly thought that since the data structure now uses ALLOCATABLE components that Fortran intrinsic assignment would suffice.  But forgot that the "parent" component is still a pointer.  Failures from this assumption were subtle as often parents would point to   correctly looking copies outside the intended data structure.
+
+- Missing RECURSIVE declarations on some procedures.  The issue arises for YAML data structures where a map may contain items of the same map type and similarly for vectors.
+
+### Added
+
+- A verify() method was added to several containers to aid in debugging some of the problems mentioned above.   Users of gFTL should not use this method - its interface may change and the procedure may even disappear in later releases.
+
+
 ## [1.7.1] - 2022-04-24
 
 ### Fixed

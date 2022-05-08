@@ -7,4 +7,8 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
+#ifdef _UNUSED_DUMMY
+#  undef _UNUSED_DUMMY
+#endif
+   
 #define _UNUSED_DUMMY(dummy) if (.false.) print*,shape(dummy)

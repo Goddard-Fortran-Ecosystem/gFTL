@@ -126,7 +126,7 @@
 ! =======================
 !  insert
 ! =======================
-      subroutine __MANGLE(insert_key_value)(this, key, value)
+      recursive subroutine __MANGLE(insert_key_value)(this, key, value)
          class (__omap), intent(inout) :: this
          __Key_declare_dummy__, intent(in) :: key
          __T_declare_dummy__, intent(in) :: value
@@ -145,7 +145,7 @@
 
       ! TODO: This implemetation requires to searches for
       ! the element.  Should be improved
-      subroutine __MANGLE(insert_pair)(this, p)
+      recursive subroutine __MANGLE(insert_pair)(this, p)
          class (__omap), intent(inout) :: this
          type (__omap_pair), intent(in) :: p
 
@@ -397,6 +397,13 @@
 
          return
       end function __MANGLE(key_less_than)
+
+      recursive logical function __MANGLE(verify)(this) result(verify)
+         class (__omap), target, intent(in) :: this
+
+         verify = this%map%verify()
+      end function __MANGLE(verify)
+
 
 
 #include "ordered_map/iterator_procedures.inc"

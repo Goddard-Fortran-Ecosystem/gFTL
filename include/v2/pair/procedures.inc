@@ -27,8 +27,9 @@
       type (Pair) :: p
       __T1_declare_dummy__, intent(in) :: first
       __T2_declare_dummy__, intent(in) :: second
-      p%first = first
-      p%second = second
+      __T1_COPY__(p%first, first)
+      __T2_COPY__(p%second, second)
+
    end function __MANGLE(new_pair)
 
 
