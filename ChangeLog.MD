@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## Fixed
+
+- Fix misspelling of SUCCESS
+
 ## [1.7.2] - 2022-05-08
 
 ### Fixed
@@ -14,18 +18,18 @@
 
 - A verify() method was added to several containers to aid in debugging some of the problems mentioned above.   Users of gFTL should not use this method - its interface may change and the procedure may even disappear in later releases.
 
-
 ## [1.7.1] - 2022-04-24
 
 ### Fixed
 
-- Corrected previous commit that eliminitade the non intrinsic
+- Corrected previous commit that eliminated the non intrinsic
   assignment for set, map, and `ordered_map` containers.  Just had not
   thought through why these are needed: internal pointers are not
   correctly established by intrinsic assignment.  I was too focused on
   the nice property that allocatable components ar correctly
   _deallocated_.   Use cases would sometimes work, because the compiler
   was avoiding copies when using constructors. 
+p
 
 ## [1.7.0] - 2022-04-08
 
