@@ -73,7 +73,7 @@
 ! =======================
 !  next
 ! =======================
-      subroutine __MANGLE(iter_next)(this)
+      recursive subroutine __MANGLE(iter_next)(this)
          class(__map_iterator), intent(inout) :: this
 
          call this%set_iter%next()

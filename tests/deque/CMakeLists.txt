@@ -6,8 +6,8 @@ set (types
   unlimited
   integer_shape_3
   real_rank_2_deferred_shape
-  Foo
-  FooPoly
+#  Foo
+#  FooPoly
   )
 
 set (src ${CMAKE_CURRENT_SOURCE_DIR})

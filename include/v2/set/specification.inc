@@ -90,7 +90,7 @@
       ! key_compare() and value_compare() are the same thing for Set.
       procedure :: key_compare => __MANGLE(value_compare)
       procedure :: value_compare => __MANGLE(value_compare)
-
+      procedure :: verify => __MANGLE(verify)
    end type __set
 
    interface swap
