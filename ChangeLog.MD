@@ -6,6 +6,8 @@
 
 - Fix misspelling of SUCCESS
 
+- Reactivated unit tests (involving Foo) that were deactivated as a workaround for some NAG 7.1 compiler releases.
+
 ## [1.7.2] - 2022-05-08
 
 ### Fixed

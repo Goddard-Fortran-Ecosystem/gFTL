@@ -5,11 +5,7 @@ set (types
   integer32
   character_len17
   deferred_string
-#  Foo
-#  logical
-#  unlimited
-#  integer_shape_3
-#  real_rank_2_deferred_shape
+  Foo
   )
 
 
