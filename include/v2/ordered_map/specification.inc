@@ -104,9 +104,8 @@
 
       procedure :: count => __MANGLE(count)
       procedure :: deep_copy => __MANGLE(deep_copy)
-#ifdef __GFORTRAN__
-!!$      generic :: assignment(=) => deep_copy
-#endif
+      generic :: assignment(=) => deep_copy
+
 !#ifdef _DUMP_MAP
 !      procedure :: dump => mapdump
 !#endif
