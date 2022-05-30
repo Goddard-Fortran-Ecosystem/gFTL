@@ -76,7 +76,8 @@ contains
 
       counter = counter + 1
       p1 = (counter == 1)
-      
+
+     __UNUSED_DUMMY(value)
    end function p1
    
    logical function p2(value)
@@ -85,6 +86,7 @@ contains
       counter = counter + 1
       p2 = (counter == 2)
       
+     __UNUSED_DUMMY(value)
    end function p2
 
    subroutine reset_counter()
@@ -111,6 +113,8 @@ contains
       iter = find_if(s%begin(), s%end(), p1)
       @assert_that(counter, is(1))
 
+      ! The following line is to avoid compiler warning about not referencing iter
+      __UNUSED_DUMMY(iter)
       
    end subroutine test_if
 
@@ -125,7 +129,6 @@ contains
       call s%insert(two)
       call s%insert(three)
 
-
       call reset_counter()
       iter = find_if_not(s%begin(), s%end(), p1)
       @assert_that(counter, is(2))
@@ -133,7 +136,10 @@ contains
       call reset_counter()
       iter = find_if_not(s%begin(), s%end(), p2)
       @assert_that(counter, is(1))
-      
+
+      ! The following line is to avoid compiler warning about not referencing iter
+      __UNUSED_DUMMY(iter)
+
    end subroutine test_if_not
 
 end module Test_{}_type()SetAlgorithms

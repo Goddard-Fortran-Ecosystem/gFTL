@@ -9,6 +9,8 @@
 
 ## Fixed
 
+- Fixed bug in `vector::insert_range()` (needs a unit test)
+
 - Added `TARGET` to some dummy arguments to prevent NAG from doing copy-in / copy-out.  Seems to 
   have been causing a memory corruption issue with the yaFyaml package, but might indicate a bug
   in yaFyaml (or gFTL).

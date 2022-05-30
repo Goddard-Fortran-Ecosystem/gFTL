@@ -67,6 +67,15 @@
 #include "parameters/Key/define_derived_macros.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+   subroutine __MANGLE(unused_procedure)()
+      ! The following are an adhoc way to suppress compiler
+      ! warnings about parameters not used in this template
+      __UNUSED_DUMMY(BAD_ALLOC)
+      __UNUSED_DUMMY(ILLEGAL_INPUT)
+      __UNUSED_DUMMY(LENGTH_ERROR)
+      __UNUSED_DUMMY(TYPE_HAS_NO_DEFAULT_VALUE)
+      __UNUSED_DUMMY(NO_TYPE__)
+   end subroutine __MANGLE(unused_procedure)
 
 ! This constructor is needed in situations where an empty dictionary needs to be
 ! passed to a procedure.  Prevents the need of declaring a local variable.

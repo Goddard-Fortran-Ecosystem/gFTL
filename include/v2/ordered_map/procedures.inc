@@ -141,6 +141,7 @@
             call this%map%insert(key, value)
          end if
 
+         __UNUSED_DUMMY(tmp)
       end subroutine __MANGLE(insert_key_value)
 
 
@@ -162,7 +163,6 @@
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_dummy__, intent(in) :: value
 
-      type(__omap_pair) :: p
       integer :: status
       __T_declare_result__, pointer :: v
       
@@ -175,7 +175,7 @@
       end if
 
       return
-
+      __UNUSED_DUMMY(v)
       end subroutine __MANGLE(set_)
 
 ! =======================
@@ -190,8 +190,6 @@
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_result__, pointer :: res
 
-      __T_declare_result__, pointer :: v
-
       res => this%map%of(key)
 
       return
@@ -205,8 +203,6 @@
       class(__omap), target, intent(in) :: this
       __Key_declare_dummy__, intent(in) :: key
       integer, intent(out) :: rc
-
-      type (__omap_iterator) :: iter
 
       res => this%map%at(key, rc)
 
@@ -228,6 +224,7 @@
          m_iter = this%map%erase(this%map%find(iter%key_iter%of()))
          new_iter%key_iter = this%ordered_keys%erase(iter%key_iter)
 
+         __UNUSED_DUMMY(m_iter)
       end function __MANGLE(erase_iter)
 
 ! =======================
@@ -251,6 +248,8 @@
             n = 0
          end if
 
+         return
+         __UNUSED_DUMMY(iter)
       end function __MANGLE(erase_key)
 
 
@@ -345,9 +344,6 @@
          class(__omap), target, intent(in) :: this
          __Key_declare_dummy__, intent(in) :: key
 
-         type (__omap_pair) :: p
-
-         __Key_COPY__(p%first, key)
 
          iter%reference => this
          associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())

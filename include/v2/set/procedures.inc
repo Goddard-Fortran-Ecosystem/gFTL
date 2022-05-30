@@ -157,9 +157,6 @@
       recursive subroutine node_deallocate(node)
          class(__base_node), allocatable, intent(inout) :: node
 
-         class(__base_node), pointer :: ch
-
-!!$         print*,'recursive node deallocate in set'
          select type (q => node)
          type is (__set_node)
             if (allocated(q%left)) call node_deallocate(q%left)
@@ -167,6 +164,7 @@
          end select
 
          deallocate(node)
+
       end subroutine node_deallocate
 
          
@@ -296,6 +294,8 @@
 
       call this%insert(value, iter=iter)
 
+      __UNUSED_DUMMY(unused)
+      __UNUSED_DUMMY(hint)
    end subroutine __MANGLE(insert_single_with_hint)
 
 
@@ -991,6 +991,10 @@
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 
