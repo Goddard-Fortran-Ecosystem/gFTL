@@ -4,7 +4,11 @@
 
 ## Fixed
 
-- Fix misspelling of SUCCESS
+- Fixed bug in interface to map::at() and ordered_map::at().  The self object should be `INTENT(IN)` for these interfaces.
+
+- Fixed non-standard-conforming mismatched integer KIND in deque implementation.
+
+- Fixed misspelling of SUCCESS
 
 ## [1.7.2] - 2022-05-08
 

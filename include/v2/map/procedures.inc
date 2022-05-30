@@ -139,8 +139,6 @@
          __Key_declare_dummy__, intent(in) :: key
          __T_declare_dummy__, target, intent(in) :: value
 
-         integer :: sz
-
          integer, save :: depth = 0
 
          type (__map_pair) :: p
@@ -149,7 +147,6 @@
          __Key_COPY__(p%first, key)
          __T_COPY__(p%second, value)
 
-         sz = this%size()
          call this%tree%insert(p)
          depth = depth - 1
 
@@ -420,6 +417,12 @@
 
          verify = this%tree%verify()
       end function __MANGLE(verify)
+
+      recursive subroutine __MANGLE(final)(this)
+         type(__map), intent(inout) :: this
+
+         call this%clear()
+      end subroutine __MANGLE(final)
 
 
 #ifdef _DUMP_MAP

@@ -63,7 +63,8 @@
       function __MANGLE(new_omap_empty)() result(m)
          type (__omap) :: m
 
-         if (.false.) print*,shape(m) ! avoid compiler warnings about unused
+         m%map = __MANGLE(Map)()
+         m%ordered_keys = __MANGLE(Vector)()
          
       end function __MANGLE(new_omap_empty)
 
@@ -403,6 +404,13 @@
 
          verify = this%map%verify()
       end function __MANGLE(verify)
+
+
+      recursive subroutine __MANGLE(final)(this)
+         type(__omap), intent(inout) :: this
+
+         call this%clear()
+      end subroutine __MANGLE(final)
 
 
 

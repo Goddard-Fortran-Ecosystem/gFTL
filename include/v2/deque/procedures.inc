@@ -997,7 +997,7 @@
       class(__deque), intent(in) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: i
 
-      bucket_offset = 1 + modulo(i-1, __deque_bucket_size__)
+      bucket_offset = 1 + modulo(i-1, int(__deque_bucket_size__,kind=GFTL_SIZE_KIND))
    end function __MANGLE(bucket_offset)
 
 #include "deque/iterator_procedures.inc"
