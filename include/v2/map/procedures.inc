@@ -418,12 +418,6 @@
          verify = this%tree%verify()
       end function __MANGLE(verify)
 
-      recursive subroutine __MANGLE(final)(this)
-         type(__map), intent(inout) :: this
-
-         call this%clear()
-      end subroutine __MANGLE(final)
-
 
 #ifdef _DUMP_MAP
 ! =======================
