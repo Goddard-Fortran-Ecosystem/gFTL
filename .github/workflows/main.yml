@@ -1,27 +1,45 @@
 name: CI Tests
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    # Do not run if the only files changed cannot affect the build
+    paths-ignore:
+      - "**.md"
+      - "**.MD"
+      - "Licence.txt"
+      - "Copyright.txt"
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-10.15, macos-11]
-        compiler: [gfortran-8, gfortran-9, gfortran-10]
+        os: [ubuntu-20.04, ubuntu-22.04, macos-11, macos-12]
+        compiler: [gfortran-9, gfortran-10, gfortran-11, gfortran-12]
         exclude:
-          - os: macos-10.15
-            compiler: gfortran-8
+          - os: ubuntu-20.04
+            compiler: gfortran-11
+          - os: ubuntu-20.04
+            compiler: gfortran-12
+          - os: ubuntu-22.04
+            compiler: gfortran-9
           - os: macos-11
-            compiler: gfortran-8
+            compiler: gfortran-12
+          - os: macos-12
+            compiler: gfortran-9
+          - os: macos-12
+            compiler: gfortran-10
+          - os: macos-12
+            compiler: gfortran-12
 
-      # fail-fast is set to 'true' here which is good for production, but when
+      # fail-fast if set to 'true' here is good for production, but when
       # debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
       # GitHub Actions will stop any other test immediately. So good for production, bad
       # when trying to figure something out. For more info see:
       # https://www.edwardthomson.com/blog/github_actions_6_fail_fast_matrix_workflows.html
 
-      fail-fast: true
+      fail-fast: false
     env:
       FC: ${{ matrix.compiler }}
       LANGUAGE: en_US.UTF-8
@@ -34,14 +52,10 @@ jobs:
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}
     steps:
-      - name: Install GCC 8 on Ubuntu 20
-        if: matrix.os == 'ubuntu-20.04' && matrix.compiler == 'gfortran-8'
+      - name: Install GCC 12 on Ubuntu 22.04
+        if: matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gfortran-12'
         run: |
-          sudo apt-get install gfortran-8 -y
-      - name: Install GCC 11 on Ubuntu 20
-        if: matrix.os == 'ubuntu-20.04' && matrix.compiler == 'gfortran-11'
-        run: |
-          sudo apt-get install gfortran-11 -y
+          sudo apt-get install gfortran-12 -y
       - name: Compiler Versions
         run: |
           ${FC} --version
@@ -67,3 +81,10 @@ jobs:
         run: |
           cd build
           ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
