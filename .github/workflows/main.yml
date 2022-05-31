@@ -1,6 +1,14 @@
 name: CI Tests
 
-on: [pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    # Do not run if the only files changed cannot affect the build
+    paths-ignore:
+      - "**.md"
+      - "**.MD"
+      - "Licence.txt"
+      - "Copyright.txt"
 
 jobs:
   build:
