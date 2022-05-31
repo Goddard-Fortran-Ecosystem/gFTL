@@ -25,13 +25,13 @@ jobs:
           - os: macos-12
             compiler: gfortran-12
 
-      # fail-fast is set to 'true' here which is good for production, but when
+      # fail-fast if set to 'true' here is good for production, but when
       # debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
       # GitHub Actions will stop any other test immediately. So good for production, bad
       # when trying to figure something out. For more info see:
       # https://www.edwardthomson.com/blog/github_actions_6_fail_fast_matrix_workflows.html
 
-      fail-fast: true
+      fail-fast: false
     env:
       FC: ${{ matrix.compiler }}
       LANGUAGE: en_US.UTF-8
