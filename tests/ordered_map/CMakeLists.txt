@@ -7,7 +7,7 @@ set (keys
   integer32
   character_len17
   deferred_string
-#  Foo
+  Foo
   )
 
 set (types
@@ -15,7 +15,7 @@ set (types
   integer32
   character_len17
   deferred_string
-#  Foo
+  Foo
   logical
   unlimited
   integer_shape_3
