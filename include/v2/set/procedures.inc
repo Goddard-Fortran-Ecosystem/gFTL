@@ -113,8 +113,8 @@
 
 
    logical function __MANGLE(order_eq)(x, y) result(equal)
-      __T_declare_dummy__, target, intent(in) :: x
-      __T_declare_dummy__, target, intent(in) :: y
+      __T_declare_dummy__, intent(in) :: x
+      __T_declare_dummy__, intent(in) :: y
 
       equal = .not. __MANGLE(lessThan)(x,y) .and. .not. __MANGLE(lessThan)(y,x)
    end function __MANGLE(order_eq)
