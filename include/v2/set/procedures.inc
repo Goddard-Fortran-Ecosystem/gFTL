@@ -146,27 +146,10 @@
    recursive subroutine __MANGLE(clear)(this)
       class(__set), intent(inout) :: this
 
-!!$      if (allocated(this%root)) deallocate(this%root)
-      if (allocated(this%root)) call node_deallocate(this%root)
+      if (allocated(this%root)) deallocate(this%root)
 
       this%tsize = 0
       return
-
-   contains
-
-      recursive subroutine node_deallocate(node)
-         class(__base_node), allocatable, intent(inout) :: node
-
-         select type (q => node)
-         type is (__set_node)
-            if (allocated(q%left)) call node_deallocate(q%left)
-            if (allocated(q%right)) call node_deallocate(q%right)
-         end select
-
-         deallocate(node)
-
-      end subroutine node_deallocate
-
          
    end subroutine __MANGLE(clear)
 

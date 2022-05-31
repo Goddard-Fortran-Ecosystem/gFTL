@@ -207,7 +207,6 @@ contains
       @assert_that(int(s%size()), is(2))
       @assert_that(int(s%count(one)), is(0))
 
-      
    end subroutine test_erase_iter
 
    @test
