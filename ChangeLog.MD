@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.8.0] - 2022-05-31
+
 ## Changed
 
 - Interfaces (intents) to map::at() and ordered_map::at().  The self object should be `INTENT(IN)` for these interfaces.
