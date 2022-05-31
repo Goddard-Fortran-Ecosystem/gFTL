@@ -19,6 +19,10 @@ jobs:
           - os: macos-11
             compiler: gfortran-12
           - os: macos-12
+            compiler: gfortran-9
+          - os: macos-12
+            compiler: gfortran-10
+          - os: macos-12
             compiler: gfortran-12
 
       # fail-fast is set to 'true' here which is good for production, but when
