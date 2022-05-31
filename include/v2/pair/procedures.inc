@@ -86,7 +86,6 @@
       type(__pair), intent(in) :: a
       type(__pair), intent(in) :: b
 
-      logical :: gt
       logical :: lt1, lt2
 
       lt = __T1_LT__(a%first, b%first)

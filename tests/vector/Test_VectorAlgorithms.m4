@@ -78,7 +78,8 @@ contains
 
       counter = counter + 1
       p1 = (counter == 1)
-      
+
+      __UNUSED_DUMMY(value)
    end function p1
    
    logical function p2(value)
@@ -87,6 +88,7 @@ contains
       counter = counter + 1
       p2 = (counter == 2)
       
+      __UNUSED_DUMMY(value)
    end function p2
 
    subroutine reset_counter()
