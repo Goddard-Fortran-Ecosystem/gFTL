@@ -147,8 +147,10 @@
       class(__set), intent(inout) :: this
 
       if (allocated(this%root)) deallocate(this%root)
+
       this%tsize = 0
       return
+         
    end subroutine __MANGLE(clear)
 
    ! =======================
@@ -275,6 +277,8 @@
 
       call this%insert(value, iter=iter)
 
+      __UNUSED_DUMMY(unused)
+      __UNUSED_DUMMY(hint)
    end subroutine __MANGLE(insert_single_with_hint)
 
 
@@ -505,7 +509,9 @@
     if (associated(find_node)) then
        do
           if (.not. last .and. (                                           &
-               &     (__MANGLE(order_eq)(find_node%get_value(),value)))) return
+               &     (__MANGLE(order_eq)(find_node%get_value(),value)))) then
+             return
+          end if
           side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%get_value()))
           if (.not.associated(find_node%get_child(side))) return
           find_node => find_node%get_child(side)
@@ -891,11 +897,11 @@
       class(__set), target, intent(out) :: this
       class(__set), target, intent(in) :: other
 
-      type(__set_iterator) :: iter, iteriter
-      __T_declare_result__, pointer :: ptr, ptrptr
+      type(__set_iterator) :: iter
+      __T_declare_result__, pointer :: ptr
 
       integer, save :: depth = 0
-      integer :: counter, countercounter
+      integer :: counter
 
       if (.not. allocated(other%root)) return
 
@@ -968,6 +974,10 @@
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 

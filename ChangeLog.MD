@@ -2,9 +2,30 @@
 
 ## Unreleased
 
+## [1.8.0] - 2022-05-31
+
+## Changed
+
+- Interfaces (intents) to map::at() and ordered_map::at().  The self object should be `INTENT(IN)` for these interfaces.
+
+
 ## Fixed
 
-- Fix misspelling of SUCCESS
+- Fixed bug in `vector::insert_range()` (needs a unit test)
+
+- Added `TARGET` to some dummy arguments to prevent NAG from doing copy-in / copy-out.  Seems to 
+  have been causing a memory corruption issue with the yaFyaml package, but might indicate a bug
+  in yaFyaml (or gFTL).
+
+- Fixed non-standard-conforming mismatched integer KIND in deque implementation.
+
+- Fixed misspelling of SUCCESS
+
+## Removed
+
+- Various unused local variables that were causing annoying compiler warnings.
+
+
 
 - Reactivated unit tests (involving Foo) that were deactivated as a workaround for some NAG 7.1 compiler releases.
 

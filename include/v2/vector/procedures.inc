@@ -379,7 +379,7 @@
       end do
 
       do i = 0, n-1
-         __T_COPY__(this%elements(pos%current_index + i)%item, first%of(i))
+         __T_COPY__(this%elements(pos%current_index + i)%item, value)
       end do
 
       this%vsize = this%vsize + n
@@ -994,6 +994,9 @@
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 
