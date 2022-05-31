@@ -11,10 +11,13 @@
 ## Changed
 
 - Updated GitHub Actions
-  - Removed gfortran-8
-  - Added gfortran-11
-  - Added macos-12 and ubuntu-22.04
-  - Added gfortran-12 (for ubuntu-22.04)
+  - OSs
+    - Remove macos-10.15
+    - Add ubuntu-22.04 and macos-12
+  - Compilers
+   - Removed gfortran-8
+   - Added gfortran-11
+   - Added gfortran-12 (for ubuntu-22.04)
 
 ## [1.7.2] - 2022-05-08
 
