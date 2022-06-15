@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.8.1] - 2022-06-15
+
+### Fixed
+
+- Fix some macro redefinitions in `v1/map.inc`
+
 ## [1.8.0] - 2022-05-31
 
 ## Changed
