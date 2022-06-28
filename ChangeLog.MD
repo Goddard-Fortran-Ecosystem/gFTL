@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.8.1] - 2022-06-28
+
+### Fixed
+
+- Prevented some macro redefinitions in `v1/map.inc` that caused warning messages and broke documentation tool on downstream projects.
+
 ## [1.8.0] - 2022-05-31
 
 ## Changed
