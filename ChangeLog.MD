@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+### Added
+
+- Added `IntelLLVM.cmake` file as a copy of `Intel.cmake` to support the LLVM Intel compiler frontends
+
 ## [1.8.0] - 2022-05-31
 
-## Changed
+### Changed
 
 - Interfaces (intents) to map::at() and ordered_map::at().  The self object should be `INTENT(IN)` for these interfaces.
 
@@ -17,7 +21,7 @@
    - Added gfortran-11
    - Added gfortran-12 (for ubuntu-22.04)
 
-## Fixed
+### Fixed
 
 - Fixed bug in `vector::insert_range()` (needs a unit test)
 
@@ -28,7 +32,7 @@
 
 - Fixed misspelling of SUCCESS
 
-## Removed
+### Removed
 
 - Various unused local variables that were causing annoying compiler warnings.
 
