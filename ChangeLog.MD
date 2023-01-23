@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.8.2] - 2023-01-23
+
+### Fixed
+
+- Fix issues with GNU Make builds
+
 ## [1.8.1] - 2022-06-28
 
 ### Fixed
