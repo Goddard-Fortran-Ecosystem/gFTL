@@ -53,7 +53,7 @@
          class (__vector), intent(in) :: this
          
          if (allocated(this%elements)) then
-            capacity = size(this%elements)
+            capacity = size(this%elements, kind=SIZE_KIND)
          else
             capacity = 0
          end if
