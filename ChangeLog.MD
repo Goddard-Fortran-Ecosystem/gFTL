@@ -6,7 +6,7 @@
 
 ### Fixed
 
-- Missing `KIND=` on `size()` procedure.  Gave incorrect response for large containers.
+- Missing `KIND=` on `size()` procedure.  Gave incorrect response for large containers.  Only affects V1 containers.
 
 ## [1.8.2] - 2023-01-23
 
