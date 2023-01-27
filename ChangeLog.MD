@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.8.3] - 2023-01-27
+
+### Fixed
+
+- Missing `KIND=` on `size()` procedure.  Gave incorrect response for large containers.
+
 ## [1.8.2] - 2023-01-23
 
 ### Fixed
