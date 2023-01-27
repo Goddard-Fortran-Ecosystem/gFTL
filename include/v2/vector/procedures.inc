@@ -312,7 +312,7 @@
    ! =======================
    !  insert()
    ! =======================
-   function __MANGLE(insert_one)(this, pos, value) result(iter)
+   recursive function __MANGLE(insert_one)(this, pos, value) result(iter)
       type(__vector_iterator) :: iter
       class(__vector), target, intent(inout) :: this
       type(__vector_iterator), intent(in) :: pos
@@ -322,7 +322,7 @@
 
    end function __MANGLE(insert_one)
 
-   function __MANGLE(insert_count_size_kind)(this, pos, count, value) result(iter)
+   recursive function __MANGLE(insert_count_size_kind)(this, pos, count, value) result(iter)
       type(__vector_iterator) :: iter
       class(__vector), target, intent(inout) :: this
       type(__vector_iterator), intent(in) :: pos
@@ -379,7 +379,7 @@
       end do
 
       do i = 0, n-1
-         __T_COPY__(this%elements(pos%current_index + i)%item, first%of(i))
+         __T_COPY__(this%elements(pos%current_index + i)%item, value)
       end do
 
       this%vsize = this%vsize + n
@@ -591,7 +591,7 @@
    ! =======================
    !  push_back()
    ! =======================
-   subroutine __MANGLE(push_back)(this, value, unused, rc)
+   recursive subroutine __MANGLE(push_back)(this, value, unused, rc)
       class(__vector), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional, intent(in) :: unused
@@ -694,7 +694,7 @@
    ! =======================
    !  downsize()
    ! =======================
-   subroutine __MANGLE(downsize)(this, newsize)
+   recursive subroutine __MANGLE(downsize)(this, newsize)
       class(__vector), intent(inout) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: newsize  ! assumes newsize<=size()
       integer(kind=GFTL_SIZE_KIND) :: i
@@ -713,7 +713,7 @@
    ! =======================
    !  clear
    ! =======================
-   subroutine __MANGLE(clear)(this)
+   recursive subroutine __MANGLE(clear)(this)
       class(__vector), intent(inout) :: this
 
       call this%downsize(0_GFTL_SIZE_KIND)
@@ -994,6 +994,9 @@
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 

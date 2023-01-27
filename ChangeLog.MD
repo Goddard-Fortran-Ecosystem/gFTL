@@ -1,8 +1,132 @@
 # Change Log
 
 ## Unreleased
+
+## [1.8.2] - 2023-01-23
+
+### Fixed
+
+- Fix issues with GNU Make builds
+
+## [1.8.1] - 2022-06-28
+
+### Fixed
+
+- Prevented some macro redefinitions in `v1/map.inc` that caused warning messages and broke documentation tool on downstream projects.
+
+## [1.8.0] - 2022-05-31
+
+## Changed
+
+- Interfaces (intents) to map::at() and ordered_map::at().  The self object should be `INTENT(IN)` for these interfaces.
+
+- Updated GitHub Actions
+  - OSs
+    - Remove macos-10.15
+    - Add ubuntu-22.04 and macos-12
+  - Compilers
+   - Removed gfortran-8
+   - Added gfortran-11
+   - Added gfortran-12 (for ubuntu-22.04)
+
+## Fixed
+
+- Fixed bug in `vector::insert_range()` (needs a unit test)
+
+- Added `TARGET` to some dummy arguments to prevent NAG from doing copy-in / copy-out.  Seems to  have been causing a memory corruption issue with the yaFyaml package, but might indicate a bug
+  in yaFyaml (or gFTL).  
+
+- Fixed non-standard-conforming mismatched integer KIND in deque implementation.
+
+- Fixed misspelling of SUCCESS
+
+## Removed
+
+- Various unused local variables that were causing annoying compiler warnings.
+
+- Reactivated unit tests (involving Foo) that were deactivated as a workaround for some NAG 7.1 compiler releases.
+
+
+## [1.7.2] - 2022-05-08
+
+### Fixed
+
+- Patched (again) such that the assignment operator for Set invokes a deep copy.  Previously I mistakenly thought that since the data structure now uses ALLOCATABLE components that Fortran intrinsic assignment would suffice.  But forgot that the "parent" component is still a pointer.  Failures from this assumption were subtle as often parents would point to   correctly looking copies outside the intended data structure.
+
+- Missing RECURSIVE declarations on some procedures.  The issue arises for YAML data structures where a map may contain items of the same map type and similarly for vectors.
+
+### Added
+
+- A verify() method was added to several containers to aid in debugging some of the problems mentioned above.   Users of gFTL should not use this method - its interface may change and the procedure may even disappear in later releases.
+
+## [1.7.1] - 2022-04-24
+
+### Fixed
+
+- Corrected previous commit that eliminated the non intrinsic
+  assignment for set, map, and `ordered_map` containers.  Just had not
+  thought through why these are needed: internal pointers are not
+  correctly established by intrinsic assignment.  I was too focused on
+  the nice property that allocatable components ar correctly
+  _deallocated_.   Use cases would sometimes work, because the compiler
+  was avoiding copies when using constructors. 
+p
+
+## [1.7.0] - 2022-04-08
+
+### Changed
+
+- Eliminated type-bound overload of `assignment(=)` for set, map, and ordered_map.  It was found that
+  it caused problems with ifort 2021.5.0 and not needed by other compilers after other recent changes.
+
+- Also made deep-copy RECURSIVE, as this is needed in the yaFyaml use
+  case.  RECURSIVE is of course now default in Fortran, but not all compilers
+  have implemented this consistently at this time.
+
+## [1.6.1] - 2022-03-30
+
+### Fixed
+
+- Missing RECURSIVE on methods in vector template.  This is necessary
+  for some use cases involving recursive data structures.  In particular
+  sequences-of-sequences in yaFyaml.  GFortran has not yet implemented
+  default RECURSIVE, which is what actually makes this necessary.  (So not
+  technically a bug, but ...)
+  
+## [1.6.0] - 2022-03-16
+
+### Added
+
+- NVHPC compiler support
+
+### Removed
+
+- Removed `PGI.mk` and `NAG.mk` files which seem to be unneeded cruft
+
+## [1.5.5] - 2022-03-07
+
+
+### Changed
+
 - On Windows M4 program is now downloaded from SourceForge during CMake configuration
   if it is not found.
+
+### Fixed
+
+- Some procedures for `map` and `ordered_map` had not been implemented and are now added in.  This was an oversight and thus being treated as a bug rather than a feature. 
+
+
+## [1.5.4] - 2022-01-10
+
+### Fixed
+
+- Minor bug in Pair template that is exposed under certain combinations
+  of key/value types.   If key has "==" but "value" does not, then some
+  local variable declarations are skipped that are needed.
+  
+- Declarion of Ptr argument in Pointer template.   Still not ready 
+  for production use though.
+  
 
 ## [1.5.3] - 2021-11-16
 
@@ -164,8 +288,6 @@ modulo Fortran syntax.
 
   This is to allow useful diagnostics via DTIO.
   
-
->>>>>>> ad6bb41... Changed location of GFTLConfig.cmake
 ## [1.2.5] - 2020-04-06
 
 ### Fixed

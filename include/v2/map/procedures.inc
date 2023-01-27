@@ -1,3 +1,9 @@
+#ifdef _DEPTH_
+#  undef _DEPTH_
+#endif
+
+#define _DEPTH_ *
+
 !--------------------------------------------------------------------
 ! Copyright © 2020 United States Government as represented by the   |
 ! Administrator of the National Aeronautics and Space               |
@@ -42,13 +48,13 @@
 #define __set_T __map_pair
 #define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
 #define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
-
 #include "set/procedures.inc"
 
 #undef __set
 #undef __set_iterator
 #include "parameters/T/undef_set_T.inc"
 #undef __set_guard
+#undef __set_T_COPY
 
 #include "parameters/T1/undef_pair_T1.inc"   
 #include "parameters/T2/undef_pair_T2.inc"   
@@ -61,6 +67,15 @@
 #include "parameters/Key/define_derived_macros.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+   subroutine __MANGLE(unused_procedure)()
+      ! The following are an adhoc way to suppress compiler
+      ! warnings about parameters not used in this template
+      __UNUSED_DUMMY(BAD_ALLOC)
+      __UNUSED_DUMMY(ILLEGAL_INPUT)
+      __UNUSED_DUMMY(LENGTH_ERROR)
+      __UNUSED_DUMMY(TYPE_HAS_NO_DEFAULT_VALUE)
+      __UNUSED_DUMMY(NO_TYPE__)
+   end subroutine __MANGLE(unused_procedure)
 
 ! This constructor is needed in situations where an empty dictionary needs to be
 ! passed to a procedure.  Prevents the need of declaring a local variable.
@@ -128,101 +143,109 @@
 ! =======================
 !  insert
 ! =======================
-      subroutine __MANGLE(insert_key_value)(this, key, value)
+      recursive subroutine __MANGLE(insert_key_value)(this, key, value)
          class (__map), intent(inout) :: this
          __Key_declare_dummy__, intent(in) :: key
-         __T_declare_dummy__, intent(in) :: value
+         __T_declare_dummy__, target, intent(in) :: value
+
+         integer, save :: depth = 0
 
          type (__map_pair) :: p
+
+         depth = depth + 1
+         __Key_COPY__(p%first, key)
+         __T_COPY__(p%second, value)
+
+         call this%tree%insert(p)
+         depth = depth - 1
+
+      end subroutine __MANGLE(insert_key_value)
+
+
+      recursive subroutine __MANGLE(insert_pair)(this, p)
+         class (__map), intent(inout) :: this
+         type (__map_pair), intent(in) :: p
+
+         integer, save :: depth = 0
+
+         depth = depth + 1
+         call this%tree%insert(p)
+
+         depth = depth - 1
+      end subroutine __MANGLE(insert_pair)
+
+      ! =======================
+      !  set
+      ! =======================
+      subroutine __MANGLE(set_)(this, key, value)
+         class(__map), intent(inout) :: this
+         __Key_declare_dummy__, intent(in) :: key
+         __T_declare_dummy__, intent(in) :: value
+         type(__map_pair) :: p
 
          __Key_COPY__(p%first, key)
          __T_COPY__(p%second, value)
 
          call this%tree%insert(p)
-
-      end subroutine __MANGLE(insert_key_value)
-
-
-      subroutine __MANGLE(insert_pair)(this, p)
-         class (__map), intent(inout) :: this
-         type (__map_pair), intent(in) :: p
-
-         call this%tree%insert(p)
-
-      end subroutine __MANGLE(insert_pair)
-
-! =======================
-!  set
-! =======================
-      subroutine __MANGLE(set_)(this, key, value)
-      class(__map), intent(inout) :: this
-      __Key_declare_dummy__, intent(in) :: key
-      __T_declare_dummy__, intent(in) :: value
-      type(__map_pair) :: p
-
-      __Key_COPY__(p%first, key)
-      __T_COPY__(p%second, value)
-
-      call this%tree%insert(p)
-      return
+         return
 
       end subroutine __MANGLE(set_)
 
-! =======================
-!  of - grows map if key does not exist
-!  Analog of C++ [] operator.
-! =======================
+      ! =======================
+      !  of - grows map if key does not exist
+      !  Analog of C++ [] operator.
+      ! =======================
       function __MANGLE(of)(this, key) result(res)
-      class(__map), target, intent(inout) :: this
-      __Key_declare_dummy__, intent(in) :: key
-      __T_declare_result__, pointer :: res
-      type(__map_pair) :: p
+         class(__map), target, intent(inout) :: this
+         __Key_declare_dummy__, intent(in) :: key
+         __T_declare_result__, pointer :: res
+         type(__map_pair) :: p
 
-      logical :: is_new
-      type(__MANGLE(SetIterator)) :: iter
-      type(__map_pair), pointer :: pair_ptr
+         logical :: is_new
+         type(__MANGLE(SetIterator)) :: iter
+         type(__map_pair), pointer :: pair_ptr
 
-      __Key_COPY__(p%first, key)
+         __Key_COPY__(p%first, key)
 
-      call this%tree%insert(p, iter=iter, is_new=is_new)
-      if (.not. is_new) then
-         pair_ptr => iter%of()
-         res => pair_ptr%second
-      else
-         res => null()
-      end if
+         call this%tree%insert(p, iter=iter, is_new=is_new)
+         if (.not. is_new) then
+            pair_ptr => iter%of()
+            res => pair_ptr%second
+         else
+            res => null()
+         end if
 
-      return
+         return
       end function __MANGLE(of)
 
-! =======================
-!  at
-! =======================
+      ! =======================
+      !  at
+      ! =======================
       function __MANGLE(at_rc)(this, key, rc) result(res)
-      __T_declare_result__, pointer :: res
-      class(__map), target, intent(in) :: this
-      __Key_declare_dummy__, intent(in) :: key
-      integer, intent(out) :: rc
+         __T_declare_result__, pointer :: res
+         class(__map), target, intent(in) :: this
+         __Key_declare_dummy__, intent(in) :: key
+         integer, intent(out) :: rc
 
-      type (__map_iterator) :: iter
+         type (__map_iterator) :: iter
 
-      iter = this%find(key)
-      if (iter == this%end()) then
-         res => null()
-         rc = OUT_OF_RANGE
-      else
-         res => iter%second()
-         rc = SUCCESS
-      end if
+         iter = this%find(key)
+         if (iter == this%end()) then
+            res => null()
+            rc = OUT_OF_RANGE
+         else
+            res => iter%second()
+            rc = SUCCESS
+         end if
 
-      return
+         return
       end function __MANGLE(at_rc)
 
 
 
-! =======================
-!  erase_iter()
-! =======================
+      ! =======================
+      !  erase_iter()
+      ! =======================
       function __MANGLE(erase_iter)(this, iter) result(new_iter)
          type(__map_iterator) :: new_iter
          class(__map), intent(inout) :: this
@@ -233,9 +256,9 @@
 
       end function __MANGLE(erase_iter)
 
-! =======================
-!  erase_key()
-! =======================
+      ! =======================
+      !  erase_key()
+      ! =======================
       function __MANGLE(erase_key)(this, k) result(n)
          integer(kind=GFTL_SIZE_KIND) :: n
          class(__map), intent(inout) :: this
@@ -254,9 +277,9 @@
       end function __MANGLE(erase_key)
 
 
-! =======================
-!  erase_range()
-! =======================
+      ! =======================
+      !  erase_range()
+      ! =======================
       function __MANGLE(erase_range)(this, first, last) result(new_iter)
          type(__map_iterator) :: new_iter
          class(__map), target, intent(inout) :: this
@@ -269,45 +292,45 @@
       end function __MANGLE(erase_range)
 
 
-! =======================
-!  clear
-! =======================
+      ! =======================
+      !  clear
+      ! =======================
       recursive subroutine __MANGLE(clear)(this)
-      class(__map), intent(inout) :: this
+         class(__map), intent(inout) :: this
 
-      call this%tree%clear()
+         call this%tree%clear()
 
       end subroutine __MANGLE(clear)
 
 
-! Non type-bound functions
-      
+      ! Non type-bound functions
 
-   ! =======================
-   !  equal
-   ! =======================
-   logical function __MANGLE(equal)(a, b) result(equal)
-      type(__map), intent(in) :: a
-      type(__map), intent(in) :: b
 
-      equal = a%tree == b%tree
+      ! =======================
+      !  equal
+      ! =======================
+      logical function __MANGLE(equal)(a, b) result(equal)
+         type(__map), intent(in) :: a
+         type(__map), intent(in) :: b
 
-   end function __MANGLE(equal)
+         equal = a%tree == b%tree
 
-   ! =======================
-   !  not_equal
-   ! =======================
-   logical function __MANGLE(not_equal)(a, b) result(not_equal)
-      type(__map), intent(in) :: a
-      type(__map), intent(in) :: b
+      end function __MANGLE(equal)
 
-      not_equal = .not. (a == b)
+      ! =======================
+      !  not_equal
+      ! =======================
+      logical function __MANGLE(not_equal)(a, b) result(not_equal)
+         type(__map), intent(in) :: a
+         type(__map), intent(in) :: b
 
-   end function __MANGLE(not_equal)
+         not_equal = .not. (a == b)
 
-! =======================
-!  begin
-! =======================
+      end function __MANGLE(not_equal)
+
+      ! =======================
+      !  begin
+      ! =======================
       function __MANGLE(begin)(this) result(iter)
          class(__map), target, intent(in) :: this
          type (__map_iterator) :: iter
@@ -371,13 +394,20 @@
 !  copyFrom
 ! =======================
 
-      subroutine __MANGLE(deep_copy)(this, x)
+      recursive subroutine __MANGLE(deep_copy)(this, x)
          class(__map), intent(out) :: this
-         type(__map), intent(in) :: x
+         type(__map), target, intent(in) :: x
+
+         integer, save :: depth = 0
 
          ! Set container assigmnent ovrrides default assignment.
          ! Correct implementations should do a deep copy here
-         this%tree = x%tree
+!!$         this%tree = x%tree
+
+         depth = depth + 1
+         call this%tree%deep_copy(x%tree)
+
+         depth = depth - 1
 
       end subroutine __MANGLE(deep_copy)
       
@@ -390,6 +420,13 @@
 
          return
       end function __MANGLE(key_less_than)
+
+      recursive logical function __MANGLE(verify)(this) result(verify)
+         class (__map), target, intent(in) :: this
+
+         verify = this%tree%verify()
+      end function __MANGLE(verify)
+
 
 #ifdef _DUMP_MAP
 ! =======================

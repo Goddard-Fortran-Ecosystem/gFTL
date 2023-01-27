@@ -69,6 +69,7 @@
 
       procedure :: deep_copy => __MANGLE(deep_copy)
       generic :: assignment(=) => deep_copy
+      
 #ifdef __T_listable__
       procedure :: copy_list => __MANGLE(copy_list)
       generic :: assignment(=) => copy_list
@@ -89,7 +90,7 @@
       ! key_compare() and value_compare() are the same thing for Set.
       procedure :: key_compare => __MANGLE(value_compare)
       procedure :: value_compare => __MANGLE(value_compare)
-
+      procedure :: verify => __MANGLE(verify)
    end type __set
 
    interface swap

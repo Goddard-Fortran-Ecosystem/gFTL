@@ -104,10 +104,13 @@
 
       procedure :: count => __MANGLE(count)
       procedure :: deep_copy => __MANGLE(deep_copy)
-      generic :: assignment(=) => deep_copy
+      ! Explicit deep copy triggers odd runtime issues with ifort 2022.0
+!!$      generic :: assignment(=) => deep_copy
+
 !#ifdef _DUMP_MAP
 !      procedure :: dump => mapdump
 !#endif
+      procedure :: verify => __MANGLE(verify)
    end type __omap
 
    interface operator(==)

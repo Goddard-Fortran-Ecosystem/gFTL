@@ -120,11 +120,12 @@
    ! =======================
    !  set_value()
    ! =======================
-   subroutine __MANGLE(set_value)(this, value)
+   recursive subroutine __MANGLE(set_value)(this, value)
       class(__set_node), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
 
       __T_COPY__(this%value, value)
+
       return
    end subroutine __MANGLE(set_value)
 

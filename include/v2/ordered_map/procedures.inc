@@ -63,7 +63,8 @@
       function __MANGLE(new_omap_empty)() result(m)
          type (__omap) :: m
 
-         if (.false.) print*,shape(m) ! avoid compiler warnings about unused
+         m%map = __MANGLE(Map)()
+         m%ordered_keys = __MANGLE(Vector)()
          
       end function __MANGLE(new_omap_empty)
 
@@ -126,7 +127,7 @@
 ! =======================
 !  insert
 ! =======================
-      subroutine __MANGLE(insert_key_value)(this, key, value)
+      recursive subroutine __MANGLE(insert_key_value)(this, key, value)
          class (__omap), intent(inout) :: this
          __Key_declare_dummy__, intent(in) :: key
          __T_declare_dummy__, intent(in) :: value
@@ -140,12 +141,13 @@
             call this%map%insert(key, value)
          end if
 
+         __UNUSED_DUMMY(tmp)
       end subroutine __MANGLE(insert_key_value)
 
 
       ! TODO: This implemetation requires to searches for
       ! the element.  Should be improved
-      subroutine __MANGLE(insert_pair)(this, p)
+      recursive subroutine __MANGLE(insert_pair)(this, p)
          class (__omap), intent(inout) :: this
          type (__omap_pair), intent(in) :: p
 
@@ -161,7 +163,6 @@
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_dummy__, intent(in) :: value
 
-      type(__omap_pair) :: p
       integer :: status
       __T_declare_result__, pointer :: v
       
@@ -174,7 +175,7 @@
       end if
 
       return
-
+      __UNUSED_DUMMY(v)
       end subroutine __MANGLE(set_)
 
 ! =======================
@@ -189,8 +190,6 @@
       __Key_declare_dummy__, intent(in) :: key
       __T_declare_result__, pointer :: res
 
-      __T_declare_result__, pointer :: v
-
       res => this%map%of(key)
 
       return
@@ -204,8 +203,6 @@
       class(__omap), target, intent(in) :: this
       __Key_declare_dummy__, intent(in) :: key
       integer, intent(out) :: rc
-
-      type (__omap_iterator) :: iter
 
       res => this%map%at(key, rc)
 
@@ -227,6 +224,7 @@
          m_iter = this%map%erase(this%map%find(iter%key_iter%of()))
          new_iter%key_iter = this%ordered_keys%erase(iter%key_iter)
 
+         __UNUSED_DUMMY(m_iter)
       end function __MANGLE(erase_iter)
 
 ! =======================
@@ -250,6 +248,8 @@
             n = 0
          end if
 
+         return
+         __UNUSED_DUMMY(iter)
       end function __MANGLE(erase_key)
 
 
@@ -344,9 +344,6 @@
          class(__omap), target, intent(in) :: this
          __Key_declare_dummy__, intent(in) :: key
 
-         type (__omap_pair) :: p
-
-         __Key_COPY__(p%first, key)
 
          iter%reference => this
          associate (b => this%ordered_keys%begin(), e => this%ordered_keys%end())
@@ -374,7 +371,7 @@
 !  copyFrom
 ! =======================
 
-      subroutine __MANGLE(deep_copy)(this, x)
+      recursive subroutine __MANGLE(deep_copy)(this, x)
          class(__omap), intent(out) :: this
          type(__omap), intent(in) :: x
 
@@ -397,6 +394,20 @@
 
          return
       end function __MANGLE(key_less_than)
+
+      recursive logical function __MANGLE(verify)(this) result(verify)
+         class (__omap), target, intent(in) :: this
+
+         verify = this%map%verify()
+      end function __MANGLE(verify)
+
+
+      recursive subroutine __MANGLE(final)(this)
+         type(__omap), intent(inout) :: this
+
+         call this%clear()
+      end subroutine __MANGLE(final)
+
 
 
 #include "ordered_map/iterator_procedures.inc"

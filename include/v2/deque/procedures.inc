@@ -38,6 +38,16 @@
 ! define derived generic template parameters from internal parameters.
 #include "parameters/T/define_derived_macros.inc"
 
+
+   subroutine __MANGLE(unused_procedure)()
+      ! The following are an adhoc way to suppress compiler
+      ! warnings about parameters not used in this template
+      __UNUSED_DUMMY(BAD_ALLOC)
+      __UNUSED_DUMMY(TYPE_HAS_NO_DEFAULT_VALUE)
+      __UNUSED_DUMMY(NO_TYPE__)
+   end subroutine __MANGLE(unused_procedure)
+
+
    ! =======================
    !  Structure constructors
    ! =======================
@@ -200,7 +210,7 @@
          rc = OUT_OF_RANGE
          res => null()
       else
-         rc = 0
+         rc = SUCCESS
          res => this%buckets(this%idx(i))%ptr%bucket_items%item
       end if
 
@@ -283,6 +293,7 @@
       ii = this%idx(i)
       __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
       __T_COPY__(this%buckets(ii)%ptr%bucket_items%item, value)
+
 
       return
    end subroutine __MANGLE(set_size_kind)
@@ -569,13 +580,13 @@
       integer, optional, intent(out) :: rc
 
       integer(kind=GFTL_SIZE_KIND) :: old_size
-      integer(kind=GFTL_SIZE_KIND) :: i, ii
       integer :: status
-
-      __UNUSED_DUMMY(unused)
+#if defined(__T_FREE__)
+      integer(kind=GFTL_SIZE_KIND) :: i, ii
+#endif
 
       if (count == this%size_) then
-         if (present(rc)) rc = 0
+         if (present(rc)) rc = SUCCESS
          return
       end if
       if (count < 0) then
@@ -583,7 +594,7 @@
          return
       end if
 
-      if (present(rc)) rc = 0
+      if (present(rc)) rc = SUCCESS
 
       old_size = this%size_
 
@@ -594,6 +605,7 @@
       end if
 
       this%size_ = count
+#if defined(__T_FREE__)
       do i = count + 1, old_size
          ii = this%idx(i)
          __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
@@ -612,8 +624,10 @@
             end do
          end if
       endif
+#endif
 
       return
+      __UNUSED_DUMMY(unused)
    end subroutine __MANGLE(resize_size_kind)
 
    subroutine __MANGLE(resize_default)(this, count, unused, value, rc)
@@ -637,14 +651,17 @@
       class(__deque), intent(inout) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: from, to  ! assumes newsize<=size()
 
+#if defined(__T_FREE__)
       integer(kind=GFTL_SIZE_KIND) :: i, ii
-
       if (from <= to) then
+
          do i = from, to - 1
             ii = this%idx(i)
             __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
          end do
+
       else
+
          do i = from, this%capacity()
             ii = this%idx(i)
             __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
@@ -653,7 +670,11 @@
             ii = this%idx(i)
             __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
          end do
+
       endif
+      __UNUSED_DUMMY(ii)
+#endif
+
       this%size_ = this%size_ - modulo(from - to, this%capacity())  - 1
 
       return
@@ -753,7 +774,7 @@
             rc = LENGTH_ERROR
             return
          else
-            rc = 0
+            rc = SUCCESS
          end if
       end if
 
@@ -777,7 +798,7 @@
             rc = LENGTH_ERROR
             return
          else
-            rc = 0
+            rc = SUCCESS
          end if
       end if
 
@@ -981,6 +1002,10 @@
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 
@@ -990,6 +1015,8 @@
       integer(kind=GFTL_SIZE_KIND), intent(in) :: i
 
       bucket_index = 1 + (i-1)/__deque_bucket_size__
+
+      __UNUSED_DUMMY(this)
    end function __MANGLE(bucket_index)
 
    function __MANGLE(bucket_offset)(this, i) result(bucket_offset)
@@ -997,7 +1024,9 @@
       class(__deque), intent(in) :: this
       integer(kind=GFTL_SIZE_KIND), intent(in) :: i
 
-      bucket_offset = 1 + modulo(i-1, __deque_bucket_size__)
+      bucket_offset = 1 + modulo(i-1, int(__deque_bucket_size__,kind=GFTL_SIZE_KIND))
+
+      __UNUSED_DUMMY(this)
    end function __MANGLE(bucket_offset)
 
 #include "deque/iterator_procedures.inc"

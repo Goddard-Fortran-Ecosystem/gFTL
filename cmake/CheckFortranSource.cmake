@@ -81,7 +81,7 @@ macro (CHECK_Fortran_SOURCE_COMPILE file var)
 
   if (${var})
     if (NOT CMAKE_REQUIRED_QUIET)
-      message(STATUS "Performing Test ${var}: SUCCESSS")
+      message(STATUS "Performing Test ${var}: SUCCESS")
     endif ()
 
     add_definitions(-D${var})

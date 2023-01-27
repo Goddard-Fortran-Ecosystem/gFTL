@@ -1,3 +1,8 @@
+#ifdef _DEPTH_
+#  undef _DEPTH_
+#endif
+#define _DEPTH_ *
+
 !--------------------------------------------------------------------
 ! Copyright © 2020 United States Government as represented by the   |
 ! Administrator of the National Aeronautics and Space               |
@@ -80,7 +85,7 @@
       integer(kind=GFTL_SIZE_KIND) :: res
 
       integer(kind=GFTL_SIZE_KIND) :: index
-      
+
       res = huge(index)
 
       return
@@ -142,14 +147,16 @@
       class(__set), intent(inout) :: this
 
       if (allocated(this%root)) deallocate(this%root)
+
       this%tsize = 0
       return
+         
    end subroutine __MANGLE(clear)
 
    ! =======================
    !  insert_single()
    ! =======================
-   subroutine __MANGLE(insert_single)(this, value, unused, is_new, iter)
+   recursive subroutine __MANGLE(insert_single)(this, value, unused, is_new, iter)
       class(__set), target, intent(inout) :: this
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused
@@ -160,7 +167,12 @@
 
       class(__set_node), pointer :: r
 
+      integer, save :: depth = 0
+
+      depth = depth + 1
+
       if (present(iter)) iter%tree => this
+
 
       if (allocated(this%root)) then
 #ifdef __set_multi
@@ -177,6 +189,7 @@
             if (present(is_new)) then
                is_new = .false.
             end if
+            depth = depth - 1
             return
          endif
 #endif
@@ -188,7 +201,9 @@
          if (present(iter)) iter%node => new
          call new%set_parent(parent)
          __T_COPY__(new%value, value)
-         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%get_value())),new)
+
+         call parent%set_child(merge(__LEFT, __RIGHT, __T_LT__(value, parent%get_value())), new)
+         if (allocated(new)) error stop 'should be deallocated'
          call this%rebalance(parent, .true.)
       else
          allocate(__set_node :: this%root)
@@ -203,7 +218,11 @@
          end if
       endif
       this%tsize = this%tsize + 1
+
+      depth = depth - 1
+
       return
+
       if (present(unused)) print*,shape(unused)
 
    end subroutine __MANGLE(insert_single)
@@ -213,7 +232,7 @@
    ! =======================
    !  insert_initializer_list()
    ! =======================
-   subroutine __MANGLE(insert_initializer_list)(this, values)
+   recursive subroutine __MANGLE(insert_initializer_list)(this, values)
       class(__set), intent(inout) :: this
       __T_declare_dummy__, intent(in) :: values(:)
       integer :: i
@@ -225,11 +244,11 @@
    end subroutine __MANGLE(insert_initializer_list)
 #endif
 
-   
+
    ! =======================
    !  insert_range()
    ! =======================
-   subroutine __MANGLE(insert_range)(this, first, last)
+   recursive subroutine __MANGLE(insert_range)(this, first, last)
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(in) :: first
       type(__set_iterator), intent(in) :: last
@@ -248,8 +267,8 @@
    !  insert_with_hint()
    ! =======================
    ! Currently a very sub-optimal implementation.
-   
-   subroutine __MANGLE(insert_single_with_hint)(this, hint, value, unused, iter)
+
+   recursive subroutine __MANGLE(insert_single_with_hint)(this, hint, value, unused, iter)
       class(__set), intent(inout) :: this
       type(__set_iterator), intent(in) :: hint
       __T_declare_dummy__, intent(in) :: value
@@ -258,9 +277,11 @@
 
       call this%insert(value, iter=iter)
 
+      __UNUSED_DUMMY(unused)
+      __UNUSED_DUMMY(hint)
    end subroutine __MANGLE(insert_single_with_hint)
 
-   
+
 
 
    logical function __MANGLE(lessThan)(x, y) result(less)
@@ -272,7 +293,7 @@
 #else
       less = __T_LT__(x,y)
 #endif
-      
+
    contains
 
       ! TODO:  possibly this procedure should be inside some sort of #ifdef
@@ -307,8 +328,8 @@
          __compare_declare_dummy, intent(in) :: y
 
          associate( wx => transfer(x,[1]), wy => transfer(y,[1]) )
-           less = dictionaryLessThan1d(wx, wy)
-         end associate
+         less = dictionaryLessThan1d(wx, wy)
+       end associate
 
 #  if !defined(__compare_type)
 #    undef __compare_declare_dummy
@@ -316,190 +337,193 @@
 #    undef __COMPARE_COPY
 #    undef __COMPARE_FREE
 #  endif
-      end function defaultLessThan
+    end function __MANGLE
 #endif
 
-   end function __MANGLE(lessThan)
+ end function __MANGLE(lessThan)
 
 
 
 
 
 
-   ! =======================
-   !  erase
-   ! =======================
-   function __MANGLE(erase_iter)(this, position) result(iter)
-      type(__set_iterator) :: iter
-      class(__set), target, intent(inout) :: this
-      type(__set_iterator), intent(in) :: position
+ ! =======================
+ !  erase
+ ! =======================
+ function __MANGLE(erase_iter)(this, position) result(iter)
+    type(__set_iterator) :: iter
+    class(__set), target, intent(inout) :: this
+    type(__set_iterator), intent(in) :: position
 
-      type (__set_iterator) :: last
+    type (__set_iterator) :: last
 
-      last = position
-      call last%next()
-      iter = this%erase(position, last)
+    last = position
+    call last%next()
+    iter = this%erase(position, last)
 
-   end function __MANGLE(erase_iter)
+ end function __MANGLE(erase_iter)
 
 
-   function __MANGLE(erase_value)(this, value) result(n)
-      integer(kind=GFTL_SIZE_KIND) :: n
-      class(__set), target, intent(inout) :: this
-      __T_declare_dummy__, intent(in) :: value
+ function __MANGLE(erase_value)(this, value) result(n)
+    integer(kind=GFTL_SIZE_KIND) :: n
+    class(__set), target, intent(inout) :: this
+    __T_declare_dummy__, intent(in) :: value
 
-      type(__set_iterator) :: iter
+    type(__set_iterator) :: iter
 
-      iter = this%find(value)
-      if (iter /= this%end()) then
-         iter = this%erase(iter)
+    iter = this%find(value)
+    if (iter /= this%end()) then
+       iter = this%erase(iter)
 #ifdef __set_multi
-         error - unhandled case for multiset
+       error - unhandled case for multiset
 #else
-         n = 1
+       n = 1
 #endif
-      else
-         n = 0
-      end if
-   end function __MANGLE(erase_value)
+    else
+       n = 0
+    end if
+ end function __MANGLE(erase_value)
 
-   ! =======================
-   !  erase_multi
-   ! =======================
-   function __MANGLE(erase_range)(this, first, last) result(next_iter)
-      type(__set_iterator) :: next_iter
-      class(__set), intent(inout) :: this
-      type(__set_iterator), intent(in) :: first
-      type(__set_iterator), intent(in) :: last
-      type(__set_node), pointer :: parent
-      type(__set_node), pointer :: pos
+ ! =======================
+ !  erase_multi
+ ! =======================
+ function __MANGLE(erase_range)(this, first, last) result(next_iter)
+    type(__set_iterator) :: next_iter
+    class(__set), intent(inout) :: this
+    type(__set_iterator), intent(in) :: first
+    type(__set_iterator), intent(in) :: last
+    type(__set_node), pointer :: parent
+    type(__set_node), pointer :: pos
 
-      type (__set_iterator) :: iter
+    type (__set_iterator) :: iter
 
-      next_iter = last
+    next_iter = last
 
-      iter = first
-      do while (iter /= last)
-         pos => iter%node
-         call iter%next()
-         if (pos%has_child(__RIGHT)) then
-            call this%erase_nonleaf(pos, __RIGHT)
-         else if (pos%has_child(__LEFT)) then
-            call this%erase_nonleaf(pos, __LEFT)
-         else
-            parent => pos%get_parent()
-            if (associated(parent)) then
-               call parent%deallocate_child(parent%which_child(pos))
-               call this%rebalance(parent, .false.)
-            else
-               deallocate(this%root)
-            endif
-         endif
-         this%tsize=this%tsize-1
-      end do
+    iter = first
+    do while (iter /= last)
+       pos => iter%node
+       call iter%next()
+       if (pos%has_child(__RIGHT)) then
+          call this%erase_nonleaf(pos, __RIGHT)
+       else if (pos%has_child(__LEFT)) then
+          call this%erase_nonleaf(pos, __LEFT)
+       else
+          parent => pos%get_parent()
+          if (associated(parent)) then
+             call parent%deallocate_child(parent%which_child(pos))
+             call this%rebalance(parent, .false.)
+          else
+             deallocate(this%root)
+          endif
+       endif
+       this%tsize=this%tsize-1
+    end do
 
-      return
-   end function __MANGLE(erase_range)
+    return
+ end function __MANGLE(erase_range)
 
-   ! =======================
-   !  begin
-   ! =======================
-   function __MANGLE(begin)(this) result(begin)
-      class(__set), target, intent(in) :: this
-      type(__set_iterator) :: begin
+ ! =======================
+ !  begin
+ ! =======================
+ function __MANGLE(begin)(this) result(begin)
+    class(__set), target, intent(in) :: this
+    type(__set_iterator) :: begin
 
-      begin%tree => this
-      call begin%next()
-      return
-   end function __MANGLE(begin)
+    begin%tree => this
+    call begin%next()
 
-   ! =======================
-   !  end
-   ! =======================
-   function __MANGLE(end)(this) result(end_)
-      class(__set), target, intent(in) :: this
-      type(__set_iterator) :: end_
+    return
+ end function __MANGLE(begin)
 
-      end_%tree => this
+ ! =======================
+ !  end
+ ! =======================
+ function __MANGLE(end)(this) result(end_)
+    class(__set), target, intent(in) :: this
+    type(__set_iterator) :: end_
 
-      return
-   end function __MANGLE(end)
+    end_%tree => this
 
-   ! =======================
-   !  lower_bound
-   ! =======================
-   function __MANGLE(lower_bound)(this, value) result(lb)
-      type(__set_iterator) :: lb
-      class(__set), target, intent(in) :: this
-      __T_declare_dummy__, intent(in) :: value
+    return
+ end function __MANGLE(end)
 
-      type(__set_node), pointer :: node
+ ! =======================
+ !  lower_bound
+ ! =======================
+ function __MANGLE(lower_bound)(this, value) result(lb)
+    type(__set_iterator) :: lb
+    class(__set), target, intent(in) :: this
+    __T_declare_dummy__, intent(in) :: value
 
-      lb%tree => this
-      node => this%find_node(value, .false.)
-      lb%node => node
+    type(__set_node), pointer :: node
 
-      if (__T_LT__(node%value, value)) then
-         if (lb /= this%end()) call lb%next()
-      end if
+    lb%tree => this
+    node => this%find_node(value, .false.)
+    lb%node => node
 
-      return
-   end function __MANGLE(lower_bound)
+    if (__T_LT__(node%value, value)) then
+       if (lb /= this%end()) call lb%next()
+    end if
 
-   ! =======================
-   !  upper_bound
-   ! =======================
-   function __MANGLE(upper_bound)(this, value) result(ub)
-      type(__set_iterator) :: ub
-      class(__set), target, intent(in) :: this
-      __T_declare_dummy__, intent(in) :: value
+    return
+ end function __MANGLE(lower_bound)
 
-      type(__set_node), pointer :: node
+ ! =======================
+ !  upper_bound
+ ! =======================
+ function __MANGLE(upper_bound)(this, value) result(ub)
+    type(__set_iterator) :: ub
+    class(__set), target, intent(in) :: this
+    __T_declare_dummy__, intent(in) :: value
 
-      ub%tree => this
-      node => this%find_node(value, .false.)
-      ub%node => node
+    type(__set_node), pointer :: node
 
-      if (.not. (__T_LT__(value, node%value))) then
-         if (ub /= this%end()) call ub%next()
-      end if
-            
-      return
-   end function __MANGLE(upper_bound)
+    ub%tree => this
+    node => this%find_node(value, .false.)
+    ub%node => node
+
+    if (.not. (__T_LT__(value, node%value))) then
+       if (ub /= this%end()) call ub%next()
+    end if
+
+    return
+ end function __MANGLE(upper_bound)
 
 
-   ! =======================
-   !  find_node
-   ! =======================
-   function __MANGLE(find_node)(this, value, last) result(find_node)
-      type(__set_node), pointer :: find_node
-      class(__set), target, intent(in) :: this
-      __T_declare_dummy__, intent(in) :: value
-      logical, intent(in) :: last
-      integer :: side
+ ! =======================
+ !  find_node
+ ! =======================
+ function __MANGLE(find_node)(this, value, last) result(find_node)
+    type(__set_node), pointer :: find_node
+    class(__set), target, intent(in) :: this
+    __T_declare_dummy__, intent(in) :: value
+    logical, intent(in) :: last
+    integer :: side
 
-      if (.not. allocated(this%root)) then
-         find_node => null()
-         return
-      end if
+    if (.not. allocated(this%root)) then
+       find_node => null()
+       return
+    end if
 
-      find_node => this%root%to_node()
-      if (associated(find_node)) then
-         do
-            if (.not. last .and. (                                           &
-                 &     (__MANGLE(order_eq)(find_node%get_value(),value)))) return
-            side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%get_value()))
-            if (.not.associated(find_node%get_child(side))) return
-            find_node => find_node%get_child(side)
-         end do
-      end if
+    find_node => this%root%to_node()
+    if (associated(find_node)) then
+       do
+          if (.not. last .and. (                                           &
+               &     (__MANGLE(order_eq)(find_node%get_value(),value)))) then
+             return
+          end if
+          side=merge(__LEFT, __RIGHT, __MANGLE(lessThan)(value, find_node%get_value()))
+          if (.not.associated(find_node%get_child(side))) return
+          find_node => find_node%get_child(side)
+       end do
+    end if
 
-      return
-   end function __MANGLE(find_node)
+    return
+ end function __MANGLE(find_node)
 
-   ! =======================
-   !  rebalance
-   ! =======================
+ ! =======================
+ !  rebalance
+ ! =======================
    subroutine __MANGLE(rebalance)(this, pos, once)
       class(__set), intent(inout) :: this
       type(__set_node), pointer, intent(in) :: pos
@@ -538,7 +562,7 @@
    ! =======================
    !  erase_nonleaf
    ! =======================
-subroutine __MANGLE(erase_nonleaf)(this, pos, side)
+   subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(inout) :: this
       type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: side
@@ -620,7 +644,7 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
    ! =======================
    !  advpos
    ! =======================
-   subroutine __MANGLE(advpos)(this, pos, dir)
+   recursive subroutine __MANGLE(advpos)(this, pos, dir)
       class(__set), target, intent(in) :: this
       type(__set_node), pointer, intent(inout) :: pos
       integer, intent(in) :: dir   ! dir=1 forward, dir=0 backward
@@ -738,12 +762,6 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       call pos%update_height()
       if (associated(child)) call child%update_height()
       return
-   contains
-
-      subroutine cheat(a,b)
-         type(__set_node), allocatable :: a, b
-         call move_alloc(from=a, to=b)
-      end subroutine cheat
    end subroutine __MANGLE(rot)
 
    logical function __MANGLE(value_compare)(this, x, y) result(value_compare)
@@ -875,22 +893,37 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
    ! =======================
    !   deep_copy (assignment)
    ! =======================
-   subroutine __MANGLE(deep_copy)(this, other)
+   recursive subroutine __MANGLE(deep_copy)(this, other)
       class(__set), target, intent(out) :: this
       class(__set), target, intent(in) :: other
 
       type(__set_iterator) :: iter
       __T_declare_result__, pointer :: ptr
 
-      iter = other%begin()
-      do while (iter /= other%end())
-         ptr => iter%of()
-         call this%insert(ptr)
-         call iter%next()
-      end do
+      integer, save :: depth = 0
+      integer :: counter
+
+      if (.not. allocated(other%root)) return
+
+      depth = depth + 1
+
+      associate ( b => other%begin(), e => other%end() )
+        iter = b
+        counter = 0
+        do while (iter /= e)
+           counter = counter + 1
+           ptr => iter%of()
+           if (.not. associated(ptr)) then
+              error stop 'bad ptr'
+           end if
+           call this%insert(ptr)
+           call iter%next()
+        end do
+      end associate
 
       this%tsize = other%tsize
-
+      depth = depth - 1
+      
    end subroutine __MANGLE(deep_copy)
 
 #ifdef __T_listable__
@@ -898,13 +931,13 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
       class(__set), intent(out) :: this
       __T_declare_dummy__, intent(in) :: il(:)
 
-      this = __set ()
+!!$      this = __set ()
       call this%insert(il)
 
    end subroutine __MANGLE(copy_list)
 #endif
    ! Suboptimal implementation
-   subroutine __MANGLE(merge)(this, source)
+   recursive subroutine __MANGLE(merge)(this, source)
       class(__set), intent(inout) :: this
       type(__set), target, intent(inout) :: source
 
@@ -941,6 +974,10 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
 #endif
     write(unit,'(a)') new_line('a')
     write(unit,'(4x,a10,1x,i0)') 'size: ',this%size()
+
+    __UNUSED_DUMMY(iomsg)
+    __UNUSED_DUMMY(iotype)
+    __UNUSED_DUMMY(v_list)
    end subroutine __MANGLE(write_formatted)
 
 
@@ -964,6 +1001,68 @@ subroutine __MANGLE(erase_nonleaf)(this, pos, side)
 
       return
    end subroutine __MANGLE(swap)
+
+   recursive logical function __MANGLE(verify)(this) result(verify)
+      class (__set), target, intent(in) :: this
+      
+         integer :: counter, sz
+         type(__set_iterator) :: iter
+
+
+      if (.not. allocated(this%root)) then
+         verify = .true.
+         return
+      else
+         select type (q => this%root)
+         type is (__set_node)
+            verify = verify_node(q)
+         end select
+         if (.not. verify) return
+         
+         sz = this%size()
+         associate ( b => this%begin(), e => this%end())
+           iter = b
+           counter = 0
+           do while (iter /= e)
+              counter = counter + 1
+              call iter%next()
+           end do
+         end associate
+         verify = (counter == sz)
+      end if
+
+   contains
+
+      recursive logical function verify_node(node) result(verify)
+         type(__set_node), target, intent(in) :: node
+
+         verify = verify_child(node, __LEFT) .and. verify_child(node, __RIGHT)
+
+      end function verify_node
+
+      recursive logical function verify_child(node, dir) result(verify)
+         type(__set_node), target, intent(in) :: node
+         integer, intent(in) :: dir
+
+         type(__set_node), pointer :: ch
+         
+
+         if (node%has_child(dir)) then
+            ch => node%get_child(dir)
+            if (.not. associated(ch%parent, node)) then
+               verify = .false.
+               return
+            end if
+            verify = verify_node(ch)
+         else
+            verify = .true. ! null case
+         end if
+
+      end function verify_child
+
+      
+
+   end function __MANGLE(verify)
 
 
 #ifdef __DEBUG__   

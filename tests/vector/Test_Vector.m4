@@ -431,9 +431,9 @@ contains
 
    @test
    subroutine test_equal()
+#if defined(__T__EQ__) || defined(__T_LT__)
       type(vector) :: ref, smaller, bigger, different
 
-#if defined(__T__EQ__) || defined(__T_LT__)
       ! [1,2]
       call ref%push_back(one)
       call ref%push_back(two)
@@ -461,9 +461,10 @@ contains
 
    @test
    subroutine test_not_equal()
-      type(vector) :: ref, smaller, bigger, different
 
 #if defined(__T_EQ__) || defined(__T_LT__)
+      type(vector) :: ref, smaller, bigger, different
+
       ! [1,2]
       call ref%push_back(one)
       call ref%push_back(two)

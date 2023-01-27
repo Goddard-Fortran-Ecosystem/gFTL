@@ -27,8 +27,9 @@
       type (Pair) :: p
       __T1_declare_dummy__, intent(in) :: first
       __T2_declare_dummy__, intent(in) :: second
-      p%first = first
-      p%second = second
+      __T1_COPY__(p%first, first)
+      __T2_COPY__(p%second, second)
+
    end function __MANGLE(new_pair)
 
 
@@ -40,7 +41,7 @@
       type(__pair), target, intent(in) :: a
       type(__pair), target, intent(in) :: b
 
-#if !(defined(__T1_EQ__) | defined(__T2_EQ__))
+#if (!defined(__T1_EQ__) | !defined(__T2_EQ__))
       logical :: lt, gt
 #endif      
 #if defined(__T1_EQ__)
@@ -85,7 +86,6 @@
       type(__pair), intent(in) :: a
       type(__pair), intent(in) :: b
 
-      logical :: gt
       logical :: lt1, lt2
 
       lt = __T1_LT__(a%first, b%first)

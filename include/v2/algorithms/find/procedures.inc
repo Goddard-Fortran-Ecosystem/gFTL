@@ -30,6 +30,8 @@
          type(keywordenforcer), intent(in) :: unused
 
          j%placeholder = -1
+         __UNUSED_DUMMY(do_not_use)
+         __UNUSED_DUMMY(unused)
        end function __MANGLE(find_basic)
 #endif      
       

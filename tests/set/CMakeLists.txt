@@ -6,10 +6,6 @@ set (types
   character_len17
   deferred_string
   Foo
-#  logical
-#  unlimited
-#  integer_shape_3
-#  real_rank_2_deferred_shape
   )
 
 

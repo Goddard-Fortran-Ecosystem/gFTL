@@ -153,6 +153,16 @@
 
 #include "templates/type_set_use_tokens.inc"
 
+#ifdef __USE_ASSIGN
+#  undef __USE_ASSIGN
+#endif
+#ifdef __USE_MOVE
+#  undef __USE_MOVE
+#endif
+#ifdef __USE_FREE
+#  undef __USE_FREE
+#endif
+
 #ifdef  __PAIR_ASSIGN
 #  define __USE_ASSIGN(dest,src) __PAIR_ASSIGN(dest,src)
 #else
