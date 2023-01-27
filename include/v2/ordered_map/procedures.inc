@@ -81,9 +81,9 @@
          type (__omap) :: m
          type (__omap_pair), intent(in) :: il(:)
          
-         integer :: i
+         integer(kind=GFTL_SIZE_KIND) :: i
 
-         do i = 1, size(il)
+         do i = 1, size(il,kind=GFTL_SIZE_KIND)
             call m%insert(il(i)%first, il(i)%second)
          end do
          

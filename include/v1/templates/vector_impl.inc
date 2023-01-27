@@ -243,7 +243,7 @@
          
          integer(kind=SIZE_KIND) :: n
          
-         n = size(array)
+         n = size(array, kind=SIZE_KIND)
          
          call this%reserve(n)
          this%elements(1:n) = array(1:n)
@@ -318,7 +318,7 @@
          class(__vector), intent(in) :: b
          logical, intent(in) :: less
          logical :: diff
-         integer :: i, n
+         integer(kind=SIZE_KIND) :: i, n
 
          __type_declare_result, pointer :: ai, bi
 

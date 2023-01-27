@@ -384,14 +384,14 @@
 
             integer(kind=SIZE_KIND) :: i, n
 
-            n = min(size(x),size(y))
+            n = min(size(x,kind=SIZE_KIND),size(y,kind=SIZE_KIND))
             
             do i = 1, n
                less = (x(i) < y(i))
                if (.not. x(i) == y(i)) return
             end do
             
-            less = (size(x) < size(y))
+            less = (size(x,kind=SIZE_KIND) < size(y,kind=SIZE_KIND))
             
          end function dictionaryLessThan1d
 

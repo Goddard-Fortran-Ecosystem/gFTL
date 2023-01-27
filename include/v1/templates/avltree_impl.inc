@@ -113,7 +113,7 @@
       function getsize(this)
       implicit none
       class(tree), intent(in) :: this
-      integer :: getsize
+      integer(kind=SIZE_KIND) :: getsize
 
       getsize=this%tsize
       return
