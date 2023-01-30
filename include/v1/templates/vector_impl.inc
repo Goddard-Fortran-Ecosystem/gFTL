@@ -318,7 +318,7 @@
          class(__vector), intent(in) :: b
          logical, intent(in) :: less
          logical :: diff
-         integer(kind=SIZE_KIND) :: i, n
+         integer :: i, n
 
          __type_declare_result, pointer :: ai, bi
 
