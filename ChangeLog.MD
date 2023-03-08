@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+### Changed
+
+- Moved existing v1 examples from `./examples` to `./examples/v1`
+
+### Added
+
+- New directory `/examples/v2` for examples using v2 interfaces.
+
+
 ## [1.8.2] - 2023-01-23
 
 ### Fixed

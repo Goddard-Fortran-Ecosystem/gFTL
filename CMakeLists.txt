@@ -39,8 +39,6 @@ endif ()
 # "source" code is all include files for gFTL:
 add_subdirectory (include)
 
-#add_subdirectory (examples)
-
 # No Fortran compiler is required to build GFTL, but the tests do
 # require Fortran.  So we check for that before searching for the
 # testing framework.
@@ -66,6 +64,9 @@ if (CMAKE_Fortran_COMPILER)
     add_subdirectory(tests EXCLUDE_FROM_ALL)
   endif ()
 endif ()
+
+add_subdirectory (examples)
+
 
 # The following is needed for external projects using *nix make when
 # parent project builds GFTL as a subproject.
