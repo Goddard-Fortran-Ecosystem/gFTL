@@ -110,6 +110,10 @@
       module procedure __MANGLE(iter_begin)
    end interface begin
 
+   interface ftn_begin
+      module procedure __MANGLE(iter_ftn_begin)
+   end interface ftn_begin
+
    interface distance
       module procedure __MANGLE(iter_distance)
    end interface distance
@@ -117,6 +121,10 @@
    interface end
       module procedure __MANGLE(iter_end)
    end interface end
+
+   interface ftn_end
+      module procedure __MANGLE(iter_ftn_end)
+   end interface ftn_end
 
    interface next
       ! Cannot use optional dummy due to otherwise ambiguous interfaces

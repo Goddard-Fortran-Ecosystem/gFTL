@@ -341,9 +341,9 @@
       end function __MANGLE(begin)
 
 
-! =======================
-!  end
-! =======================
+      ! =======================
+      !  end
+      ! =======================
       function __MANGLE(end)(this) result(iter)
          class(__map), target, intent(in) :: this
          type (__map_iterator) :: iter
@@ -352,6 +352,32 @@
          iter%set_iter = this%tree%end()
 
       end function __MANGLE(end)
+
+
+      ! =======================
+      !  ftn_begin
+      ! =======================
+      function __MANGLE(ftn_begin)(this) result(iter)
+         class(__map), target, intent(in) :: this
+         type (__map_iterator) :: iter
+
+         iter%reference => this
+         iter%set_iter = this%tree%ftn_begin()
+
+      end function __MANGLE(ftn_begin)
+
+
+      ! =======================
+      !  ftn_end
+      ! =======================
+      function __MANGLE(ftn_end)(this) result(iter)
+         class(__map), target, intent(in) :: this
+         type (__map_iterator) :: iter
+
+         iter%reference => this
+         iter%set_iter = this%tree%ftn_end()
+
+      end function __MANGLE(ftn_end)
 
 
 ! =======================

@@ -147,6 +147,8 @@
       ! Factory methods for iterators
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
+      procedure :: ftn_begin => __MANGLE(ftn_begin)
+      procedure :: ftn_end => __MANGLE(ftn_end)
       procedure :: rbegin => __MANGLE(rbegin)
       procedure :: rend => __MANGLE(rend)
 

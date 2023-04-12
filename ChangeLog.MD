@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+## [1.9.0] - 2023-03-12
+
+### Added
+
+- Added Fortran-friendly iterator factories (and tests) to
+
+  `ftn_begin()` and `ftn_end()` have been added to vector, set, map,
+  and ordered_map templates.  `ftn_begin()` points to just-before the
+  1st element of a container, while `ftn_end()` points to the last
+  element.   This allows the `next()` invocation to be at the start of the loop which
+  is less error prone in the presence of `CYCLE` statements.   Example usage:
+  
+  ```f90
+  type(Vector) :: v
+  type(VectorIterator) :: iter
+  ...
+  associate (e => v%ftn_end())
+     iter = v%ftn_begin()
+     do while (iter /= e)
+        call iter%next()
+        ...
+        if (<cond>) cycle ! does the right thing
+        ...
+     end do
+  end associate
+  ```
+
 ## [1.8.2] - 2023-01-23
 
 ### Fixed

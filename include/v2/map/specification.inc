@@ -96,6 +96,8 @@
 
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
+      procedure :: ftn_begin => __MANGLE(ftn_begin)
+      procedure :: ftn_end => __MANGLE(ftn_end)
       procedure :: find => __MANGLE(find)
 
       procedure :: count => __MANGLE(count)

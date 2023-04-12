@@ -10,6 +10,8 @@
    public :: advance
    public :: begin
    public :: end
+   public :: ftn_begin
+   public :: ftn_end
    public :: next
    public :: prev
 

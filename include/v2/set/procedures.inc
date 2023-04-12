@@ -448,6 +448,33 @@
  end function __MANGLE(end)
 
  ! =======================
+ !  ftn_begin
+ ! =======================
+ function __MANGLE(ftn_begin)(this) result(begin)
+    class(__set), target, intent(in) :: this
+    type(__set_iterator) :: begin
+
+    begin%tree => this
+
+    return
+ end function __MANGLE(ftn_begin)
+
+ ! =======================
+ !  end
+ ! =======================
+ function __MANGLE(ftn_end)(this) result(end_)
+    class(__set), target, intent(in) :: this
+    type(__set_iterator) :: end_
+
+    type(__set_iterator) :: tmp
+
+    ! brute force implementation for now
+    end_ = next(this%begin(), this%size()-1)
+
+    return
+ end function __MANGLE(ftn_end)
+
+ ! =======================
  !  lower_bound
  ! =======================
  function __MANGLE(lower_bound)(this, value) result(lb)

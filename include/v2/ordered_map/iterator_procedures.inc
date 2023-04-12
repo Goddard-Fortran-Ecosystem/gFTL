@@ -161,6 +161,32 @@
       end function __MANGLE(iter_end)
 
 ! ======
+! ftn_begin
+! ======
+
+      function __MANGLE(iter_ftn_begin)(cont) result(begin)
+         type(__omap_iterator) :: begin
+         type(__omap), target, intent(in) :: cont
+
+         begin = cont%ftn_begin()
+
+         return
+      end function __MANGLE(iter_ftn_begin)
+
+! =====
+! ftn_end
+! =====
+
+      function __MANGLE(iter_ftn_end)(cont) result(end)
+         type(__omap_iterator) :: end
+         type(__omap), target, intent(in) :: cont
+
+         end = cont%ftn_end()
+
+         return
+      end function __MANGLE(iter_ftn_end)
+
+! ======
 ! next
 ! ======
 
