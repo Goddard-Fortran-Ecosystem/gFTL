@@ -226,6 +226,16 @@
       end function __MANGLE(iter_begin)
 
       
+      function __MANGLE(iter_ftn_begin)(cont) result(begin)
+         type(__vector_iterator) :: begin
+         type(__vector), target, intent(in) :: cont
+
+         begin = cont%begin()
+
+         return
+      end function __MANGLE(iter_ftn_begin)
+
+      
       integer(kind=__gftl_size_kind) function __MANGLE(iter_distance)(a, b) result(distance)
          class(__vector_iterator), intent(in) :: a
          type(__vector_iterator), intent(in) :: b
@@ -244,6 +254,16 @@
 
          return
       end function __MANGLE(iter_end)
+
+
+      function __MANGLE(iter_ftn_end)(cont) result(end)
+         type(__vector_iterator) :: end
+         type(__vector), target, intent(in) :: cont
+
+         end = cont%ftn_end()
+
+         return
+      end function __MANGLE(iter_ftn_end)
 
 
       function __MANGLE(iter_next_1)(it) result(new_it)

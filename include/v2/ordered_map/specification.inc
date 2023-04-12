@@ -41,12 +41,14 @@
 #define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(K_)
 #define __vector __IDENTITY(__omap_guard)__IDENTITY(Vector)
 #define __vector_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorIterator)
+#define __vector_ftn_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorFtnIterator)
 #define __vector_riterator __IDENTITY(__omap_guard)__IDENTITY(VectorRIterator)
 
 #include "vector/specification.inc"
 
 #undef __vector
 #undef __vector_iterator
+#undef __vector_ftn_iterator
 #undef __vector_riterator
 #undef __vector_guard
 #include "parameters/T/undef_vector_T.inc"
@@ -100,6 +102,8 @@
 
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
+      procedure :: ftn_begin => __MANGLE(ftn_begin)
+      procedure :: ftn_end => __MANGLE(ftn_end)
       procedure :: find => __MANGLE(find)
 
       procedure :: count => __MANGLE(count)

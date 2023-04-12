@@ -32,7 +32,8 @@ foreach (T ${types})
 
   add_pfunit_ctest (${test}.x
     TEST_SOURCES ${bin}/${test}.pf
-                 ${bin}/${test}Iterator.pf ${bin}/${test}RIterator.pf
+                 ${bin}/${test}Iterator.pf
+                 ${bin}/${test}RIterator.pf
                  ${bin}/${test}Algorithms.pf
     OTHER_SOURCES ${sut}
     LINK_LIBRARIES test_shared gftl-v2
