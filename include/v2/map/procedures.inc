@@ -96,10 +96,10 @@
          type (__map) :: m
          type (__map_pair), intent(in) :: il(:)
          
-         integer :: i
+         integer(kind=GFTL_SIZE_KIND) :: i
 
          m = __map()
-         do i = 1, size(il)
+         do i = 1, size(il,kind=GFTL_SIZE_KIND)
             call m%insert(il(i))
          end do
          
