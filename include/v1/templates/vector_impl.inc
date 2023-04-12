@@ -243,7 +243,7 @@
          
          integer(kind=SIZE_KIND) :: n
          
-         n = size(array)
+         n = size(array, kind=SIZE_KIND)
          
          call this%reserve(n)
          this%elements(1:n) = array(1:n)

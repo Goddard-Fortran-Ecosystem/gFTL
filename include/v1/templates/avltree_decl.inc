@@ -32,7 +32,7 @@
       type, public :: tree
         private
         type(node), pointer :: root=>null()
-        integer :: tsize=0
+        integer(kind=SIZE_KIND) :: tsize=0
       contains
         final :: kill_tree
         procedure :: empty
