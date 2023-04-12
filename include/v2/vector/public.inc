@@ -9,8 +9,10 @@
    ! Iterator functions
    public :: advance
    public :: begin
+   public :: ftn_begin
    public :: distance
    public :: end
+   public :: ftn_end
    public :: next
    public :: prev
    public :: operator(+)

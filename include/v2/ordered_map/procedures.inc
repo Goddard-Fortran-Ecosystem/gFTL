@@ -40,12 +40,14 @@
 #define __vector_guard __IDENTITY(__omap_guard)__IDENTITY(K_)
 #define __vector __IDENTITY(__omap_guard)__IDENTITY(Vector)
 #define __vector_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorIterator)
+#define __vector_ftn_iterator __IDENTITY(__omap_guard)__IDENTITY(VectorFtnIterator)
 #define __vector_riterator __IDENTITY(__omap_guard)__IDENTITY(VectorRIterator)
 
 #include "vector/procedures.inc"
 
 #undef __vector
 #undef __vector_iterator
+#undef __vector_ftn_iterator
 #undef __vector_riterator
 #undef __vector_guard
 #include "parameters/T/undef_vector_T.inc"
@@ -334,6 +336,31 @@
          iter%key_iter = this%ordered_keys%end()
 
       end function __MANGLE(end)
+
+! =======================
+!  ftn_begin
+! =======================
+      function __MANGLE(ftn_begin)(this) result(iter)
+         class(__omap), target, intent(in) :: this
+         type (__omap_iterator) :: iter
+
+         iter%reference => this
+         iter%key_iter = this%ordered_keys%ftn_begin()
+
+      end function __MANGLE(ftn_begin)
+
+
+! =======================
+!  ftn_end
+! =======================
+      function __MANGLE(ftn_end)(this) result(iter)
+         class(__omap), target, intent(in) :: this
+         type (__omap_iterator) :: iter
+
+         iter%reference => this
+         iter%key_iter = this%ordered_keys%ftn_end()
+
+      end function __MANGLE(ftn_end)
 
 
 ! =======================

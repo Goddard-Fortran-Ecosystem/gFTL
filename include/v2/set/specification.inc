@@ -62,6 +62,8 @@
       generic :: erase => erase_iter, erase_value, erase_range
       procedure :: begin => __MANGLE(begin)
       procedure :: end => __MANGLE(end)
+      procedure :: ftn_begin => __MANGLE(ftn_begin)
+      procedure :: ftn_end => __MANGLE(ftn_end)
       procedure :: lower_bound => __MANGLE(lower_bound)
       procedure :: upper_bound => __MANGLE(upper_bound)
 

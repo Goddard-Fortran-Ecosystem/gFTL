@@ -930,6 +930,23 @@
 
    end function __MANGLE(begin)
 
+   ! ==============================
+   !  ftn_begin() - create an iterator with fortran looping convention
+   ! ==============================
+   function __MANGLE(ftn_begin)(this) result(iter)
+      type (__vector_iterator) :: iter
+      class (__vector), target, intent(in) :: this
+
+      iter%current_index = 0
+
+      if (allocated(this%elements)) then
+         iter%elements => this%elements
+      else
+         iter%elements => null()
+      end if
+
+   end function __MANGLE(ftn_begin)
+
 
    ! =======================
    !  end()
@@ -948,6 +965,24 @@
       end if
 
    end function __MANGLE(end)
+
+   ! =======================
+   !  ftn_end()
+   !  Construct  forward iterator, initially set to
+   !  last element of vector.
+   ! =======================
+   function __MANGLE(ftn_end)(this) result(iter)
+      class (__vector), target, intent(in) :: this
+      type (__vector_iterator) :: iter
+
+      iter%current_index = this%size() ! end
+      if (allocated(this%elements)) then
+         iter%elements => this%elements
+      else
+         iter%elements => null()
+      end if
+
+   end function __MANGLE(ftn_end)
 
 
    ! =======================
