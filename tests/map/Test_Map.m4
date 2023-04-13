@@ -323,6 +323,20 @@ contains
    end subroutine test_make_from_array_of_pairs
 #endif
 
+   @test
+   subroutine test_ftn_iter()
+      type(Map), target :: m
+
+      call m%insert(key_one, one)
+      call m%insert(key_two, two)
+
+      @assert_that('ftn_begin', next(m%ftn_begin()) == m%begin(), is(true()))
+      @assert_that('ftn_end', next(m%ftn_end()) == m%end(), is(true()))
+
+   end subroutine test_ftn_iter
+
+
+
 #include "parameters/Key/undef_derived_macros.inc"
 #include "parameters/Key/undef_internal.inc"
 #include "parameters/Key/undef_map_Key.inc"

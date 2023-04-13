@@ -229,6 +229,20 @@ contains
    end subroutine test_swap
 
 
+   @test
+   subroutine test_ftn_iter()
+      type(set), target :: s
+
+      call s%insert(one)
+      call s%insert(two)
+      call s%insert(three)
+
+      @assert_that('ftn_begin', next(s%ftn_begin()) == s%begin(), is(true()))
+      @assert_that('ftn_end', next(s%ftn_end()) == s%end(), is(true()))
+
+   end subroutine test_ftn_iter
+
+
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_set_T.inc"

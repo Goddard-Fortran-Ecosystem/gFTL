@@ -316,6 +316,66 @@ contains
       
    end subroutine test_prev
 
+
+   @test
+   subroutine test_compare_ftn_iter()
+      type(Vector) :: v
+      type(VectorIterator) :: iter
+
+      call v%push_back(one)
+      call v%push_back(two)
+
+      @assert_that(next(v%ftn_begin(),1) == v%begin(), is(true()))
+      @assert_that(next(v%ftn_begin(),2) == next(v%begin(),1), is(true()))
+
+      @assert_that(v%ftn_end() == prev(v%end(),1), is(true()))
+      @assert_that(prev(v%ftn_end(),1) == prev(v%end(),2), is(true()))
+      
+   end subroutine test_compare_ftn_iter
+
+   @test
+   subroutine test_ftn_next()
+      type(Vector) :: v
+      type(VectorIterator) :: iter
+
+      call v%push_back(one)
+      call v%push_back(two)
+
+      iter = next(v%ftn_begin(),1)
+      ASSERT(iter%of(), one)
+
+      iter = next(v%ftn_begin(),2)
+      @assert_that(iter == v%ftn_end(), is(true()))
+
+      iter = next(v%ftn_begin(),1_GFTL_SIZE_KIND)
+      ASSERT(iter%of(), one)
+
+      iter = next(v%ftn_begin(),2_GFTL_SIZE_KIND)
+      @assert_that(iter == v%ftn_end(), is(true()))
+
+   end subroutine test_ftn_next
+
+   @test
+   subroutine test_ftn_prev()
+      type(Vector) :: v
+      type(VectorIterator) :: iter
+
+      call v%push_back(one)
+      call v%push_back(two)
+      call v%push_back(three)
+
+      iter = prev(v%ftn_end(),1)
+      ASSERT(iter%of(), two)
+      iter = prev(v%ftn_end(),2)
+      ASSERT(iter%of(), one)
+      
+      iter = prev(v%ftn_end(),1_GFTL_SIZE_KIND)
+      ASSERT(iter%of(), two)
+      iter = prev(v%ftn_end(),2_GFTL_SIZE_KIND)
+      ASSERT(iter%of(), one)
+      
+   end subroutine test_ftn_prev
+
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_vector_T.inc"

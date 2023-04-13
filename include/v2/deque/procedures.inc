@@ -166,7 +166,7 @@
       class (__deque), intent(in) :: this
 
       if (allocated(this%buckets)) then
-         capacity = size(this%buckets)
+         capacity = size(this%buckets, kind=GFTL_SIZE_KIND)
       else
          capacity = 0
       end if
@@ -823,7 +823,7 @@
             old_capacity = 0
             allocate(this%buckets(capacity))
          else                                      ! allocated
-            old_capacity = size(this%buckets)
+            old_capacity = size(this%buckets,kind=GFTL_SIZE_KIND)
             allocate(temp(capacity))
             do i = 1, min(old_capacity, capacity)
                ii = this%idx(i)

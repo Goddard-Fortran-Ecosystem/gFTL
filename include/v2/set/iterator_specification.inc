@@ -33,6 +33,14 @@
       module procedure __MANGLE(iter_end)
    end interface end
 
+   interface ftn_begin
+      module procedure __MANGLE(iter_ftn_begin)
+   end interface ftn_begin
+
+   interface ftn_end
+      module procedure __MANGLE(iter_ftn_end)
+   end interface ftn_end
+
    interface next
       module procedure __MANGLE(iter_next_1)
 #ifndef  __gftl_disable_index_kind_overload

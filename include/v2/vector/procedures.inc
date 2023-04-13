@@ -94,8 +94,8 @@
 
       integer(kind=GFTL_SIZE_KIND) :: i
 
-      call v%resize(size(il))
-      do i = 1, size(il)
+      call v%resize(size(il,kind=GFTL_SIZE_KIND))
+      do i = 1, size(il,kind=GFTL_SIZE_KIND)
          __T_COPY__(v%elements(i)%item, il(i))
       end do
 
@@ -136,7 +136,7 @@
       class (__vector), intent(in) :: this
 
       if (allocated(this%elements)) then
-         capacity = size(this%elements)
+         capacity = size(this%elements, kind=GFTL_SIZE_KIND)
       else
          capacity = 0
       end if
@@ -397,7 +397,7 @@
       
       integer(kind=GFTL_SIZE_KIND) :: i, n
 
-      n = size(values)
+      n = size(values, kind=GFTL_SIZE_KIND)
       call this%grow_to(this%vsize + n)
 
       do i = this%vsize, pos%current_index, -1
@@ -437,7 +437,7 @@
 
       integer(kind=GFTL_SIZE_KIND) :: n
 
-      n = size(array)
+      n = size(array, kind=GFTL_SIZE_KIND)
 
       call this%reserve(n)
       this%elements(1:n)%item = array(1:n)
@@ -930,6 +930,23 @@
 
    end function __MANGLE(begin)
 
+   ! ==============================
+   !  ftn_begin() - create an iterator with fortran looping convention
+   ! ==============================
+   function __MANGLE(ftn_begin)(this) result(iter)
+      type (__vector_iterator) :: iter
+      class (__vector), target, intent(in) :: this
+
+      iter%current_index = 0
+
+      if (allocated(this%elements)) then
+         iter%elements => this%elements
+      else
+         iter%elements => null()
+      end if
+
+   end function __MANGLE(ftn_begin)
+
 
    ! =======================
    !  end()
@@ -948,6 +965,24 @@
       end if
 
    end function __MANGLE(end)
+
+   ! =======================
+   !  ftn_end()
+   !  Construct  forward iterator, initially set to
+   !  last element of vector.
+   ! =======================
+   function __MANGLE(ftn_end)(this) result(iter)
+      class (__vector), target, intent(in) :: this
+      type (__vector_iterator) :: iter
+
+      iter%current_index = this%size() ! end
+      if (allocated(this%elements)) then
+         iter%elements => this%elements
+      else
+         iter%elements => null()
+      end if
+
+   end function __MANGLE(ftn_end)
 
 
    ! =======================
