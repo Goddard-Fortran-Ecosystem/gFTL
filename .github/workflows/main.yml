@@ -162,7 +162,8 @@ jobs:
           cmake --version
       - name: Install Python3
         run: |
-          apt-get install python3 -y
+          apt-get update
+          apt-get install python3 python-is-python3 -y
       - name: Checkout
         uses: actions/checkout@v3
         with:
