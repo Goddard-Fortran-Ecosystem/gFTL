@@ -11,7 +11,7 @@ on:
       - "Copyright.txt"
 
 jobs:
-  build:
+  GNU:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -59,7 +59,7 @@ jobs:
           ${FC} --version
           cmake --version
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
       - name: Build GFE Prereqs
@@ -80,7 +80,49 @@ jobs:
           cd build
           ctest -j1 --output-on-failure --repeat until-pass:4
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
+
+
+  Nvidia:
+    runs-on: ubuntu-20.04
+    container: nvcr.io/nvidia/nvhpc:23.3-devel-cuda12.0-ubuntu20.04
+    env:
+      FC: nvfortran
+
+    name: Nvidia HPC
+    steps:
+      - name: Versions
+        run: |
+          ${FC} --version
+          cmake --version
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/travis-install-gfe.bash
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j$(nproc)
+      - name: Build Tests
+        run: |
+          cd build
+          make -j$(nproc) tests
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: logfiles
