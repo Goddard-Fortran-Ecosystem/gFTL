@@ -67,7 +67,7 @@ jobs:
           git config --global --add safe.directory '*'
       - name: Build GFE Prereqs
         run: |
-          bash ./tools/travis-install-gfe.bash
+          bash ./tools/ci-install-gfe.bash
       - name: Build gFTL
         run: |
           mkdir -p build
@@ -125,7 +125,7 @@ jobs:
           cmake --version
       - name: Build GFE Prereqs
         run: |
-          bash ./tools/travis-install-gfe.bash
+          bash ./tools/ci-install-gfe.bash
       - name: Build gFTL
         run: |
           mkdir -p build
@@ -173,7 +173,7 @@ jobs:
           git config --global --add safe.directory '*'
       - name: Build GFE Prereqs
         run: |
-          bash ./tools/travis-install-gfe.bash
+          bash ./tools/ci-install-gfe.bash
       - name: Build gFTL
         run: |
           mkdir -p build
