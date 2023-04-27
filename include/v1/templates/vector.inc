@@ -20,13 +20,13 @@
 #ifdef _iterator
 #  define __iterator _iterator
 #else
-#  define __iterator __QUOTE(__vector)__QUOTE(Iterator)
+#  define __iterator _CONCAT(__vector,Iterator)
 #endif
 
 #ifdef _riterator
 #  define __riterator _riterator
 #else
-#  define __riterator __QUOTE(__vector)__QUOTE(RIterator) 
+#  define __riterator _CONCAT(__vector,RIterator)
 #endif
 
       public :: __vector

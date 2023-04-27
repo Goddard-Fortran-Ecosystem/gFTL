@@ -11,7 +11,12 @@
 #  define __tmplbase_inc
 
 #  define __QUOTE(x) x
-#  define __PROC(x) __QUOTE(__container_prefix)__QUOTE(x)
+#ifdef _CRAYFTN
+#  define _CONCAT(v,i) v##i
+#else
+#  define _CONCAT(v,i) __QUOTE(v)__QUOTE(i)
+#endif
+#  define __PROC(x) _CONCAT(__container_prefix,x)
 
 ! The Intel compiler requires a flag to use F2003 allocate-on-assignment
 ! semantics.  To avoid assuming that users have that flag set,

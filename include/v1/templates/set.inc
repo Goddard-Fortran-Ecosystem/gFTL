@@ -20,7 +20,7 @@
 #ifdef _iterator
 #  define __iterator _iterator
 #else
-#  define __iterator __QUOTE(__set)__QUOTE(Iterator)
+#  define __iterator _CONCAT(__set,Iterator)
 #endif
       public :: __set
       public :: __iterator

@@ -19,7 +19,7 @@
 #ifdef _iterator
 #  define __miterator _iterator
 #else
-#  define __miterator __QUOTE(__map)__QUOTE(Iterator)
+#  define __miterator _CONCAT(__map,Iterator)
 #endif
 #define __siterator s_iterator
 #define __set set2
