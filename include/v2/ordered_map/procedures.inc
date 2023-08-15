@@ -204,7 +204,7 @@
       __T_declare_result__, pointer :: res
       class(__omap), target, intent(in) :: this
       __Key_declare_dummy__, intent(in) :: key
-      integer, intent(out) :: rc
+      integer, intent(out), optional :: rc
 
       res => this%map%at(key, rc)
 
