@@ -88,7 +88,6 @@
 
       procedure :: of => __MANGLE(of) ! [] operator 
       procedure :: at_rc => __MANGLE(at_rc)
-      generic :: at => of
       generic :: at => at_rc  ! [] operator
 
       procedure :: erase_iter => __MANGLE(erase_iter)

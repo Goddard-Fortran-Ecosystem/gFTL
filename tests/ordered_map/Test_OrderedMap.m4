@@ -110,7 +110,8 @@ contains
    subroutine test_at()
       type (OrderedMap) :: m
       __T_declare_result__, pointer :: val
-      
+      integer :: rc
+
       call m%insert(key_one, one)
       call m%insert(key_two, two)
 
@@ -119,6 +120,18 @@ contains
 
       val => m%at(key_two)
       ASSERT(val, two)
+
+      ! access non-existent key with bounds-check result rc
+      @assertEqual(2, m%size())
+      val => m%at(key_three,rc)
+      @assertFalse(associated(val))
+      @assertEqual(rc, OUT_OF_RANGE)
+      @assertEqual(2, m%size())
+
+      ! access with bounds check no result rc
+      val => m%at(key_three)
+      @assertFalse(associated(val))
+      @assertEqual(2, m%size())
 
    end subroutine test_at
 
@@ -348,7 +361,7 @@ contains
 
       m =  Map([mapPair(key_one,one), mapPair(key_two,two), mapPair(key_three,THREE)])
       @assert_that(int(m%size()), is(equal_to(3)))
-      
+
       call m%insert(key_one, one)
       call m%insert(key_two, two)
 
