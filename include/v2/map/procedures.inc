@@ -225,17 +225,17 @@
          __T_declare_result__, pointer :: res
          class(__map), target, intent(in) :: this
          __Key_declare_dummy__, intent(in) :: key
-         integer, intent(out) :: rc
+         integer, intent(out), optional :: rc
 
          type (__map_iterator) :: iter
 
          iter = this%find(key)
          if (iter == this%end()) then
             res => null()
-            rc = OUT_OF_RANGE
+            if (present(rc)) rc = OUT_OF_RANGE
          else
             res => iter%second()
-            rc = SUCCESS
+            if (present(rc)) rc = SUCCESS
          end if
 
          return
