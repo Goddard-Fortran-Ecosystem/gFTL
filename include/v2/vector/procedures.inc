@@ -21,6 +21,16 @@
 ! define derived generic template parameters from internal parameters.
 #include "parameters/T/define_derived_macros.inc"
 
+   subroutine __MANGLE(unused_procedure)()
+      ! The following are an adhoc way to suppress compiler
+      ! warnings about parameters not used in this template
+      __UNUSED_DUMMY(BAD_ALLOC)
+      __UNUSED_DUMMY(ILLEGAL_INPUT)
+      __UNUSED_DUMMY(LENGTH_ERROR)
+      __UNUSED_DUMMY(TYPE_HAS_NO_DEFAULT_VALUE)
+      __UNUSED_DUMMY(NO_TYPE__)
+   end subroutine __MANGLE(unused_procedure)
+
    ! =======================
    !  Structure constructors
    ! =======================
