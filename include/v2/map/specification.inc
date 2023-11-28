@@ -82,7 +82,6 @@
 
       procedure :: of => __MANGLE(of) ! [] operator 
       procedure :: at_rc => __MANGLE(at_rc)
-      generic :: at => of
       generic :: at => at_rc  ! [] operator
 
       procedure :: erase_iter => __MANGLE(erase_iter)
@@ -102,7 +101,9 @@
 
       procedure :: count => __MANGLE(count)
       procedure :: deep_copy => __MANGLE(deep_copy)
+#ifndef  __gftl_map_use_default_assignment
       generic :: assignment(=) => deep_copy
+#endif
 !#ifdef _DUMP_MAP
 !      procedure :: dump => mapdump
 !#endif

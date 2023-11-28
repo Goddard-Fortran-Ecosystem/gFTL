@@ -70,7 +70,9 @@
       procedure :: merge  => __MANGLE(merge)
 
       procedure :: deep_copy => __MANGLE(deep_copy)
+#ifndef  __gftl_set_use_default_assignment
       generic :: assignment(=) => deep_copy
+#endif
       
 #ifdef __T_listable__
       procedure :: copy_list => __MANGLE(copy_list)

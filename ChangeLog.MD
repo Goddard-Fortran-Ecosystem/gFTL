@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Added
+
+- Introduced new preprocessing options to disable override of `assignment(=)` in v2 map and set templates.   This is to workaround a case where intel compiler is producing erroneous results.   Disabling everywhere is too risky.
+
+### Changed
+
+- Behavior of `at(key)` (without rc) now will not extend the map.   This change may be reverted if it breaks any downstream projects.
+- Remove Ubuntu 20 and gfortran-9 from CI
+
+### Fixed
+
+- Add `-check nouninit` for Intel LLVM to work around [`ifx` bug](https://github.com/HPC-Bugs/reproducers/tree/main/compiler/Fortran/ifx/allocatable).
+
 ## [1.10.0] - 2023-04-13
 
 ### Added
