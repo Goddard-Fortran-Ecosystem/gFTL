@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Update CI. Add nvhpc and Intel. Remove gfortran-9 and ubuntu 20.04
+
 ### Fixed
 
 - Add `-check nouninit` for Intel LLVM to work around [`ifx` bug](https://github.com/HPC-Bugs/reproducers/tree/main/compiler/Fortran/ifx/allocatable).

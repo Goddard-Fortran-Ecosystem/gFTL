@@ -15,19 +15,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-11, macos-12]
-        compiler: [gfortran-9, gfortran-10, gfortran-11, gfortran-12]
+        os: [ubuntu-22.04, macos-11, macos-12]
+        compiler: [gfortran-10, gfortran-11, gfortran-12, gfortran-13]
         exclude:
-          - os: ubuntu-20.04
-            compiler: gfortran-11
-          - os: ubuntu-20.04
-            compiler: gfortran-12
-          - os: ubuntu-22.04
-            compiler: gfortran-9
           - os: macos-11
-            compiler: gfortran-9
-          - os: macos-12
-            compiler: gfortran-9
+            compiler: gfortran-13
           - os: macos-12
             compiler: gfortran-10
 
@@ -50,16 +42,12 @@ jobs:
 
     name: ${{ matrix.os }} / ${{ matrix.compiler }}
     steps:
-      - name: Install GCC 12 on Ubuntu 22.04
-        if: matrix.os == 'ubuntu-22.04' && matrix.compiler == 'gfortran-12'
-        run: |
-          sudo apt-get install gfortran-12 -y
       - name: Compiler Versions
         run: |
           ${FC} --version
           cmake --version
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Set all directories as git safe
@@ -100,7 +88,7 @@ jobs:
     name: Intel Fortran
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Set all directories as git safe
@@ -149,8 +137,8 @@ jobs:
             build/**/*.log
 
   Nvidia:
-    runs-on: ubuntu-20.04
-    container: nvcr.io/nvidia/nvhpc:23.3-devel-cuda12.0-ubuntu20.04
+    runs-on: ubuntu-22.04
+    container: nvcr.io/nvidia/nvhpc:23.11-devel-cuda_multi-ubuntu22.04
     env:
       FC: nvfortran
 
@@ -165,7 +153,7 @@ jobs:
           apt-get update
           apt-get install python3 python-is-python3 -y
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Set all directories as git safe
