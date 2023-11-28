@@ -94,6 +94,10 @@ jobs:
       - name: Set all directories as git safe
         run: |
           git config --global --add safe.directory '*'
+      - name: Install needed packages
+        run: |
+          apt-get update
+          apt-get install -y cmake python-is-python3 m4
       - name: Versions
         run: |
           ${FC} --version
