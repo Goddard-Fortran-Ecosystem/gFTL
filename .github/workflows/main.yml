@@ -82,7 +82,7 @@ jobs:
     runs-on: ubuntu-20.04
     container: intel/hpckit:2024.0.0-devel-ubuntu22.04
     env:
-      FC: ifort
+      FC: ifx
       CC: icx
 
     name: Intel Fortran
