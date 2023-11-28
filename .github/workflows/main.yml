@@ -87,14 +87,21 @@ jobs:
 
     name: Intel Fortran
     steps:
-      - name: Free root space
-        uses: almahmoud/free-root-space@main
-        with:
-          verbose: true
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Print out disk usage
+        run: |
+          du -hsc /* | sort -h
+      - name: Clean out some unneeded Intel stuff
+        run: |
+          rm -rf /opt/intel/oneapi/debugger
+          rm -rf /opt/intel/oneapi/inspector
+          rm -rf /opt/intel/oneapi/itac
+          rm -rf /opt/intel/oneapi/advisor
+          rm -rf /opt/intel/oneapi/vtune
+          rm -rf /opt/intel/oneapi/dal
       - name: Set all directories as git safe
         run: |
           git config --global --add safe.directory '*'
@@ -116,11 +123,11 @@ jobs:
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+          make -j3
       - name: Build Tests
         run: |
           cd build
-          make -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu) tests
+          make -j3 tests
       - name: Run Tests
         run: |
           cd build
