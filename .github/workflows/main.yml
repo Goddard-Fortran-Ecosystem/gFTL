@@ -87,6 +87,10 @@ jobs:
 
     name: Intel Fortran
     steps:
+      - name: Free root space
+        uses: almahmoud/free-root-space@main
+        with:
+          verbose: true
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -111,7 +115,7 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE -DCMAKE_BUILD_TYPE=Debug
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
           make -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
       - name: Build Tests
         run: |
