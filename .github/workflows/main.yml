@@ -58,11 +58,11 @@ jobs:
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j$(nproc)
+          make -j3
       - name: Build Tests
         run: |
           cd build
-          make -j$(nproc) tests
+          make -j3 tests
       - name: Run Tests
         run: |
           cd build
