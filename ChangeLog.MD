@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.11.0] - 2023-11-28
+
 ### Added
 
 - Introduced new preprocessing options to disable override of `assignment(=)` in v2 map and set templates.   This is to workaround a case where intel compiler is producing erroneous results.   Disabling everywhere is too risky.
