@@ -12,6 +12,7 @@
 
 - Behavior of `at(key)` (without rc) now will not extend the map.   This change may be reverted if it breaks any downstream projects.
 - Remove Ubuntu 20 and gfortran-9 from CI
+- Update CI. Add nvhpc and Intel. Remove gfortran-9 and ubuntu 20.04
 
 ### Fixed
 

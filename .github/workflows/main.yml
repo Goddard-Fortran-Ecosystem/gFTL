@@ -11,7 +11,7 @@ on:
       - "Copyright.txt"
 
 jobs:
-  build:
+  GNU:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -47,12 +47,77 @@ jobs:
           ${FC} --version
           cmake --version
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
       - name: Build GFE Prereqs
         run: |
-          bash ./tools/travis-install-gfe.bash
+          bash ./tools/ci-install-gfe.bash
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu)
+      - name: Build Tests
+        run: |
+          cd build
+          make -j$(nproc 2>/dev/null || sysctl -n hw.logicalcpu) tests
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
+
+  Intel:
+    runs-on: ubuntu-20.04
+    container: intel/hpckit:2024.0.0-devel-ubuntu22.04
+    env:
+      FC: ifort
+      CC: icx
+
+    name: Intel Fortran
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Print out disk usage
+        run: |
+          du -hsc /* | sort -h
+      - name: Clean out some unneeded Intel stuff
+        run: |
+          rm -rf /opt/intel/oneapi/debugger
+          rm -rf /opt/intel/oneapi/inspector
+          rm -rf /opt/intel/oneapi/itac
+          rm -rf /opt/intel/oneapi/advisor
+          rm -rf /opt/intel/oneapi/vtune
+          rm -rf /opt/intel/oneapi/dal
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+      - name: Install needed packages
+        run: |
+          apt-get update
+          apt-get install -y cmake python-is-python3 m4
+      - name: Versions
+        run: |
+          ${FC} --version
+          ${CC} --version
+          mpirun --version
+          cmake --version
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
       - name: Build gFTL
         run: |
           mkdir -p build
@@ -68,9 +133,59 @@ jobs:
           cd build
           ctest -j1 --output-on-failure --repeat until-pass:4
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: logfiles
           path: |
             build/**/*.log
+
+  #########################################################################################################################################
+  # Nvidia:                                                                                                                               #
+  #   runs-on: ubuntu-22.04                                                                                                               #
+  #   container: nvcr.io/nvidia/nvhpc:23.11-devel-cuda_multi-ubuntu22.04                                                                  #
+  #   env:                                                                                                                                #
+  #     FC: nvfortran                                                                                                                     #
+  #                                                                                                                                       #
+  #   name: Nvidia HPC                                                                                                                    #
+  #   steps:                                                                                                                              #
+  #     - name: Versions                                                                                                                  #
+  #       run: |                                                                                                                          #
+  #         ${FC} --version                                                                                                               #
+  #         cmake --version                                                                                                               #
+  #     - name: Install Python3                                                                                                           #
+  #       run: |                                                                                                                          #
+  #         apt-get update                                                                                                                #
+  #         apt-get install python3 python-is-python3 -y                                                                                  #
+  #     - name: Checkout                                                                                                                  #
+  #       uses: actions/checkout@v4                                                                                                       #
+  #       with:                                                                                                                           #
+  #         fetch-depth: 1                                                                                                                #
+  #     - name: Set all directories as git safe                                                                                           #
+  #       run: |                                                                                                                          #
+  #         git config --global --add safe.directory '*'                                                                                  #
+  #     - name: Build GFE Prereqs                                                                                                         #
+  #       run: |                                                                                                                          #
+  #         bash ./tools/ci-install-gfe.bash                                                                                              #
+  #     - name: Build gFTL                                                                                                                #
+  #       run: |                                                                                                                          #
+  #         mkdir -p build                                                                                                                #
+  #         cd build                                                                                                                      #
+  #         cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE #
+  #         make -j$(nproc)                                                                                                               #
+  #     - name: Build Tests                                                                                                               #
+  #       run: |                                                                                                                          #
+  #         cd build                                                                                                                      #
+  #         make -j$(nproc) tests                                                                                                         #
+  #     - name: Run Tests                                                                                                                 #
+  #       run: |                                                                                                                          #
+  #         cd build                                                                                                                      #
+  #         ctest -j1 --output-on-failure --repeat until-pass:4                                                                           #
+  #     - name: Archive log files on failure                                                                                              #
+  #       uses: actions/upload-artifact@v3                                                                                                #
+  #       if: failure()                                                                                                                   #
+  #       with:                                                                                                                           #
+  #         name: logfiles                                                                                                                #
+  #         path: |                                                                                                                       #
+  #           build/**/*.log                                                                                                              #
+  #########################################################################################################################################
