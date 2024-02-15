@@ -410,6 +410,10 @@ contains
 
       @assert_that(int(v%size()), is(4))
       @assert_that(next_iter == iter, is(true()))
+      ASSERT(v%at(1), one)
+      ASSERT(v%at(2), two)
+      ASSERT(v%at(3), three)
+      ASSERT(v%at(4), one)
 
    end subroutine test_erase_empty_range
 
