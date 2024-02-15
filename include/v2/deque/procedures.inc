@@ -735,22 +735,24 @@
       integer(kind=GFTL_SIZE_KIND) :: i, ii, delta
 
       delta=last%current_index-first%current_index
-      do i=last%current_index, this%size_
-         ii = this%idx(i)
-         associate( &
-              a => this%buckets(ii-delta)%ptr%bucket_items, &
-              b => this%buckets(ii)%ptr%bucket_items)
-              __T_MOVE__(a%item, b%item)
-         end associate
-      end do
-      do i = this%size_ - delta + 1, last%current_index - 1
-         ii = this%idx(i)
-         __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
-      end do
-      this%size_=this%size_-delta
+      if (delta.gt.0) then
+        do i=last%current_index, this%size_
+           ii = this%idx(i)
+           associate( &
+                a => this%buckets(ii-delta)%ptr%bucket_items, &
+                b => this%buckets(ii)%ptr%bucket_items)
+                __T_MOVE__(a%item, b%item)
+           end associate
+        end do
+        do i = this%size_ - delta + 1, last%current_index - 1
+           ii = this%idx(i)
+           __T_FREE__(this%buckets(ii)%ptr%bucket_items%item)
+        end do
+        this%size_=this%size_-delta
 
-      ! back may wrap around
-      this%back_ = 1 + modulo(this%back_ - delta - 1, this%size_)
+        ! back may wrap around
+        this%back_ = 1 + modulo(this%back_ - delta - 1, this%size_)
+      end if
 
       new_iter%deque => this
       new_iter%current_index = first%current_index

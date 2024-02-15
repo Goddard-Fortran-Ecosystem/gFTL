@@ -772,15 +772,17 @@
       integer(kind=GFTL_SIZE_KIND) :: i, delta
 
       delta=last%current_index-first%current_index
-      do i=last%current_index, this%vsize
-         associate(a => this%elements(i-delta),b =>this%elements(i))
-           __T_MOVE__(a%item, b%item)
-         end associate
-      end do
-      do i = this%vsize - delta + 1, last%current_index - 1
-         __T_FREE__(this%elements(i)%item)
-      end do
-      this%vsize=this%vsize-delta
+      if (delta.gt.0) then
+        do i=last%current_index, this%vsize
+           associate(a => this%elements(i-delta),b =>this%elements(i))
+             __T_MOVE__(a%item, b%item)
+           end associate
+        end do
+        do i = this%vsize - delta + 1, last%current_index - 1
+           __T_FREE__(this%elements(i)%item)
+        end do
+        this%vsize=this%vsize-delta
+      end if
 
       new_iter%elements => this%elements
       new_iter%current_index = first%current_index
