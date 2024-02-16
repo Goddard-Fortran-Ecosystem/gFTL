@@ -772,6 +772,11 @@
       integer(kind=GFTL_SIZE_KIND) :: i, delta
 
       delta=last%current_index-first%current_index
+      if (delta == 0) then
+         new_iter = last
+         return
+      end if
+
       do i=last%current_index, this%vsize
          associate(a => this%elements(i-delta),b =>this%elements(i))
            __T_MOVE__(a%item, b%item)
