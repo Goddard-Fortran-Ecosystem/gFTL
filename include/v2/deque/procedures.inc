@@ -735,6 +735,10 @@
       integer(kind=GFTL_SIZE_KIND) :: i, ii, delta
 
       delta=last%current_index-first%current_index
+      if (delta == 0) then
+         new_iter = last
+         return
+      end if
       do i=last%current_index, this%size_
          ii = this%idx(i)
          associate( &
