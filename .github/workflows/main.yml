@@ -11,7 +11,7 @@ on:
       - "Copyright.txt"
 
 jobs:
-  build:
+  GNU:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -46,31 +46,174 @@ jobs:
         run: |
           ${FC} --version
           cmake --version
+
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
       - name: Build GFE Prereqs
         run: |
-          bash ./tools/travis-install-gfe.bash
+          bash ./tools/ci-install-gfe.bash
+
       - name: Build gFTL
         run: |
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j3
+          make -j$(nproc)
+
       - name: Build Tests
         run: |
           cd build
-          make -j3 tests
+          make -j$(nproc) tests
+
       - name: Run Tests
         run: |
           cd build
           ctest -j1 --output-on-failure --repeat until-pass:4
+
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: logfiles
           path: |
             build/**/*.log
+
+  Intel:
+    runs-on: ubuntu-20.04
+
+    env:
+      FC: ifx
+      CC: icx
+
+    name: Intel Fortran
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Setup Intel oneAPI repository
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
+          sudo apt-get update
+
+      - name: Install Intel oneAPI compilers
+        timeout-minutes: 5
+        run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp
+
+      # optional
+      - name: Install Intel MPI
+        timeout-minutes: 5
+        run: sudo apt-get install intel-oneapi-mpi intel-oneapi-mpi-devel
+
+      - name: Setup Intel oneAPI environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> $GITHUB_ENV
+          printenv | grep intel
+
+      - name: Versions
+        run: |
+          ${FC} --version
+          ${CC} --version
+          mpirun --version
+          cmake --version
+
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
+
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j$(nproc)
+
+      - name: Build Tests
+        run: |
+          cd build
+          make -j$(nproc) tests
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
+
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
+
+  Nvidia:
+    runs-on: ubuntu-20.04
+    container: nvcr.io/nvidia/nvhpc:24.1-devel-cuda12.3-ubuntu22.04
+    env:
+      FC: nvfortran
+
+    name: Nvidia HPC
+    steps:
+      - name: Versions
+        run: |
+          ${FC} --version
+          cmake --version
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Add python-is-python3 package
+        run: |
+          apt-get update
+          apt-get install -y python-is-python3
+
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
+
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j$(nproc)
+
+      - name: Build Tests
+        run: |
+          cd build
+          make -j$(nproc) tests
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
+
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
+

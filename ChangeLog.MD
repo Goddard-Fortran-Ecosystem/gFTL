@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Fujitsu compiler support
+
 ## [1.11.0] - 2023-11-28
 
 ### Added
