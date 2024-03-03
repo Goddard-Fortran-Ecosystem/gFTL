@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.12.0] - 2024-03-03
+
 ### Added
 
 - Fujitsu compiler support
