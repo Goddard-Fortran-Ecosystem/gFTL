@@ -1,6 +1,10 @@
 # Change Log
 
 ## Unreleased
+### Fixed
+
+- (#211) Fixed bug in implementation of erase(first, last) for vector & deque containers.  When the range was empty, then some cases would erronously call `MOVE_ALLOC(x,x)` which is illegal. 
+
 
 ## [1.12.0] - 2024-03-03
 
