@@ -13,16 +13,7 @@
 #  define __QUOTE(x) x
 #  define __PROC(x) __QUOTE(__container_prefix)__QUOTE(x)
 
-! The Intel compiler requires a flag to use F2003 allocate-on-assignment
-! semantics.  To avoid assuming that users have that flag set,
-! we use the more verbose option here.  Unfortunately, gfortran does not
-! support this variant for arrays, so we do use the allocate-on-assignment
-! for that compiler.
-#  ifdef __INTEL_COMPILER
-#    define __ASSIGN_DIM(dest, src) allocate(dest,source=src)
-#  else
-#    define __ASSIGN_DIM(dest, src) dest=src
-#  endif
+#  define __ASSIGN_DIM(dest, src) dest=src
 
 
 #ifndef __GFORTRAN

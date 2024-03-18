@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+## Workaround
+
+- Implemented workaround for ifx compiler.  As it turns out this involves actually deleting a workaround for much older intel compilers.
 
 ## [1.12.0] - 2024-03-03
 
