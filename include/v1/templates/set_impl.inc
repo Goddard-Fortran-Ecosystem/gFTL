@@ -296,23 +296,25 @@
             end type LocalWrapper
 
             type (LocalWrapper) :: wrapX, wrapY
-#    define __xx wrapX
-#    define __yy wrapY
+            integer, allocatable :: wx(:), wy(:)
+            
+            wrapx%item => x
+            wx = transfer(wrapx,[1])
+            wrapx%item => y
+            wy = transfer(wrapx,[1])
 
-            __COMPARE_ASSIGN(wrapX%item, x)
-            __COMPARE_ASSIGN(wrapY%item, y)
+            less = dictionaryLessThan1d(wx,wy)
 
 #  else
 
-#    define __xx x
-#    define __yy y
+            associate( wx => transfer(x, [1]),                                &
+     &                 wy => transfer(y, [1]) )
+              less = dictionaryLessThan1d(wx, wy)
+            end associate
 
 #  endif
 
-            associate( wx => transfer(__xx,[1]),                                &
-     &                 wy => transfer(__yy,[1]) )
-              less = dictionaryLessThan1d(wx, wy)
-            end associate
+
 
 #  if  defined(_pointer)
             __COMPARE_FREE(wrapX%item)
