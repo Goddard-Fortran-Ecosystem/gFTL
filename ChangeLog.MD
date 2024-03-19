@@ -2,9 +2,15 @@
 
 ## Unreleased
 
-## Workaround
+## Fixed
 
-- Implemented workaround for ifx compiler.  As it turns out this involves actually deleting a workaround for much older intel compilers.
+- Implemented workarounds for ifx compiler and v1 interfaces. v2 tests were fine.
+  1. Removed previous workaround for older Intel compilers that did not support polymorphic assignment.
+  2. Introduced workaround for comparing polymorphic pointers for Set and altSet
+
+## Fixed
+
+- Removed stray print statements in tests.
 
 ## [1.12.0] - 2024-03-03
 
