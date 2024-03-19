@@ -35,10 +35,8 @@ contains
       select type (pa => a)
 
       type is (integer)
-         print*,__FILE__,__LINE__
          select type (pb => b)
          type is (integer)
-            print*,__FILE__,__LINE__
             call shadowAssert(pa, pb, location=location)
          type is (integer(kind=INT64))
             call shadowAssert(pa, pb, location=location)
