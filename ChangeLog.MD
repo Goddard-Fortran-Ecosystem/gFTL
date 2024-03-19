@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+
+- Removed `macos-11` from CI, added `macos-13`
 
 ## [1.12.0] - 2024-03-03
 
