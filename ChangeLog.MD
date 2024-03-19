@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Changed
+
+- Added `-quiet` flag for NAG compiler
 
 ## [1.12.0] - 2024-03-03
 
