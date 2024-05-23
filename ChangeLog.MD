@@ -2,9 +2,13 @@
 
 ## Unreleased
 
+### Fixed
+
+- Change use of `spread` in `include/v2/parameters/define_derived_macros.m4` to `reshape` to avoid NVHPC issue
+
 ## [1.13.0] - 2024-03-20
 
-## Fixed
+### Fixed
 
 - Implemented workarounds for ifx compiler and v1 interfaces. v2 tests were fine.
   1. Removed previous workaround for older Intel compilers that did not support polymorphic assignment.
