@@ -4,7 +4,7 @@
 
 ## [1.13.0] - 2024-03-20
 
-## Fixed
+### Fixed
 
 - Implemented workarounds for ifx compiler and v1 interfaces. v2 tests were fine.
   1. Removed previous workaround for older Intel compilers that did not support polymorphic assignment.
@@ -15,6 +15,10 @@
 - Removed `macos-11` from CI, added `macos-13`
 - Added `-quiet` flag for NAG compiler
 - Removed stray print statements in tests.
+
+### Added
+
+- Preliminary LLVMFlang support
 
 ## [1.12.0] - 2024-03-03
 
