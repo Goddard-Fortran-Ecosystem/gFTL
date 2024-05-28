@@ -6,6 +6,10 @@
 
 - Change use of `spread` in `include/v2/parameters/define_derived_macros.m4` to `reshape` to avoid NVHPC issue
 
+### Changed
+
+- Update CI to remove `macos-12`, add `macos-14` and `ubuntu-24.04`
+
 ## [1.13.0] - 2024-03-20
 
 ### Fixed
