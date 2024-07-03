@@ -319,7 +319,7 @@ define(__T,`__`'_T()')
 #    endif
 #endif
 
-#if (defined(T()_deferred || defined(__T()_deferred)) && !defined(__T()_deferred__)
+#if (defined(T()_deferred) || defined(__T()_deferred)) && !defined(__T()_deferred__)
 #   define __T_deferred__
 #endif
 
