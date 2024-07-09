@@ -10,7 +10,7 @@ if [ ! -d "${HOME}/local/cmake/bin" ] ; then
    cd cmake-${cmake_ver}
    mkdir build && cd build
    cmake .. -DCMAKE_INSTALL_PREFIX=${HOME}/local/cmake
-   make -j$(nproc)
+   make -j4
    make install/strip
    cd ../.. && rm -r cmake-${cmake_ver}
 fi

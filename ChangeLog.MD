@@ -2,9 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- Enabled feature that allows pointers into container objects to remain valid when container grows/shrinks.  This ability is already baked into the polymorphic case where `MOVE_ALLOC()` is used.  Now if one uses `#define T_deferred` gFTL will also use a wrapper type with an allocatable component and `MOVE_ALLOC()` under the hood.
+
+### Changed
+
+- Update CI to remove `macos-12`, add `macos-14` and `ubuntu-24.04`
+
 ## [1.13.0] - 2024-03-20
 
-## Fixed
+### Fixed
 
 - Implemented workarounds for ifx compiler and v1 interfaces. v2 tests were fine.
   1. Removed previous workaround for older Intel compilers that did not support polymorphic assignment.
