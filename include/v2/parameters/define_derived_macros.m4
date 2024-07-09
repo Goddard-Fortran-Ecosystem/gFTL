@@ -302,7 +302,7 @@ define(__T,`__`'_T()')
 #        define __T()_dimension_component__ __T()_dimension_result__
 #        define __T()_dimension_string__ __T()_shape_string__
 #        ifndef __T()_default__
-#            define __T()_default__ reshape([__T()_type__ :: ],spread(0,1,__T()_rank))
+#            define __T()_default__ reshape([__T()_type__ :: ],reshape([0],shape=[__T()_rank],pad=[0]))
 #        endif
 #    endif
 #    define __T()_dimension_dummy__ __T()_dimension_component__
