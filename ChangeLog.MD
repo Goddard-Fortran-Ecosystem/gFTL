@@ -8,7 +8,7 @@
 
 ### Changed
 
-- Remove `macos-11` from GitHub Actions, add `macos-12` and `gfortran-14` to Ubuntu 24.04
+- Update CI to remove `macos-12`, add `macos-14` and `ubuntu-24.04`
 
 ## [1.13.0] - 2024-03-20
 

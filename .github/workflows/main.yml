@@ -72,12 +72,12 @@ jobs:
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j$(nproc)
+          make -j4
 
       - name: Build Tests
         run: |
           cd build
-          make -j 4 tests
+          make -j4 tests
 
       - name: Run Tests
         run: |
@@ -148,12 +148,12 @@ jobs:
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j$(nproc)
+          make -j4
 
       - name: Build Tests
         run: |
           cd build
-          make -j 4 tests
+          make -j4 tests
 
       - name: Run Tests
         run: |
@@ -204,12 +204,12 @@ jobs:
           mkdir -p build
           cd build
           cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j$(nproc)
+          make -j4
 
       - name: Build Tests
         run: |
           cd build
-          make -j 4 tests
+          make -j4 tests
 
       - name: Run Tests
         run: |
