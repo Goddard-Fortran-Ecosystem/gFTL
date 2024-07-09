@@ -2,9 +2,14 @@
 
 ## Unreleased
 
+
 ### Fixed
 
 - Change use of `spread` in `include/v2/parameters/define_derived_macros.m4` to `reshape` to avoid NVHPC issue
+
+### Added
+
+- Enabled feature that allows pointers into container objects to remain valid when container grows/shrinks.  This ability is already baked into the polymorphic case where `MOVE_ALLOC()` is used.  Now if one uses `#define T_deferred` gFTL will also use a wrapper type with an allocatable component and `MOVE_ALLOC()` under the hood.
 
 ### Changed
 
