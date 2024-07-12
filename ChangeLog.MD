@@ -3,7 +3,8 @@
 ## Unreleased
 
 ### Added
-- support for llvm flang
+
+- Preliminary LLVMFlang support
 
 ## [1.14.0] - 2024-07-09
 
@@ -14,8 +15,6 @@
 ### Added
 
 - Enabled feature that allows pointers into container objects to remain valid when container grows/shrinks.  This ability is already baked into the polymorphic case where `MOVE_ALLOC()` is used.  Now if one uses `#define T_deferred` gFTL will also use a wrapper type with an allocatable component and `MOVE_ALLOC()` under the hood.
-- Preliminary LLVMFlang support
-
 
 ### Changed
 
