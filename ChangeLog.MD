@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+- support for llvm flang
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
