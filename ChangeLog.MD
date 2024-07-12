@@ -34,7 +34,6 @@
 - Added `-quiet` flag for NAG compiler
 - Removed stray print statements in tests.
 
-
 ## [1.12.0] - 2024-03-03
 
 ### Added
