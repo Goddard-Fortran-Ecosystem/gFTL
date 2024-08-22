@@ -8,7 +8,7 @@
 
 ### Changed
 
-- Update CI to have `gfortran-10` and `gfortran-11` only on `ubuntu-20.04`
+- Update CI to have `gfortran-10` and `gfortran-11` only on `ubuntu-22.04`
 - Update CI NVIDIA to NVHPC 24.7
 
 ## [1.14.0] - 2024-07-09
