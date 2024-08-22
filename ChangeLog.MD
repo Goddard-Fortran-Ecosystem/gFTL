@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Preliminary LLVMFlang support
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
