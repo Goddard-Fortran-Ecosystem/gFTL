@@ -18,7 +18,7 @@ jobs:
         os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14]
         compiler: [gfortran-12, gfortran-13, gfortran-14]
         # gfortran-10 and -11 are only on ubuntu-22.04
-        # gfortran-13 and -13 are not on ubuntu-22.04
+        # gfortran-13 and -14 are not on ubuntu-22.04
         include:
           - os: ubuntu-22.04
             compiler: gfortran-10
