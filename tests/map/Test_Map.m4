@@ -180,6 +180,25 @@ contains
    end subroutine test_erase
 
 @test
+   subroutine test_erase_key()
+      type (Map), target :: m
+      integer :: n
+
+      call m%insert(key_one, one)
+      call m%insert(key_two, two)
+      call m%insert(key_three, three)
+
+      n = m%erase(key_two)
+      @assert_that(n, is(equal_to(1)))
+      @assert_that(int(m%size()), is(equal_to(2)))
+
+      n = m%erase(key_zero)
+      @assert_that(n, is(equal_to(0)))
+      @assert_that(int(m%size()), is(equal_to(2)))
+
+   end subroutine test_erase_key
+
+@test
    subroutine test_next()
       type (Map), target :: m
       type (MapIterator) :: iter

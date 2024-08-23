@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Added missing TARGET attribute in map::erase() procedures.  When
+  used with NAG compiler, would result in temporary objects with
+  dangling pointers. Added new test to cover this case.
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
