@@ -270,7 +270,7 @@ jobs:
       - name: Run Tests
         run: |
           cd build
-          ctest -j1 --output-on-failure --repeat until-pass:4
+          ctest -V -j1 --output-on-failure --repeat until-pass:4
 
       - name: Archive log files on failure
         uses: actions/upload-artifact@v4
