@@ -16,19 +16,19 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14]
-        compiler: [gfortran-11, gfortran-12, gfortran-13]
-        # gfortran-10 is only on ubuntu-22.04
-        # gfortran-14 is available on ubuntu-24.04
+        compiler: [gfortran-12, gfortran-13, gfortran-14]
+        # gfortran-10 and -11 are only on ubuntu-22.04
+        # gfortran-13 and -14 are not on ubuntu-22.04
         include:
           - os: ubuntu-22.04
             compiler: gfortran-10
-          - os: ubuntu-24.04
-            compiler: gfortran-14
-        exclude:
-          - os: ubuntu-24.04
+          - os: ubuntu-22.04
             compiler: gfortran-11
+        exclude:
           - os: ubuntu-22.04
             compiler: gfortran-13
+          - os: ubuntu-22.04
+            compiler: gfortran-14
 
       # fail-fast if set to 'true' here is good for production, but when
       # debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
@@ -93,7 +93,7 @@ jobs:
             build/**/*.log
 
   Intel:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     env:
       FC: ifx
@@ -169,12 +169,68 @@ jobs:
             build/**/*.log
 
   Nvidia:
-    runs-on: ubuntu-20.04
-    container: nvcr.io/nvidia/nvhpc:24.1-devel-cuda12.3-ubuntu22.04
+    runs-on: ubuntu-22.04
+    container: nvcr.io/nvidia/nvhpc:24.7-devel-cuda12.5-ubuntu22.04
     env:
       FC: nvfortran
 
     name: Nvidia HPC
+    steps:
+      - name: Versions
+        run: |
+          ${FC} --version
+          cmake --version
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Add python-is-python3 package
+        run: |
+          apt-get update
+          apt-get install -y python-is-python3
+
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
+
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j4
+
+      - name: Build Tests
+        run: |
+          cd build
+          make -j4 tests
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
+
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
+
+  Flang:
+    runs-on: ubuntu-latest
+    container: gmao/llvm-flang:latest
+    env:
+      FC: flang-new
+
+    name: Flang
     steps:
       - name: Versions
         run: |

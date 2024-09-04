@@ -6,6 +6,12 @@
 
 - Preliminary LLVMFlang support
 
+### Changed
+
+- Update CI to have `gfortran-10` and `gfortran-11` only on `ubuntu-22.04`
+- Update CI NVIDIA to NVHPC 24.7
+- Add flang test to CI
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
