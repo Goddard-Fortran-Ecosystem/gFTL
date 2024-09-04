@@ -11,218 +11,218 @@ on:
       - "Copyright.txt"
 
 jobs:
-  #GNU:
-    #runs-on: ${{ matrix.os }}
-    #strategy:
-      #matrix:
-        #os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14]
-        #compiler: [gfortran-12, gfortran-13, gfortran-14]
-        ## gfortran-10 and -11 are only on ubuntu-22.04
-        ## gfortran-13 and -14 are not on ubuntu-22.04
-        #include:
-          #- os: ubuntu-22.04
-            #compiler: gfortran-10
-          #- os: ubuntu-22.04
-            #compiler: gfortran-11
-        #exclude:
-          #- os: ubuntu-22.04
-            #compiler: gfortran-13
-          #- os: ubuntu-22.04
-            #compiler: gfortran-14
+  GNU:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, macos-13, macos-14]
+        compiler: [gfortran-12, gfortran-13, gfortran-14]
+        # gfortran-10 and -11 are only on ubuntu-22.04
+        # gfortran-13 and -14 are not on ubuntu-22.04
+        include:
+          - os: ubuntu-22.04
+            compiler: gfortran-10
+          - os: ubuntu-22.04
+            compiler: gfortran-11
+        exclude:
+          - os: ubuntu-22.04
+            compiler: gfortran-13
+          - os: ubuntu-22.04
+            compiler: gfortran-14
 
-      ## fail-fast if set to 'true' here is good for production, but when
-      ## debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
-      ## GitHub Actions will stop any other test immediately. So good for production, bad
-      ## when trying to figure something out. For more info see:
-      ## https://www.edwardthomson.com/blog/github_actions_6_fail_fast_matrix_workflows.html
+      # fail-fast if set to 'true' here is good for production, but when
+      # debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
+      # GitHub Actions will stop any other test immediately. So good for production, bad
+      # when trying to figure something out. For more info see:
+      # https://www.edwardthomson.com/blog/github_actions_6_fail_fast_matrix_workflows.html
 
-      #fail-fast: false
-    #env:
-      #FC: ${{ matrix.compiler }}
-      #LANGUAGE: en_US.UTF-8
-      #LC_ALL: en_US.UTF-8
-      #LANG: en_US.UTF-8
-      #LC_TYPE: en_US.UTF-8
-      #OMPI_ALLOW_RUN_AS_ROOT: 1
-      #OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
-      #OMPI_MCA_btl_vader_single_copy_mechanism: none
+      fail-fast: false
+    env:
+      FC: ${{ matrix.compiler }}
+      LANGUAGE: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LC_TYPE: en_US.UTF-8
+      OMPI_ALLOW_RUN_AS_ROOT: 1
+      OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
+      OMPI_MCA_btl_vader_single_copy_mechanism: none
 
-    #name: ${{ matrix.os }} / ${{ matrix.compiler }}
-    #steps:
-      #- name: Compiler Versions
-        #run: |
-          #${FC} --version
-          #cmake --version
+    name: ${{ matrix.os }} / ${{ matrix.compiler }}
+    steps:
+      - name: Compiler Versions
+        run: |
+          ${FC} --version
+          cmake --version
 
-      #- name: Checkout
-        #uses: actions/checkout@v4
-        #with:
-          #fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      #- name: Set all directories as git safe
-        #run: |
-          #git config --global --add safe.directory '*'
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
 
-      #- name: Build GFE Prereqs
-        #run: |
-          #bash ./tools/ci-install-gfe.bash
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
 
-      #- name: Build gFTL
-        #run: |
-          #mkdir -p build
-          #cd build
-          #cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          #make -j4
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j4
 
-      #- name: Build Tests
-        #run: |
-          #cd build
-          #make -j4 tests
+      - name: Build Tests
+        run: |
+          cd build
+          make -j4 tests
 
-      #- name: Run Tests
-        #run: |
-          #cd build
-          #ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
 
-      #- name: Archive log files on failure
-        #uses: actions/upload-artifact@v4
-        #if: failure()
-        #with:
-          #name: logfiles
-          #path: |
-            #build/**/*.log
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
 
-  #Intel:
-    #runs-on: ubuntu-22.04
+  Intel:
+    runs-on: ubuntu-22.04
 
-    #env:
-      #FC: ifx
-      #CC: icx
+    env:
+      FC: ifx
+      CC: icx
 
-    #name: Intel Fortran
-    #steps:
-      #- name: Checkout
-        #uses: actions/checkout@v4
-        #with:
-          #fetch-depth: 1
+    name: Intel Fortran
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      #- name: Set all directories as git safe
-        #run: |
-          #git config --global --add safe.directory '*'
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
 
-      #- name: Setup Intel oneAPI repository
-        #run: |
-          #wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-          #sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
-          #sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
-          #sudo apt-get update
+      - name: Setup Intel oneAPI repository
+        run: |
+          wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+          sudo add-apt-repository "deb https://apt.repos.intel.com/oneapi all main"
+          sudo apt-get update
 
-      #- name: Install Intel oneAPI compilers
-        #timeout-minutes: 5
-        #run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp
+      - name: Install Intel oneAPI compilers
+        timeout-minutes: 5
+        run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp
 
-      ## optional
-      #- name: Install Intel MPI
-        #timeout-minutes: 5
-        #run: sudo apt-get install intel-oneapi-mpi intel-oneapi-mpi-devel
+      # optional
+      - name: Install Intel MPI
+        timeout-minutes: 5
+        run: sudo apt-get install intel-oneapi-mpi intel-oneapi-mpi-devel
 
-      #- name: Setup Intel oneAPI environment
-        #run: |
-          #source /opt/intel/oneapi/setvars.sh
-          #printenv >> $GITHUB_ENV
-          #printenv | grep intel
+      - name: Setup Intel oneAPI environment
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          printenv >> $GITHUB_ENV
+          printenv | grep intel
 
-      #- name: Versions
-        #run: |
-          #${FC} --version
-          #${CC} --version
-          #mpirun --version
-          #cmake --version
+      - name: Versions
+        run: |
+          ${FC} --version
+          ${CC} --version
+          mpirun --version
+          cmake --version
 
-      #- name: Build GFE Prereqs
-        #run: |
-          #bash ./tools/ci-install-gfe.bash
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
 
-      #- name: Build gFTL
-        #run: |
-          #mkdir -p build
-          #cd build
-          #cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          #make -j4
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j4
 
-      #- name: Build Tests
-        #run: |
-          #cd build
-          #make -j4 tests
+      - name: Build Tests
+        run: |
+          cd build
+          make -j4 tests
 
-      #- name: Run Tests
-        #run: |
-          #cd build
-          #ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
 
-      #- name: Archive log files on failure
-        #uses: actions/upload-artifact@v4
-        #if: failure()
-        #with:
-          #name: logfiles
-          #path: |
-            #build/**/*.log
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
 
-  #Nvidia:
-    #runs-on: ubuntu-22.04
-    #container: nvcr.io/nvidia/nvhpc:24.7-devel-cuda12.5-ubuntu22.04
-    #env:
-      #FC: nvfortran
+  Nvidia:
+    runs-on: ubuntu-22.04
+    container: nvcr.io/nvidia/nvhpc:24.7-devel-cuda12.5-ubuntu22.04
+    env:
+      FC: nvfortran
 
-    #name: Nvidia HPC
-    #steps:
-      #- name: Versions
-        #run: |
-          #${FC} --version
-          #cmake --version
+    name: Nvidia HPC
+    steps:
+      - name: Versions
+        run: |
+          ${FC} --version
+          cmake --version
 
-      #- name: Checkout
-        #uses: actions/checkout@v4
-        #with:
-          #fetch-depth: 1
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
-      #- name: Set all directories as git safe
-        #run: |
-          #git config --global --add safe.directory '*'
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
 
-      #- name: Add python-is-python3 package
-        #run: |
-          #apt-get update
-          #apt-get install -y python-is-python3
+      - name: Add python-is-python3 package
+        run: |
+          apt-get update
+          apt-get install -y python-is-python3
 
-      #- name: Build GFE Prereqs
-        #run: |
-          #bash ./tools/ci-install-gfe.bash
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash
 
-      #- name: Build gFTL
-        #run: |
-          #mkdir -p build
-          #cd build
-          #cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          #make -j4
+      - name: Build gFTL
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+          make -j4
 
-      #- name: Build Tests
-        #run: |
-          #cd build
-          #make -j4 tests
+      - name: Build Tests
+        run: |
+          cd build
+          make -j4 tests
 
-      #- name: Run Tests
-        #run: |
-          #cd build
-          #ctest -j1 --output-on-failure --repeat until-pass:4
+      - name: Run Tests
+        run: |
+          cd build
+          ctest -j1 --output-on-failure --repeat until-pass:4
 
-      #- name: Archive log files on failure
-        #uses: actions/upload-artifact@v4
-        #if: failure()
-        #with:
-          #name: logfiles
-          #path: |
-            #build/**/*.log
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: logfiles
+          path: |
+            build/**/*.log
 
   Flang:
     runs-on: ubuntu-latest
@@ -270,7 +270,7 @@ jobs:
       - name: Run Tests
         run: |
           cd build
-          ctest -V -j1 --output-on-failure --repeat until-pass:4
+          ctest -j1 --output-on-failure --repeat until-pass:4
 
       - name: Archive log files on failure
         uses: actions/upload-artifact@v4
