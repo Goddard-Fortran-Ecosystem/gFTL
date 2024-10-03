@@ -265,11 +265,12 @@ Examples:
 
 #### insert
 ```f90
-subroutine insert(v, pos, value)
-   <class(vector), intent(inout) :: v
+function insert(v, pos, value) result(iter)
+   type(iterator) :: iter
+   class(vector), intent(inout) :: v
    type(iterator), intent(in) : pos
    <T>, intent(in) :: value
-end subroutine insert
+end function insert
 ```
 
 #### erase
