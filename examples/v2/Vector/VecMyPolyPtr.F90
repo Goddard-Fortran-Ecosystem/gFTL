@@ -10,18 +10,8 @@ module MyBase_mod
   type,abstract:: MyBase
     real :: r
   contains
-    procedure(equal_),deferred :: equal
-    generic :: operator(==) => equal
     procedure(display_),deferred :: display
   end type MyBase
-
-  abstract interface
-    logical function equal_(m1,m2)  result(l)
-      import MyBase
-      class(MyBase),intent(in) :: m1
-      class(MyBase),intent(in) :: m2
-    end function equal_
-  end interface
   
   abstract interface
     subroutine display_(m1)
@@ -39,7 +29,6 @@ module MyType_mod
   use MyBase_mod
   type,extends(MyBase) :: MyType
   contains
-    procedure :: equal
     procedure :: display
   end type
 
@@ -54,12 +43,6 @@ contains
     type(MyType) :: m
     m%r = r
   end function
-
-  logical function equal(m1,m2)  result(l)
-    class(MyType),intent(in) :: m1
-    class(MyBase),intent(in) :: m2
-    l = (abs(m1%r- m2%r) <= 1.0e-7)
-  end function equal
 
   subroutine display(m1)
     class(MyType),intent(in) :: m1
@@ -78,15 +61,11 @@ module VecMyPolyPtr_mod
 #define T MyBase
 ! Specify that the elements of the vector are polymorphic
 #define T_polymorphic
-! Define the == operator for elements of the vector.
-! This allows two vectors to be compared with the equal method
-#define T_EQ(x,y) (x == y)
 ! Include the vector template file to define the vector type
 ! The type will be called Vector
 #include "vector/template.inc"
 #undef T
 #undef T_polymorphic
-#undef T_EQ
 end Module
 
 program main
