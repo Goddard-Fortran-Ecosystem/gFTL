@@ -62,20 +62,27 @@ program main
   use VecMyType_mod
 
   implicit none
-  type (Vector) :: mv
+  type (Vector) :: mv1
+  type (Vector) :: mv2
   type (MyType), pointer :: mv_p
 
   ! Initialise the vector type
-  mv=Vector()
+  mv1=Vector()
+  mv2=Vector()
 
   ! Add an element to the vector
-  call mv%push_back(MyType(2.0))
+  call mv1%push_back(MyType(2.0))
+  call mv2%push_back(MyType(2.0))
 
   ! Access an element of the vector
-  mv_p => mv%at(1)
+  mv_p => mv1%at(1)
 
   ! Use the element as you would a derived type object normally
   call mv_p%display()
+
+  ! Compare the two vectors
+  print *, (mv1 == mv2)
+  print *, (mv1 < mv2)
 
 end program main
 
