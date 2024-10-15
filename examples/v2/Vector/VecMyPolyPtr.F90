@@ -68,6 +68,9 @@ module VecMyPolyPtr_mod
 #define T_polymorphic
 #define T_EQ(x,y) (x == y)
 #include "vector/template.inc"
+#undef T_EQ
+#undef T_polymorphic
+#define T
 end Module
 
 program main
