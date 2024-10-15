@@ -25,8 +25,10 @@ end module IntegerVec_mod
 ! Module creating a vector of real64
 !----------------------------------------
 module Real64Vec_mod
+! Include any modules needed for the types used in the vector
+use, intrinsic :: iso_fortran_env, only: REAL64
 ! Specify the type of the elements of the vector
-! The shortcut __REAL64 is used to specify reals with a 64 bit precision
+! The shortcut __REAL64 is used to specify reals with a 64 bit precision as defined in iso_fortran_env
 #define T __REAL64
 ! Include the vector template file to define the vector type
 ! The type will be called Vector
