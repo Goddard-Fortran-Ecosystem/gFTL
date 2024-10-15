@@ -16,8 +16,7 @@ end module IntegerVec_mod
 module Real64Vec_mod
 use, intrinsic :: iso_fortran_env
 
-#define T real
-#define T_KINDLEN(context) (kind=real64)
+#define T __REAL64
 #include "vector/template.inc"
 #undef T
 #undef T_KINDLEN
