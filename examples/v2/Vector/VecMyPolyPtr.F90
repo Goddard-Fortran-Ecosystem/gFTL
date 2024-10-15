@@ -84,9 +84,9 @@ module VecMyPolyPtr_mod
 ! Include the vector template file to define the vector type
 ! The type will be called Vector
 #include "vector/template.inc"
-#undef T_EQ
+#undef T
 #undef T_polymorphic
-#define T
+#undef T_EQ
 end Module
 
 program main
