@@ -1,5 +1,8 @@
 ! This is an example for derived types defined by users
 
+!----------------------------------------
+! Module creating a base type
+!----------------------------------------
 module MyBase_mod
 
   public :: MyBase
@@ -29,6 +32,9 @@ module MyBase_mod
 
 end module MyBase_mod
 
+!----------------------------------------
+! Module creating a derived type
+!----------------------------------------
 module MyType_mod
   use MyBase_mod
   type,extends(MyBase) :: MyType
@@ -62,11 +68,21 @@ contains
 
 end module MyType_mod
 
+!----------------------------------------
+! Module creating a vector of MyBase objects
+!----------------------------------------
 module VecMyPolyPtr_mod
+! Include any modules needed for the types used in the vector
   use MyBase_mod
+! Specify the type of the elements of the vector
 #define T MyBase
+! Specify that the elements of the vector are polymorphic
 #define T_polymorphic
+! Define the == operator for elements of the vector.
+! This allows two vectors to be compared with the equal method
 #define T_EQ(x,y) (x == y)
+! Include the vector template file to define the vector type
+! The type will be called Vector
 #include "vector/template.inc"
 #undef T_EQ
 #undef T_polymorphic
@@ -86,12 +102,16 @@ program main
   mt= myType(1.0d0)
   mp=>mt
 
+  ! Add an element to the vector
   call mv%push_back(mp)
 
+  ! Show the size of the vector
   print *, "mv%size()    =    ", mv%size()
 
+  ! Access an element of the vector
   mp_vector_accessor => mv%at(1)
 
+  ! Use the element as you would a derived type object normally
   call mp_vector_accessor%display()
 
 end program main
