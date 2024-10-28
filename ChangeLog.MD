@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Fixed
+
+- Added missing TARGET attribute in map::erase() procedures.  When
+  used with NAG compiler, would result in temporary objects with
+  dangling pointers. Added new test to cover this case.
+
+### Added
+
+- Preliminary LLVMFlang support
+
+### Changed
+
+- Update CI to have `gfortran-10` and `gfortran-11` only on `ubuntu-22.04`
+- Update CI NVIDIA to NVHPC 24.7
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
