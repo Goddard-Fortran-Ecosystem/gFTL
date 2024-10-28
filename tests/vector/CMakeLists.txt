@@ -6,6 +6,7 @@ set (types
   integer
   integer32
   logical
+  real_kindlen64
   character_len17
   deferred_string
   unlimited
