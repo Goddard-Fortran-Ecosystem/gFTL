@@ -265,11 +265,12 @@ Examples:
 
 #### insert
 ```f90
-subroutine insert(v, pos, value)
-   <class(vector), intent(inout) :: v
+function insert(v, pos, value) result(iter)
+   type(iterator) :: iter
+   class(vector), intent(inout) :: v
    type(iterator), intent(in) : pos
    <T>, intent(in) :: value
-end subroutine insert
+end function insert
 ```
 
 #### erase
@@ -363,7 +364,7 @@ end subroutine swap
 #### operator(==)
 
 ``` f90
-logical funciton equal_to(a, b)
+logical function equal_to(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function equal_to
@@ -372,7 +373,7 @@ end function equal_to
 #### operator(/=)
 
 ``` f90
-logical funciton not_equal_to(a, b)
+logical function not_equal_to(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function not_equal_to
@@ -381,7 +382,7 @@ end function not_equal_to
 #### operator(<)
 
 ``` f90
-logical funciton less_than(a, b)
+logical function less_than(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function less_than
@@ -390,7 +391,7 @@ end function less_than
 #### operator(<=)
 
 ``` f90
-logical funciton less_than_or_equal_to(a, b)
+logical function less_than_or_equal_to(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function less_than_or_equal_to
@@ -399,7 +400,7 @@ end function less_than_or_equal_to
 #### operator(>)
 
 ``` f90
-logical funciton greater_than(a, b)
+logical function greater_than(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function greater_than
@@ -408,7 +409,7 @@ end function greater_than
 #### operator(>=)
 
 ``` f90
-logical funciton greater_than_or_equal_to(a, b)
+logical function greater_than_or_equal_to(a, b)
    type(vector), intent(in) :: a
    type(vector), intent(in) :: b
 end function greater_than_or_equal_to
