@@ -7,7 +7,7 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-   type __vector_iterator
+   type :: __vector_iterator
       private
 
       type(__MANGLE(wrapper)), dimension(:), pointer :: elements

@@ -91,6 +91,7 @@
       return
    end function __MANGLE(max_size)
 
+
    ! =======================
    !  find
    ! =======================
@@ -269,7 +270,7 @@
    ! Currently a very sub-optimal implementation.
 
    recursive subroutine __MANGLE(insert_single_with_hint)(this, hint, value, unused, iter)
-      class(__set), intent(inout) :: this
+      class(__set), target, intent(inout) :: this
       type(__set_iterator), intent(in) :: hint
       __T_declare_dummy__, intent(in) :: value
       type (KeywordEnforcer), optional :: unused

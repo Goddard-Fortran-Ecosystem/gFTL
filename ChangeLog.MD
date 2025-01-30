@@ -4,6 +4,15 @@
 
 ### Added
 
+- Introduced new container "alt_set".  Interfaces are the same as "set" but underlying implementation uses vectors of indices rather than pointers.  The hope is that this will result in fewer compiler bugs related to deep copies of structures with self-referential pointers.
+- Optional FPP setting `USE_ALT_SET` to enable map containter to use `alt_set` instead of `set` under-the-hood.
+
+### Fixed
+
+- missing `TARGET` in some container interfaces.  Spotted during introducition of "alt_set" container.
+
+### Added
+
 - Preliminary LLVMFlang support
 
 ## [1.14.0] - 2024-07-09

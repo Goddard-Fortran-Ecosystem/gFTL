@@ -14,9 +14,13 @@
 ! containers.  E.g., Set uses Vector and Map uses Pair.
 !---------------
 
+#if (defined(__guard))
+#  undef __guard
+#endif
+#define __guard __vector_guard
+
 ! define generic internal template parameters from pair parameters.
 #include "parameters/T/copy_vector_T_to_internal_T.inc"
-#define __guard __vector_guard
 
 ! define derived generic template parameters from internal parameters.
 #include "parameters/T/define_derived_macros.inc"
@@ -198,7 +202,6 @@
    end interface
 #endif
       
-
 #include "vector/iterator_specification.inc"
 #include "vector/reverse_iterator_specification.inc"
 ! undef derived template parameters
@@ -213,7 +216,9 @@
 #define __algorithm_container __vector
 #define __algorithm_iterator __vector_iterator
 #define __algorithm_riterator __vector_riterator
+
 #include "algorithms/specification.inc"
+
 #undef __algorithm_container
 #undef __algorithm_iterator
 #undef __algorithm_riterator
