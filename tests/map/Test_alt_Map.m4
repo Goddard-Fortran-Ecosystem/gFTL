@@ -1,9 +1,9 @@
 changecom()
 changequote(`{',`}')
-module Test_{}_key(){}_type()Map
+module Test_{}_key(){}_type()alt_Map
    use, intrinsic :: iso_fortran_env
    use funit
-   use _key(){}_type()Map_mod
+   use _key(){}_type()alt_Map_mod
    ifelse(_type(),{Foo},{use Foo_mod},_key(),{Foo},{use Foo_mod})
 
 #include "_key()_Key.inc"
@@ -64,7 +64,7 @@ contains
 
 @test
    subroutine test_empty()
-      type (Map) :: m
+      type (map) :: m
 
       @assertTrue(m%empty())
       call m%insert(key_one, one)
@@ -74,7 +74,7 @@ contains
 
 @test
    subroutine test_size()
-      type (Map) :: m
+      type (map) :: m
 
       @assert_that(int(m%size()), is(equal_to(0)))
       call m%insert(key_one, one)
@@ -87,7 +87,7 @@ contains
 
 @test
    subroutine test_count()
-      type (Map) :: m
+      type (map) :: m
 
       call m%insert(key_one, one)
       call m%insert(key_two, one)
@@ -101,7 +101,7 @@ contains
 
 @test
    subroutine test_max_size()
-      type (Map) :: m
+      type (map) :: m
 
       @assert_that(m%max_size(), is(equal_to(huge(1_GFTL_SIZE_KIND))))
 
@@ -110,7 +110,7 @@ contains
 
 @test
    subroutine test_at()
-      type (Map) :: m
+      type (map) :: m
       __T_declare_result__, pointer :: val
       integer :: rc
 
@@ -139,7 +139,7 @@ contains
 
 @test
    subroutine test_value_empty_is_null()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       iter = m%find(key_one)
@@ -149,7 +149,7 @@ contains
 
 @test
    subroutine test_find()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       call m%insert(key_two, two)
@@ -168,7 +168,7 @@ contains
 
 @test
    subroutine test_erase()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       call m%insert(key_one, one)
@@ -182,7 +182,7 @@ contains
 
 @test
    subroutine test_next()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       __T_declare_result__, pointer :: q1, q2, q3
@@ -207,7 +207,7 @@ contains
 
 @test
    subroutine test_prev()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       __T_declare_result__, pointer :: q1, q2, q3
@@ -234,7 +234,7 @@ contains
 
 @test
    subroutine test_iterGetValue()
-      type (Map), target :: m
+      type (map), target :: m
       type (MapIterator) :: iter
 
       __T_declare_result__, pointer :: q1, q2, q3
@@ -260,7 +260,7 @@ contains
 
 @test
    subroutine testIsSet()
-      type (Map) :: m
+      type (map) :: m
       integer :: rc
       __T_declare_result__, pointer :: val
 
@@ -273,7 +273,7 @@ contains
 
 @test
    subroutine testNotSet()
-      type (Map) :: m
+      type (map) :: m
       integer :: rc
       __T_declare_result__, pointer :: val
 
@@ -286,7 +286,7 @@ contains
 
 @test
    subroutine testAt()
-      type (Map), target :: m
+      type (map), target :: m
       integer :: rc
       __T_declare_result__, pointer :: val
 
@@ -309,7 +309,7 @@ contains
    ! with the FINAL method for SET.
 @test(ifdef=include_broken)
    subroutine deepCopy()
-      type (Map) :: m1, m2
+      type (map) :: m1, m2
 
       call m1%insert(key_one, one)
       m2 = m1
@@ -319,7 +319,7 @@ contains
 #ifdef _alt
 @test(ifdef=_alt)
    subroutine test_make_from_array_of_pairs()
-      type (Map) :: m
+      type (map) :: m
       __T_declare_result__, pointer :: val
 
       m =  Map([mapPair(key_one,one), mapPair(key_two,two), mapPair(key_three,THREE)])
@@ -339,7 +339,7 @@ contains
 
    @test
    subroutine test_ftn_iter()
-      type(Map), target :: m
+      type(map), target :: m
 
       call m%insert(key_one, one)
       call m%insert(key_two, two)
@@ -360,6 +360,6 @@ contains
 #include "parameters/T/undef_map_T.inc"
 
 #include "shared/undef_common_macros.inc"
-end module Test_{}_key(){}_type()Map
+end module Test_{}_key(){}_type()alt_Map
 
 
