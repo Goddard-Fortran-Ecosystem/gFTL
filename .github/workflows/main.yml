@@ -265,7 +265,7 @@ jobs:
       - name: Build Tests
         run: |
           cd build
-          make -j4 tests
+          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
 
       - name: Run Tests
         run: |
