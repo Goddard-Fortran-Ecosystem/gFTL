@@ -30,6 +30,7 @@ _type(),{unlimited},@assert_that({tmp},is(equal_to({$2}))),
 })
 
 
+
    integer, save :: counter = 0
 
 contains

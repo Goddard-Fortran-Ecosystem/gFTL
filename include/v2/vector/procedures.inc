@@ -1057,7 +1057,6 @@
 
 ! undef internal template parameters
 #undef __guard
-#include "parameters/T/undef_internal.inc"
 
 
 #include "parameters/T/copy_vector_T_to_algorithm_T.inc"
@@ -1065,6 +1064,7 @@
 #define __algorithm_container __vector
 #define __algorithm_iterator __vector_iterator
 #define __algorithm_riterator __vector_riterator
+
 #include "algorithms/procedures.inc"   
 #undef __algorithm_container
 #undef __algorithm_iterator
@@ -1072,6 +1072,9 @@
 #undef __algorithm_T
 #undef __algorithm_guard
 #include "parameters/T/undef_algorithm_T.inc"
+
+#include "parameters/T/undef_internal.inc"
+
 
 
 

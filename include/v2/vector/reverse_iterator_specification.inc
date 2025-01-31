@@ -7,7 +7,7 @@
 ! Licensed under the Apache License, Version 2.0.                   |
 !--------------------------------------------------------------------
 
-   type __vector_riterator
+   type :: __vector_riterator
       private
       type(__vector_iterator) :: iterator
    contains

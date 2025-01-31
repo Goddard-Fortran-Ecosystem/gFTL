@@ -24,6 +24,7 @@ add_subdirectory(deque)
 add_subdirectory(queue)
 add_subdirectory(stack)
 add_subdirectory(set)
+add_subdirectory(alt_set)
 add_subdirectory(map)
 add_subdirectory(ordered_map)
 

@@ -1,4 +1,6 @@
 #ifdef __T_EQ__
+
+
       function __MANGLE(find_basic)(first, last, value) result(iter)
          type(__iterator) :: iter
          type(__iterator), intent(in) :: first

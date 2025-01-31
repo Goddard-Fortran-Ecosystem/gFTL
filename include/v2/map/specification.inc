@@ -38,17 +38,37 @@
    
    ! Cannot use __MANGLE() for these definitions because the guard
    ! prefix will be different in the other context.
-#define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
-#define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
-#define __set_T __map_pair
-#define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
-#define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-#include "set/specification.inc"
+#ifdef USE_ALT_SET
+#  define __alt_set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#  define __alt_set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
+#  define __alt_set_T __map_pair
+#  define __alt_set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
+#  define __alt_set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-#undef __set
-#undef __set_iterator
-#undef __set_guard
+#  include "alt_set/specification.inc"
+
+#  undef __alt_set
+#  undef __alt_set_iterator
+#  undef __alt_set_guard
+#  include "parameters/T/undef_alt_set_T.inc"
+
+#else
+
+#  define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#  define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
+#  define __set_T __map_pair
+#  define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
+#  define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
+
+#  include "set/specification.inc"
+
+#  undef __set
+#  undef __set_iterator
+#  undef __set_guard
+#  include "parameters/T/undef_set_T.inc"
+#endif
+
 #include "parameters/T/undef_set_T.inc"
 
 
@@ -107,7 +127,9 @@
 !#ifdef _DUMP_MAP
 !      procedure :: dump => mapdump
 !#endif
+#ifndef USE_ALT_SET
       procedure :: verify => __MANGLE(verify)
+#endif
    end type __map
 
 

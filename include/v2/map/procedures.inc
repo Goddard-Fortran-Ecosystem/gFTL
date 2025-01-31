@@ -42,19 +42,39 @@
 #undef __pair
 #undef __pair_guard
 
+#ifdef USE_ALT_SET
 
-#define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
-#define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
-#define __set_T __map_pair
-#define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
-#define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
-#include "set/procedures.inc"
+#  define __alt_set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#  define __alt_set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
+#  define __alt_set_T __map_pair
+#  define __alt_set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
+#  define __alt_set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
 
-#undef __set
-#undef __set_iterator
-#include "parameters/T/undef_set_T.inc"
-#undef __set_guard
-#undef __set_T_COPY
+#  include "alt_set/procedures.inc"
+
+#  undef __alt_set
+#  undef __alt_set_iterator
+#  include "parameters/T/undef_set_T.inc"
+#  undef __alt_set_guard
+#  undef __alt_set_T_COPY
+
+#else
+
+#  define __set __IDENTITY(__map_guard)__IDENTITY(__map_set)
+#  define __set_iterator __IDENTITY(__map_guard)__IDENTITY(__map_set_iterator)
+#  define __set_T __map_pair
+#  define __set_T_LT(a,b) __IDENTITY(__map_guard)__IDENTITY(key_less_than)(a,b)
+#  define __set_guard __IDENTITY(__map_guard)__IDENTITY(s_)
+
+#  include "set/procedures.inc"
+
+#  undef __set
+#  undef __set_iterator
+#  include "parameters/T/undef_set_T.inc"
+#  undef __set_guard
+#  undef __set_T_COPY
+
+#endif
 
 #include "parameters/T1/undef_pair_T1.inc"   
 #include "parameters/T2/undef_pair_T2.inc"   
@@ -447,12 +467,13 @@
          return
       end function __MANGLE(key_less_than)
 
+#ifndef USE_ALT_SET
       recursive logical function __MANGLE(verify)(this) result(verify)
          class (__map), target, intent(in) :: this
 
          verify = this%tree%verify()
       end function __MANGLE(verify)
-
+#endif
 
 #ifdef _DUMP_MAP
 ! =======================
