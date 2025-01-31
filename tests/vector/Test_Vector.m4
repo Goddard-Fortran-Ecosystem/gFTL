@@ -23,7 +23,7 @@ module Test_{}_type()Vector
    __T_declare_component__ :: tmp
 
 define({ASSERT},{
-tmp = {$1}
+__T_copy__(tmp,{$1})
 ifelse(_type(),{Foo},@assertTrue(tmp=={$2}),
 _type(),{FooPoly},@assertTrue(tmp=={$2}),
 _type(),{AbstractBar},@assertTrue(tmp=={$2}),
