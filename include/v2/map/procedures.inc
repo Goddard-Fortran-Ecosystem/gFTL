@@ -248,7 +248,7 @@
       ! =======================
       function __MANGLE(erase_iter)(this, iter) result(new_iter)
          type(__map_iterator) :: new_iter
-         class(__map), intent(inout) :: this
+         class(__map), target, intent(inout) :: this
          type(__map_iterator), intent(in) :: iter
 
          new_iter%reference => iter%reference
@@ -261,7 +261,7 @@
       ! =======================
       function __MANGLE(erase_key)(this, k) result(n)
          integer(kind=GFTL_SIZE_KIND) :: n
-         class(__map), intent(inout) :: this
+         class(__map), target, intent(inout) :: this
          __Key_declare_dummy__, intent(in) :: k
 
          type(__map_iterator) :: iter
