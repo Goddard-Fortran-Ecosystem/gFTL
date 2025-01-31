@@ -4,6 +4,8 @@
 
 ### Fixed
 
+- Fix CI for artifact upload
+- Update IntelLLVM flags
 
 ## [1.15.0] - 2025-01-31
 

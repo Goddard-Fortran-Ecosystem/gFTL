@@ -53,6 +53,7 @@ jobs:
         run: |
           ${FC} --version
           cmake --version
+          ulimit -a
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -88,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-${{ matrix.os }}-${{ matrix.compiler }}
           path: |
             build/**/*.log
 
@@ -164,7 +165,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-intel
           path: |
             build/**/*.log
 
@@ -220,7 +221,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-nvidia
           path: |
             build/**/*.log
 
@@ -276,7 +277,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-flang
           path: |
             build/**/*.log
 
