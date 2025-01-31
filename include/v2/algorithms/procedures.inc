@@ -9,11 +9,12 @@
    
 
 #ifdef __algorithm_riterator
-#  define __iterator __algorithm_riterator
 #  define __guard __IDENTITY(__algorithm_guard)reverse_
+#  define __iterator __algorithm_riterator
 #  include "algorithms/dir_procedures.inc"
-#  undef __guard
 #  undef __iterator
+#  undef __guard
+# undef __tmp
 #endif
 
 #include "parameters/T/undef_derived_macros.inc"
