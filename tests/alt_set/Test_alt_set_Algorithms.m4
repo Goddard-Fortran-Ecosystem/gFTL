@@ -1,18 +1,17 @@
 changecom()
 changequote(`{',`}')
-module Test_{}_type()VectorAlgorithms
+module Test_{}_type()_alt_setAlgorithms
    use funit
    use, intrinsic :: iso_fortran_env
-   use _type()Vector_mod
+   use _type()_alt_set_mod
    ifelse(_type(),{Foo},{use Foo_mod})
    ifelse(_type(),{FooPoly},{use Foo_mod})
-   ifelse(_type(),{AbstractBar},{use AbstractBar_mod})
 
 #include "_type().inc"
 #include "shared/define_common_macros.inc"
 #include "test_{}_type().inc"
-#include "parameters/T/copy_T_to_vector_T.inc"
-#include "parameters/T/copy_vector_T_to_internal_T.inc"
+#include "parameters/T/copy_T_to_set_T.inc"
+#include "parameters/T/copy_set_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
    __T_declare_component__ :: zero
@@ -26,7 +25,6 @@ define({ASSERT},{
 tmp = {$1}
 ifelse(_type(),{Foo},@assertTrue({tmp}=={$2}),
 _type(),{FooPoly},@assertTrue({tmp}=={$2}),
-_type(),{AbstractBar},@assertTrue({tmp}=={$2}),
 _type(),{unlimited},@assert_that({tmp},is(equal_to({$2}))),
 @assertEqual({tmp},{$2}))
 })
@@ -54,15 +52,15 @@ contains
    @test(ifdef=EQ_SUPPORTED)
    subroutine test_find()
 
-      type(Vector), target :: v
-      type(VectorIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
 
-      v = Vector()
-      call v%push_back(one)
-      call v%push_back(two)
-      call v%push_back(three)
+      s = alt_set()
+      call s%insert(one)
+      call s%insert(two)
+      call s%insert(three)
 
-      iter = find(v%begin(), v%end(), two)
+      iter = find(s%begin(), s%end(), two)
 
       ASSERT(iter%of(), two)
    end subroutine test_find
@@ -79,7 +77,7 @@ contains
       counter = counter + 1
       p1 = (counter == 1)
 
-      __UNUSED_DUMMY(value)
+     __UNUSED_DUMMY(value)
    end function p1
    
    logical function p2(value)
@@ -88,7 +86,7 @@ contains
       counter = counter + 1
       p2 = (counter == 2)
       
-      __UNUSED_DUMMY(value)
+     __UNUSED_DUMMY(value)
    end function p2
 
    subroutine reset_counter()
@@ -98,51 +96,57 @@ contains
 
    @test
    subroutine test_if()
-      type(Vector), target :: v
-      type(VectorIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
    
-      v = Vector()
-      call v%push_back(one)
-      call v%push_back(two)
-      call v%push_back(three)
+      s = alt_set()
+      call s%insert(one)
+      call s%insert(two)
+      call s%insert(three)
 
 
       call reset_counter()
-      iter = find_if(v%begin(), v%end(), p2)
-      ASSERT(iter%of(), two)
+      iter = find_if(s%begin(), s%end(), p2)
+      @assert_that(counter, is(2))
       
       call reset_counter()
-      iter = find_if(v%begin(), v%end(), p1)
-      ASSERT(iter%of(), one)
+      iter = find_if(s%begin(), s%end(), p1)
+      @assert_that(counter, is(1))
+
+      ! The following line is to avoid compiler warning about not referencing iter
+      __UNUSED_DUMMY(iter)
       
    end subroutine test_if
 
          
    @test
    subroutine test_if_not()
-      type(Vector), target :: v
-      type(VectorIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
    
-      v = Vector()
-      call v%push_back(one)
-      call v%push_back(two)
-      call v%push_back(three)
-
+      s = alt_set()
+      call s%insert(one)
+      call s%insert(two)
+      call s%insert(three)
 
       call reset_counter()
-      iter = find_if_not(v%begin(), v%end(), p1)
-      ASSERT(iter%of(), two)
+      iter = find_if_not(s%begin(), s%end(), p1)
+      @assert_that(counter, is(2))
+
       call reset_counter()
-      iter = find_if_not(v%begin(), v%end(), p2)
-      ASSERT(iter%of(), one)
-      
+      iter = find_if_not(s%begin(), s%end(), p2)
+      @assert_that(counter, is(1))
+
+      ! The following line is to avoid compiler warning about not referencing iter
+      __UNUSED_DUMMY(iter)
+
    end subroutine test_if_not
 
-end module Test_{}_type()VectorAlgorithms
+end module Test_{}_type()_alt_setAlgorithms
 
 
 #include "parameters/T/undef_derived_macros.inc"
 #include "parameters/T/undef_internal.inc"
-#include "parameters/T/undef_vector_T.inc"
+#include "parameters/T/undef_set_T.inc"
 #include "shared/undef_common_macros.inc"
 

@@ -1,9 +1,9 @@
 changecom()
 changequote(`{',`}')
-module Test_{}_type()Set
+module Test_{}_type()_alt_set
    use, intrinsic :: iso_fortran_env
    use funit
-   use _type()Set_mod
+   use _type()_alt_set_mod
    ifelse(_type(),{Foo},{use Foo_mod})
 
 #include "_type().inc"
@@ -42,9 +42,9 @@ contains
 
    @test
    subroutine test_empty()
-     type(Set), target :: s
+     type(alt_set), target :: s
 
-     s = Set()
+     s = alt_set()
      @assert_that(s%empty(), is(true()))
 
      call s%insert(one)
@@ -53,7 +53,7 @@ contains
 
    @test
    subroutine test_max_size()
-      type(Set), target :: s
+      type(alt_set), target :: s
 
       @assert_that(s%max_size(), is(huge(1_GFTL_SIZE_KIND)))
    end subroutine test_max_size
@@ -61,7 +61,7 @@ contains
 
    @test
    subroutine test_size()
-      type(Set), target :: s
+      type(alt_set), target :: s
 
       @assert_that(int(s%size()), is(0))
       call s%insert(zero)
@@ -73,7 +73,7 @@ contains
 
    @test
    subroutine test_size_duplicate_insert()
-      type(Set), target :: s
+      type(alt_set), target :: s
 
       call s%insert(zero)
       call s%insert(zero)
@@ -83,7 +83,7 @@ contains
 
    @test
    subroutine test_count()
-      type(Set), target :: s
+      type(alt_set), target :: s
 
       @assert_that(int(s%count(zero)), is(0))
       call s%insert(zero)
@@ -97,8 +97,8 @@ contains
 
    @test
    subroutine test_find_not_found()
-      type(Set), target :: s
-      type(SetIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
 
       iter = s%find(zero)
       @assert_that(iter == s%end(), is(true()))
@@ -107,8 +107,8 @@ contains
 
    @test
    subroutine test_find_found()
-      type(Set), target :: s
-      type(SetIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
 
       call s%insert(zero)
       call s%insert(one)
@@ -126,7 +126,7 @@ contains
 
    @test
    subroutine test_insert_is_new()
-      type(Set), target :: s
+      type(alt_set), target :: s
       logical :: is_new
 
       call s%insert(zero, is_new=is_new)
@@ -142,8 +142,8 @@ contains
 
    @test
    subroutine test_insert_get_iterator_new()
-      type(Set), target :: s
-      type(SetIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
 
       call s%insert(zero, iter=iter)
       ASSERT(iter%of(), zero)
@@ -159,7 +159,7 @@ contains
 
    @test
    subroutine test_insert_range()
-      type(Set), target :: s1, s2
+      type(alt_set), target :: s1, s2
 
 
       call s1%insert(zero)
@@ -179,13 +179,14 @@ contains
    ! developed that actually uses the hint
    @test
    subroutine test_insert_with_hint()
-      type(Set), target :: s
-      type(SetIterator) :: iter, hint
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter, hint
 
       call s%insert(zero)
       call s%insert(one)
 
       hint = s%find(one)
+      print*,__FILE__,__LINE__
       call s%insert(hint, two, iter=iter)
       ASSERT(iter%of(), two)
       
@@ -193,8 +194,8 @@ contains
 
    @test
    subroutine test_erase_iter()
-      type(Set), target :: s
-      type(SetIterator) :: iter
+      type(alt_set), target :: s
+      type(alt_set_iterator) :: iter
       
       call s%insert(zero)
       call s%insert(one)
@@ -211,7 +212,7 @@ contains
 
    @test
    subroutine test_swap()
-      type(set), target :: s1, s2
+      type(alt_set), target :: s1, s2
 
       call s1%insert(one)
       call s1%insert(two)
@@ -231,7 +232,7 @@ contains
 
    @test
    subroutine test_ftn_iter()
-      type(set), target :: s
+      type(alt_set), target :: s
 
       call s%insert(one)
       call s%insert(two)
@@ -247,4 +248,4 @@ contains
 #include "parameters/T/undef_internal.inc"
 #include "parameters/T/undef_set_T.inc"
 #include "shared/undef_common_macros.inc"
-end module Test_{}_type()Set
+end module Test_{}_type()_alt_set

@@ -20,16 +20,16 @@ module Test_{}_type()VectorIterator
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+   __T_declare_component__ :: tmp
+
 define({ASSERT},{
-#if defined(__GFORTRAN__)
-ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
-_type(),{FooPoly},@assertTrue({$1}=={$2}),
-_type(),{AbstractBar},@assertTrue({$1}=={$2}),
-_type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
-@assertEqual({$1},{$2}))
-#else
-@assert_that({$1},is(equal_to({$2})))
-#endif})
+tmp = {$1}
+ifelse(_type(),{Foo},@assertTrue(tmp=={$2}),
+_type(),{FooPoly},@assertTrue(tmp=={$2}),
+_type(),{AbstractBar},@assertTrue(tmp=={$2}),
+_type(),{unlimited},@assert_that(tmp,is(equal_to({$2}))),
+@assertEqual(tmp,{$2}))
+})
 
 
 contains
@@ -46,7 +46,7 @@ contains
 
    @test
    subroutine test_of()
-      type(Vector) :: v
+      type(Vector), target :: v
       type(VectorIterator) :: iter
 
       call v%push_back(one)

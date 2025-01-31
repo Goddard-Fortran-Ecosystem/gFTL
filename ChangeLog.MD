@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Workarounds of IFX issues.  (Did not submit reproducers.)
+
 ## [1.14.0] - 2024-07-09
 
 ### Fixed
