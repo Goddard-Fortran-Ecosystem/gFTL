@@ -30,15 +30,16 @@ module Test_{}_key(){}_type()Map
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
+   __T_declare_component__ :: tmp
+
 define({ASSERT},{
-#if defined(__GFORTRAN__)
-ifelse(_type(),{Foo},@assertTrue({$1}=={$2}),
-_type(),{FooPoly},@assertTrue({$1}=={$2}),
-_type(),{unlimited},@assert_that({$1},is(equal_to({$2}))),
-@assertEqual({$1},{$2}))
-#else
-@assert_that({$1},is(equal_to({$2})))
-#endif})
+tmp = {$1}
+ifelse(_type(),{Foo},@assertTrue(tmp=={$2}),
+_type(),{FooPoly},@assertTrue(tmp=={$2}),
+_type(),{AbstractBar},@assertTrue(tmp=={$2}),
+_type(),{unlimited},@assert_that(tmp,is(equal_to({$2}))),
+@assertEqual(tmp,{$2}))
+})
 
 
 contains
@@ -178,6 +179,25 @@ contains
       @assert_that(int(m%size()), is(equal_to(0)))
 
    end subroutine test_erase
+
+@test
+   subroutine test_erase_key()
+      type (Map), target :: m
+      integer :: n
+
+      call m%insert(key_one, one)
+      call m%insert(key_two, two)
+      call m%insert(key_three, three)
+
+      n = m%erase(key_two)
+      @assert_that(n, is(equal_to(1)))
+      @assert_that(int(m%size()), is(equal_to(2)))
+
+      n = m%erase(key_zero)
+      @assert_that(n, is(equal_to(0)))
+      @assert_that(int(m%size()), is(equal_to(2)))
+
+   end subroutine test_erase_key
 
 @test
    subroutine test_next()

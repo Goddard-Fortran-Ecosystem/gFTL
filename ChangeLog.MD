@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Fixed
+
+
+## [1.15.0] - 2025-01-31
+
 ### Added
 
 - Introduced new container "alt_set".  Interfaces are the same as "set" but underlying implementation uses vectors of indices rather than pointers.  The hope is that this will result in fewer compiler bugs related to deep copies of structures with self-referential pointers.
@@ -14,12 +19,17 @@
 ### Added
 
 - Preliminary LLVMFlang support
+- Added missing TARGET attribute in map::erase() procedures.  When
+  used with NAG compiler, would result in temporary objects with
+  dangling pointers. Added new test to cover this case.
 
 ### Changed
 
 - Update CI to have `gfortran-10` and `gfortran-11` only on `ubuntu-22.04`
 - Update CI NVIDIA to NVHPC 24.7
+- Workarounds of IFX issues.  (Did not submit reproducers.)
 - Add flang test to CI
+
 
 ## [1.14.0] - 2024-07-09
 
