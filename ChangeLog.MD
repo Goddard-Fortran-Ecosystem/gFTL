@@ -4,6 +4,11 @@
 
 ### Fixed
 
+## [1.15.1] - 2025-01-31
+
+### Fixed
+
+- Workaround for gcc for unlimited vector.  (Issue #250)
 
 ## [1.15.0] - 2025-01-31
 
