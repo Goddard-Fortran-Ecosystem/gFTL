@@ -53,6 +53,7 @@ jobs:
         run: |
           ${FC} --version
           cmake --version
+          ulimit -a
 
       - name: Checkout
         uses: actions/checkout@v4
