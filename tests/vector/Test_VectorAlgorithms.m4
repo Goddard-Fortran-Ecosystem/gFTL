@@ -20,10 +20,10 @@ module Test_{}_type()VectorAlgorithms
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
-   __T_declare_component__ :: tmp
+   __T_declare_result__, pointer :: tmp
 
 define({ASSERT},{
-tmp = {$1}
+tmp => {$1}
 ifelse(_type(),{Foo},@assertTrue({tmp}=={$2}),
 _type(),{FooPoly},@assertTrue({tmp}=={$2}),
 _type(),{AbstractBar},@assertTrue({tmp}=={$2}),

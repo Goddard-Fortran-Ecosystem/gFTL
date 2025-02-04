@@ -20,10 +20,10 @@ module Test_{}_type()VectorIterator
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
-   __T_declare_component__ :: tmp
+   __T_declare_result__, pointer :: tmp
 
 define({ASSERT},{
-tmp = {$1}
+tmp => {$1}
 ifelse(_type(),{Foo},@assertTrue(tmp=={$2}),
 _type(),{FooPoly},@assertTrue(tmp=={$2}),
 _type(),{AbstractBar},@assertTrue(tmp=={$2}),
@@ -54,9 +54,9 @@ contains
       call v%push_back(three)
 
       iter = v%begin()
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
       iter = v%end() - 1
-     !_ASSERT(iter%of(), three)
+     ASSERT(iter%of(), three)
    end subroutine test_of
 
    @test
@@ -69,9 +69,9 @@ contains
       call v%push_back(three)
 
       iter = v%begin() + 1
-     !_ASSERT(iter%of(-1), one)
-     !_ASSERT(iter%of(+0), two)
-     !_ASSERT(iter%of(+1), three)
+     ASSERT(iter%of(-1), one)
+     ASSERT(iter%of(+0), two)
+     ASSERT(iter%of(+1), three)
 
    end subroutine test_of_offset_default
 
@@ -85,9 +85,9 @@ contains
       call v%push_back(three)
 
       iter = v%begin() + 1
-     !_ASSERT(iter%of(-1_GFTL_SIZE_KIND), one)
-     !_ASSERT(iter%of(+0_GFTL_SIZE_KIND), two)
-     !_ASSERT(iter%of(+1_GFTL_SIZE_KIND), three)
+     ASSERT(iter%of(-1_GFTL_SIZE_KIND), one)
+     ASSERT(iter%of(+0_GFTL_SIZE_KIND), two)
+     ASSERT(iter%of(+1_GFTL_SIZE_KIND), three)
 
    end subroutine test_of_offset_size_kind
 
@@ -102,16 +102,16 @@ contains
 
       iter = v%begin()
       call iter%add(2)
-     !_ASSERT(iter%of(), three)
+     ASSERT(iter%of(), three)
       
       call iter%sub(2)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
 
       call iter%add(1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
 
       call iter%sub(1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
 
    end subroutine test_add
 
@@ -126,16 +126,16 @@ contains
 
       iter = v%begin()
       new_iter = iter + 2
-     !_ASSERT(new_iter%of(), three)
+     ASSERT(new_iter%of(), three)
       
       new_iter = new_iter - 2
-     !_ASSERT(new_iter%of(), one)
+     ASSERT(new_iter%of(), one)
 
       new_iter = iter + 1_GFTL_SIZE_KIND
-     !_ASSERT(new_iter%of(), two)
+     ASSERT(new_iter%of(), two)
 
       new_iter = new_iter - 1_GFTL_SIZE_KIND
-     !_ASSERT(new_iter%of(), one)
+     ASSERT(new_iter%of(), one)
 
    end subroutine test_add_operator
 
@@ -265,7 +265,7 @@ contains
       iter = v%end()
       call iter%prev()
       @assert_that(iter == v%begin(), is(false()))
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
 
       call iter%prev()
       @assert_that(iter == v%begin(), is(true()))
@@ -281,13 +281,13 @@ contains
       call v%push_back(two)
 
       iter = next(v%begin(),1)
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
 
       iter = next(v%begin(),2)
       @assert_that(iter == v%end(), is(true()))
 
       iter = next(v%begin(),1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
 
       iter = next(v%begin(),2_GFTL_SIZE_KIND)
       @assert_that(iter == v%end(), is(true()))
@@ -305,14 +305,14 @@ contains
       call v%push_back(three)
 
       iter = prev(v%end(),1)
-     !_ASSERT(iter%of(), three)
+     ASSERT(iter%of(), three)
       iter = prev(v%end(),3)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
       
       iter = prev(v%end(),1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), three)
+     ASSERT(iter%of(), three)
       iter = prev(v%end(),3_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
       
    end subroutine test_prev
 
@@ -342,13 +342,13 @@ contains
       call v%push_back(two)
 
       iter = next(v%ftn_begin(),1)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
 
       iter = next(v%ftn_begin(),2)
       @assert_that(iter == v%ftn_end(), is(true()))
 
       iter = next(v%ftn_begin(),1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
 
       iter = next(v%ftn_begin(),2_GFTL_SIZE_KIND)
       @assert_that(iter == v%ftn_end(), is(true()))
@@ -365,14 +365,14 @@ contains
       call v%push_back(three)
 
       iter = prev(v%ftn_end(),1)
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
       iter = prev(v%ftn_end(),2)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
       
       iter = prev(v%ftn_end(),1_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), two)
+     ASSERT(iter%of(), two)
       iter = prev(v%ftn_end(),2_GFTL_SIZE_KIND)
-     !_ASSERT(iter%of(), one)
+     ASSERT(iter%of(), one)
       
    end subroutine test_ftn_prev
 
