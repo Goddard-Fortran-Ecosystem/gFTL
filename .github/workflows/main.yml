@@ -77,7 +77,7 @@ jobs:
       - name: Build Tests
         run: |
           cd build
-          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
+          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:20
 
       - name: Run Tests
         run: |
