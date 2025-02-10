@@ -1103,7 +1103,6 @@
 
       lch => this%root%get_child(__LEFT)
       rch => this%root%get_child(__RIGHT)
-!!$      print*,'At line: ', line, lch%get_height(), rch%get_height()
       if (this%size() > 0) then
          node => this%root%to_node()
          call dump(node)

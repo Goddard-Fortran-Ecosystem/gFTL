@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.15.2] - 2025-02-10
+
+### Fixed
+
+- removed extraneous debug prints left from last PR
+
 ## [1.15.1] - 2025-02-04
 	
 ### Fixed
