@@ -5,15 +5,11 @@
       class(__alt_set_iterator), intent(in) :: this
       __T_declare_result__, pointer :: value
 
-      print*,__FILE__,__LINE__
       value => null()
-      print*,__FILE__,__LINE__, this%current
-      print*,__FILE__,__LINE__, __MANGLE(exists)(this%current)
-      print*,__FILE__,__LINE__, associated(this%tree)
       if (__MANGLE(exists)(this%current)) then
          value  => this%tree%items%of(this%current)
       end if
-      print*,__FILE__,__LINE__
+
    end function __MANGLE(iter_of)
 
    ! =======================
