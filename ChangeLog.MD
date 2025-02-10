@@ -2,7 +2,17 @@
 
 ## Unreleased
 
+## [1.15.2] - 2025-02-10
+
 ### Fixed
+
+- removed extraneous debug prints left from last PR
+
+## [1.15.1] - 2025-02-04
+	
+### Fixed
+
+- workaround for gfortran tests on containers with unlimited polymorphic entities	
 
 
 ## [1.15.0] - 2025-01-31

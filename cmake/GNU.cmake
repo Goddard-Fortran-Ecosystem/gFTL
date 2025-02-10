@@ -1,7 +1,7 @@
 # Compiler specific flags for Intel Fortran compiler
 
 set(no_optimize "-O0")
-set(check_all "-fcheck=bounds -fcheck=pointer -fcheck=mem ")
+set(check_all "-fcheck=bounds -fcheck=pointer -fcheck=mem -save-temps")
 set(traceback "-fbacktrace")
 set(cpp "-cpp")
 

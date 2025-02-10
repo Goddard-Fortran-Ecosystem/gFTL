@@ -399,9 +399,7 @@
       type (KeywordEnforcer), optional :: unused
       type(__alt_set_iterator), optional, intent(out) :: iter
 
-      print*,__FILE__,__LINE__
       call this%insert(value, iter=iter)
-      print*,__FILE__,__LINE__, associated(iter%tree)
 
       __UNUSED_DUMMY(unused)
       __UNUSED_DUMMY(hint)

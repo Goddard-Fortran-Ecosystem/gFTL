@@ -20,10 +20,11 @@ module Test_{}_type()Vector
    __T_declare_component__ :: two
    __T_declare_component__ :: three
 
-   __T_declare_component__ :: tmp
+   __T_declare_result__, pointer :: tmp
+
 
 define({ASSERT},{
-tmp = {$1}
+tmp => {$1}
 ifelse(_type(),{Foo},@assertTrue(tmp=={$2}),
 _type(),{FooPoly},@assertTrue(tmp=={$2}),
 _type(),{AbstractBar},@assertTrue(tmp=={$2}),
@@ -43,6 +44,41 @@ contains
 
    end subroutine setup
 
+   subroutine compare(a, b)
+     class(*), intent(in) :: a
+     class(*), intent(in) :: b
+
+     select type (a)
+     type is (integer)
+        select type (b)
+        type is (integer)
+        class default
+           error stop
+        end select
+     type is (real)
+        select type (b)
+        type is (real)
+        class default
+           error stop
+        end select
+     type is (logical)
+        select type (b)
+        type is (logical)
+        class default
+           error stop
+        end select
+     type is (complex)
+        select type (b)
+        type is (complex)
+        class default
+           error stop
+        end select
+     class default
+        error stop
+     end select
+
+
+   end subroutine compare
    @test
    subroutine test_empty()
      type(Vector) :: v
@@ -87,13 +123,14 @@ contains
 
    @test
    subroutine test_of_size_kind()
-      type(Vector) :: v
+      type(Vector), target :: v
+      class(*), allocatable :: local1, local2
 
       call v%push_back(one)
       call v%push_back(two)
       ASSERT(v%of(1_GFTL_SIZE_KIND), one)
       ASSERT(v%of(2_GFTL_SIZE_KIND), two)
-
+	    
    end subroutine test_of_size_kind
 
    @test
@@ -104,7 +141,7 @@ contains
       call v%push_back(two)
       ASSERT(v%at(1), one)
       ASSERT(v%at(2), two)
-      
+
    end subroutine test_at_default
 
    @test
@@ -113,8 +150,8 @@ contains
 
       call v%push_back(one)
       call v%push_back(two)
-      ASSERT(v%at(1_GFTL_SIZE_KIND), one)
-      ASSERT(v%at(2_GFTL_SIZE_KIND), two)
+     ASSERT(v%at(1_GFTL_SIZE_KIND), one)
+     ASSERT(v%at(2_GFTL_SIZE_KIND), two)
 
    end subroutine test_at_size_kind
 
@@ -139,9 +176,9 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      ASSERT(v%back(), one)
+     ASSERT(v%back(), one)
       call v%push_back(two)
-      ASSERT(v%back(), two)
+     ASSERT(v%back(), two)
    end subroutine test_back
 
 
@@ -150,10 +187,10 @@ contains
       type(Vector) :: v
 
       call v%push_back(one)
-      ASSERT(v%front(), one)
+     ASSERT(v%front(), one)
 
       call v%push_back(two)
-      ASSERT(v%front(), one)
+     ASSERT(v%front(), one)
       
    end subroutine test_front
 
@@ -174,11 +211,11 @@ contains
 
       call v%push_back(one)
       call v%set(1, two)
-      ASSERT(v%of(1), two)
+     ASSERT(v%of(1), two)
 
       call v%resize(5)
       call v%set(5, one)
-      ASSERT(v%of(5), one)
+     ASSERT(v%of(5), one)
       
    end subroutine test_set_default
 
@@ -188,7 +225,7 @@ contains
 
       call v%resize(5_GFTL_SIZE_KIND)
       call v%set(5_GFTL_SIZE_KIND, one)
-      ASSERT(v%of(5_GFTL_SIZE_KIND), one)
+     ASSERT(v%of(5_GFTL_SIZE_KIND), one)
       
    end subroutine test_set_size_kind
 
@@ -201,9 +238,9 @@ contains
       array = [one, two, three]
       v = array
       @assert_that(int(v%size()), is(3))
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), two)
-      ASSERT(v%of(3), three)
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), two)
+     ASSERT(v%of(3), three)
       
 #endif
    end subroutine test_copy_from_array
@@ -219,8 +256,8 @@ contains
       call v%pop_back()
       
       @assert_that(int(v%size()), is(2))
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), two)
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), two)
 
    end subroutine test_pop_back
 
@@ -242,18 +279,18 @@ contains
         do i = 1, 3
            select type(q => v%at(i))
            type is (integer)
-              ASSERT(v%at(1), default)
-              ASSERT(v%at(2), default)
-              ASSERT(v%at(3), default)
+             ASSERT(v%at(1), default)
+             ASSERT(v%at(2), default)
+             ASSERT(v%at(3), default)
            class default
               @assertFail('incorrect default type')
            end select
         end do
       end block
 #else
-      ASSERT(v%at(1), default)
-      ASSERT(v%at(2), default)
-      ASSERT(v%at(3), default)
+     ASSERT(v%at(1), default)
+     ASSERT(v%at(2), default)
+     ASSERT(v%at(3), default)
 #endif
       
    end subroutine test_vector_fill_default_value
@@ -265,9 +302,9 @@ contains
 
       v = Vector(n=3, value=two)
       @assert_that(int(v%size()), is(3))
-      ASSERT(v%at(1), two)
-      ASSERT(v%at(2), two)
-      ASSERT(v%at(3), two)
+     ASSERT(v%at(1), two)
+     ASSERT(v%at(2), two)
+     ASSERT(v%at(3), two)
 
    end subroutine test_vector_fill
 
@@ -277,8 +314,8 @@ contains
       integer :: status
 
       call v%resize(2, rc=status)
-      @assert_that(status, is(0))
-      @assert_that(int(v%size()), is(2))
+         @assert_that(status, is(0))
+         @assert_that(int(v%size()), is(2))
 
    end subroutine resize_default
 
@@ -288,10 +325,10 @@ contains
       integer :: status
 
       call v%resize(2, value=three, rc=status)
-      @assert_that(status, is(0))
-      @assert_that(int(v%size()), is(2))
-      ASSERT(v%of(1), three)
-      ASSERT(v%of(2), three)
+         @assert_that(status, is(0))
+         @assert_that(int(v%size()), is(2))
+     ASSERT(v%of(1), three)
+     ASSERT(v%of(2), three)
 
    end subroutine resize_default_with_value
 
@@ -302,10 +339,10 @@ contains
 
       call v%push_back(one)
       call v%resize(2, value=three, rc=status)
-      @assert_that(status, is(0))
-      @assert_that(int(v%size()), is(2))
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), three)
+         @assert_that(status, is(0))
+         @assert_that(int(v%size()), is(2))
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), three)
 
    end subroutine resize_default_with_value_b
 
@@ -321,13 +358,13 @@ contains
       call v%push_back(two)
       call v%push_back(three)
       call v%pop_back()
-      @assert_that(int(v%capacity()) >= 3,is(true()))
+         @assert_that(int(v%capacity()) >= 3,is(true()))
 
       call v%shrink_to_fit()
-      @assert_that(int(v%capacity()) == 2,is(true()))
+         @assert_that(int(v%capacity()) == 2,is(true()))
       ! other elements unchanged
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), two)
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), two)
 
    end subroutine test_shrink_to_fit
 
@@ -337,10 +374,10 @@ contains
       integer :: status
 
       call v%resize(2_GFTL_SIZE_KIND, value=three, rc=status)
-      @assert_that(status, is(0))
-      @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      ASSERT(v%of(1_GFTL_SIZE_KIND), three)
-      ASSERT(v%of(2_GFTL_SIZE_KIND), three)
+         @assert_that(status, is(0))
+         @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
+     ASSERT(v%of(1_GFTL_SIZE_KIND), three)
+     ASSERT(v%of(2_GFTL_SIZE_KIND), three)
 
    end subroutine resize_size_kind_with_value
 
@@ -350,7 +387,7 @@ contains
       integer :: status
       
       call v%resize(-2, rc=status)
-      @assert_that(status, is(ILLEGAL_INPUT))
+         @assert_that(status, is(ILLEGAL_INPUT))
 
    end subroutine resize_illegal_size
 
@@ -366,11 +403,11 @@ contains
       iter = v%begin() + 1
       next_iter = v%erase(iter)
 
-      @assert_that(int(v%size()), is(2))
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), three)
+         @assert_that(int(v%size()), is(2))
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), three)
 
-      ASSERT(next_iter%of(), three)
+     ASSERT(next_iter%of(), three)
       
    end subroutine test_erase_one
 
@@ -387,11 +424,11 @@ contains
       iter = v%begin() + 1
       next_iter = v%erase(iter, iter+2)
 
-      @assert_that(int(v%size()), is(2))
-      ASSERT(v%of(1), one)
-      ASSERT(v%of(2), one)
+         @assert_that(int(v%size()), is(2))
+     ASSERT(v%of(1), one)
+     ASSERT(v%of(2), one)
       
-      ASSERT(next_iter%of(), one)
+     ASSERT(next_iter%of(), one)
 
    end subroutine test_erase_range
 
@@ -408,8 +445,8 @@ contains
       iter = v%begin() + 1
       next_iter = v%erase(iter, iter)
 
-      @assert_that(int(v%size()), is(4))
-      @assert_that(next_iter == iter, is(true()))
+         @assert_that(int(v%size()), is(4))
+         @assert_that(next_iter == iter, is(true()))
 
    end subroutine test_erase_empty_range
 
@@ -421,10 +458,10 @@ contains
 
       v1 = Vector(n=3, value=two)
       v2 = v1
-      @assert_that(int(v2%size()), is(3))
-      ASSERT(v2%at(1), two)
-      ASSERT(v2%at(2), two)
-      ASSERT(v2%at(3), two)
+         @assert_that(int(v2%size()), is(3))
+     ASSERT(v2%at(1), two)
+     ASSERT(v2%at(2), two)
+     ASSERT(v2%at(3), two)
 
    end subroutine test_vector_copy
 
@@ -452,10 +489,10 @@ contains
       call different%push_back(two)
 
 
-      @assert_that(ref == ref, is(true()))
-      @assert_that(ref == smaller, is(false()))
-      @assert_that(ref == bigger, is(false()))
-      @assert_that(bigger == different, is(false()))
+         @assert_that(ref == ref, is(true()))
+         @assert_that(ref == smaller, is(false()))
+         @assert_that(ref == bigger, is(false()))
+         @assert_that(bigger == different, is(false()))
 #endif      
    end subroutine test_equal
 
@@ -483,10 +520,10 @@ contains
       call different%push_back(two)
 
 
-      @assert_that(ref /= ref, is(false()))
-      @assert_that(ref /= smaller, is(true()))
-      @assert_that(ref /= bigger, is(true()))
-      @assert_that(bigger /= different, is(true()))
+         @assert_that(ref /= ref, is(false()))
+         @assert_that(ref /= smaller, is(true()))
+         @assert_that(ref /= bigger, is(true()))
+         @assert_that(bigger /= different, is(true()))
 #endif
    end subroutine test_not_equal
 
@@ -509,16 +546,13 @@ contains
       call d%push_back(three)
 
 
-      @assert_that(a < a, is(false()))
-
-      @assert_that(a < b, is(true()))
-      @assert_that(b < a, is(false()))
-
-      @assert_that(a < c, is(false()))
-      @assert_that(c < a, is(true()))
-      
-      @assert_that(a < d, is(true()))
-      @assert_that(d < a, is(false()))
+         @assert_that(a < a, is(false()))
+         @assert_that(a < b, is(true()))
+         @assert_that(b < a, is(false()))
+         @assert_that(a < c, is(false()))
+         @assert_that(c < a, is(true()))
+         @assert_that(a < d, is(true()))
+         @assert_that(d < a, is(false()))
 
    end subroutine test_less_than
 
@@ -540,16 +574,13 @@ contains
       call d%push_back(three)
 
 
-      @assert_that(a <= a, is(true()))
-
-      @assert_that(a <= b, is(true()))
-      @assert_that(b <= a, is(false()))
-
-      @assert_that(a <= c, is(false()))
-      @assert_that(c <= a, is(true()))
-      
-      @assert_that(a <= d, is(true()))
-      @assert_that(d <= a, is(false()))
+         @assert_that(a <= a, is(true()))
+         @assert_that(a <= b, is(true()))
+         @assert_that(b <= a, is(false()))
+         @assert_that(a <= c, is(false()))
+         @assert_that(c <= a, is(true()))
+         @assert_that(a <= d, is(true()))
+         @assert_that(d <= a, is(false()))
    end subroutine test_less_than_or_equal
 
    @test(ifdef=__T_LT__)
@@ -570,16 +601,13 @@ contains
       call d%push_back(three)
 
 
-      @assert_that(a > a, is(false()))
-
-      @assert_that(a > b, is(false()))
-      @assert_that(b > a, is(true()))
-
-      @assert_that(a > c, is(true()))
-      @assert_that(c > a, is(false()))
-      
-      @assert_that(a > d, is(false()))
-      @assert_that(d > a, is(true()))
+         @assert_that(a > a, is(false()))
+         @assert_that(a > b, is(false()))
+         @assert_that(b > a, is(true()))
+         @assert_that(a > c, is(true()))
+         @assert_that(c > a, is(false()))
+         @assert_that(a > d, is(false()))
+         @assert_that(d > a, is(true()))
    end subroutine test_greater_than
 
    @test(ifdef=__T_LT__)
@@ -600,16 +628,13 @@ contains
       call d%push_back(three)
 
 
-      @assert_that(a >= a, is(true()))
-
-      @assert_that(a >= b, is(false()))
-      @assert_that(b >= a, is(true()))
-
-      @assert_that(a >= c, is(true()))
-      @assert_that(c >= a, is(false()))
-      
-      @assert_that(a >= d, is(false()))
-      @assert_that(d >= a, is(true()))
+         @assert_that(a >= a, is(true()))
+         @assert_that(a >= b, is(false()))
+         @assert_that(b >= a, is(true()))
+         @assert_that(a >= c, is(true()))
+         @assert_that(c >= a, is(false()))
+         @assert_that(a >= d, is(false()))
+         @assert_that(d >= a, is(true()))
    end subroutine test_greater_than_or_equal
 
 #endif
@@ -625,12 +650,12 @@ contains
 
       call v1%swap(v2)
 
-      @assert_that(int(v1%size()), is(1))
-      @assert_that(int(v2%size()), is(2))
+         @assert_that(int(v1%size()), is(1))
+         @assert_that(int(v2%size()), is(2))
 
-      ASSERT(v1%of(1), three)
-      ASSERT(v2%of(1), one)
-      ASSERT(v2%of(2), two)
+     ASSERT(v1%of(1), three)
+     ASSERT(v2%of(1), one)
+     ASSERT(v2%of(2), two)
    end subroutine test_swap
 
    @test
@@ -640,9 +665,9 @@ contains
 
       iter = v%begin()
       iter = v%insert(iter, one)
-      @assert_that(v%size(), is(1_GFTL_SIZE_KIND))
-      ASSERT(v%at(1), one)
-      ASSERT(iter%of(0), one)
+         @assert_that(v%size(), is(1_GFTL_SIZE_KIND))
+     ASSERT(v%at(1), one)
+     ASSERT(iter%of(0), one)
       
    end subroutine test_insert_empty
 
@@ -656,11 +681,11 @@ contains
       iter = v%begin()
       iter = v%insert(iter, two)
 
-      @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      ASSERT(v%at(1), two)
-      ASSERT(v%at(2), one)
-      ASSERT(iter%of(0), two)
-      ASSERT(iter%of(1), one)
+         @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
+     ASSERT(v%at(1), two)
+     ASSERT(v%at(2), one)
+     ASSERT(iter%of(0), two)
+     ASSERT(iter%of(1), one)
       
    end subroutine test_insert_before
    
@@ -674,11 +699,11 @@ contains
       iter = v%begin() + 1
       iter = v%insert(iter, two)
 
-      @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
-      ASSERT(v%at(1), one)
-      ASSERT(v%at(2), two)
-      ASSERT(iter%of(0), two)
-      ASSERT(iter%of(-1), one)
+         @assert_that(v%size(), is(2_GFTL_SIZE_KIND))
+     ASSERT(v%at(1), one)
+     ASSERT(v%at(2), two)
+     ASSERT(iter%of(0), two)
+     ASSERT(iter%of(-1), one)
       
    end subroutine test_insert_middle
    
