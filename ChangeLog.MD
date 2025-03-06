@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Add preliminary LFortran support
+
 ## [1.15.2] - 2025-02-10
 
 ### Fixed
