@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.24)
-
 include_directories("$ENV{FTL}/include")
 add_executable(CIKey.x CaseInsensitiveKey.F90)
 add_executable(StringPoly.x StringPoly.F90)
