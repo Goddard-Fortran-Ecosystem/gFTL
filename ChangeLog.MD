@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+## [1.16.0] - 2025-04-16
+
+### Changed
+
+- Updated CMake minimum version to 3.24
+
 ## [1.15.2] - 2025-02-10
 
 ### Fixed

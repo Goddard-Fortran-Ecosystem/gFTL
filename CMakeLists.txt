@@ -1,10 +1,10 @@
-cmake_minimum_required (VERSION 3.12)
+cmake_minimum_required (VERSION 3.24)
 if (COMMAND cmake_policy)
   cmake_policy (SET CMP0003 NEW)
 endif (COMMAND cmake_policy)
 
 project (GFTL
-  VERSION 1.15.2
+  VERSION 1.16.0
   LANGUAGES NONE)
 
 if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

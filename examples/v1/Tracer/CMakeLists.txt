@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.24)
 
 include_directories("$ENV{FTL}/include")
 link_directories("$ENV{MODELE}/modelEMaster/model/shared")
