@@ -30,9 +30,17 @@ set (types
   kitchen_sink
   )
 
-find_program(AWK awk)
-configure_file (filter.x.in filter.x @ONLY)
-find_program(FILTER filter.x ${CMAKE_CURRENT_BINARY_DIR})
+find_program(AWK awk PATHS "${CMAKE_CURRENT_BINARY_DIR}/gawk/bin")
+if( NOT AWK )
+  if( WIN32 )
+    message( STATUS "Downloading AWK program from SourceForge")
+    file(DOWNLOAD "https://downloads.sourceforge.net/gnuwin32/gawk-3.1.6-1-bin.zip" "${CMAKE_CURRENT_BINARY_DIR}/gawk-bin.zip" )
+    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_BINARY_DIR}/gawk-bin.zip" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/gawk" PATTERNS "bin")
+    set(AWK "${CMAKE_CURRENT_BINARY_DIR}/gawk/bin/awk.exe")
+  else ()
+    message( SEND_ERROR "awk program not found" )
+  endif()
+endif()
 
 set(actuals)
 foreach(type ${types})
@@ -45,9 +53,10 @@ foreach(type ${types})
 
   add_custom_command (
     OUTPUT ${actual}
-        COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+    COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
     # Strip all empty lines and comments
-    COMMAND ${FILTER} ${tmp} ${actual}
+    COMMAND ${AWK} "\"/<start>/,/<stop>/\"" ${tmp} > ${tmp2}
+    COMMAND ${AWK} "\"NR>2 {print last} {last=$$0}\"" ${tmp2} > ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${type}.inc m4_type_includes
     )
@@ -56,7 +65,7 @@ foreach(type ${types})
 
   add_test(
     NAME test_derived_${type}
-    COMMAND diff ${expected} ${actual}
+    COMMAND ${CMAKE_COMMAND} -E compare_files ${expected} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 
