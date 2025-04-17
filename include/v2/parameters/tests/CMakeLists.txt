@@ -65,7 +65,7 @@ foreach(type ${types})
 
   add_test(
     NAME test_derived_${type}
-    COMMAND ${CMAKE_COMMAND} -E compare_files ${expected} ${actual}
+    COMMAND ${CMAKE_COMMAND} -E compare_files --ignore-eol ${expected} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 
