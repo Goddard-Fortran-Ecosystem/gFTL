@@ -7,6 +7,7 @@
 ### Changed
 
 - Updated CMake minimum version to 3.24
+- Update CI to use `macos-15`, remove `macos-13`
 
 ## [1.15.2] - 2025-02-10
 
