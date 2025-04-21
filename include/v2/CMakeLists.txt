@@ -18,11 +18,6 @@ set (template_parameters
   T2 # pair
   )
 
-find_program( M4 m4)
-if( NOT M4 )
-  message( SEND_ERROR "m4 program not found" )
-endif()
-
 add_subdirectory(shared)
 add_subdirectory(parameters)
 

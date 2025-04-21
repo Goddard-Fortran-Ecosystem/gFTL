@@ -12,11 +12,6 @@ target_include_directories (gftl-v1 INTERFACE
   $<INSTALL_INTERFACE:${dest}/include/v1>           # for client in install mode
   )
 
-find_program (M4 m4)
-if( NOT M4 )
-  message( SEND_ERROR "m4 program not found" )
-endif()
-
 add_subdirectory (templates)
 add_subdirectory (types)
 

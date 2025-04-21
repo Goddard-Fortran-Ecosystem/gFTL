@@ -1,5 +1,3 @@
-find_program(M4 m4)
-
 function (m4_preprocess T infile outfile)
   add_custom_command (
     OUTPUT ${outfile}

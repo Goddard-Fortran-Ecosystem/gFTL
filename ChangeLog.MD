@@ -4,9 +4,15 @@
 
 ## [1.16.0] - 2025-04-16
 
+### Removed
+
+- Removed download of `m4` on Windows if not found. We now require the user to provide it
+- Removed `filter.x.in` for pure Awk in CMake `custom_command`
+
 ### Changed
 
 - Updated CMake minimum version to 3.24
+- Made `awk` and `m4` `REQUIRED` via `find_program`
 
 ## [1.15.2] - 2025-02-10
 
