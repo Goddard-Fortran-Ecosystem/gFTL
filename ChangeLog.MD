@@ -13,6 +13,7 @@
 
 - Updated CMake minimum version to 3.24
 - Made `awk` and `m4` `REQUIRED` via `find_program`
+- Update CI to use `macos-15`, remove `macos-13`
 
 ## [1.15.2] - 2025-02-10
 
