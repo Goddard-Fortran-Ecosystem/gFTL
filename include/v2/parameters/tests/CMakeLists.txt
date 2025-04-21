@@ -45,8 +45,8 @@ foreach(type ${types})
     OUTPUT ${actual}
     COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
     # Strip all empty lines and comments
-    COMMAND ${AWK} "\"/<start>/,/<stop>/\"" ${tmp} > ${tmp2}
-    COMMAND ${AWK} "\"NR>2 {print last} {last=$$0}\"" ${tmp2} > ${actual}
+    COMMAND ${AWK} '/<start>/,/<stop>/' ${tmp} > ${tmp2}
+    COMMAND ${AWK} 'NR>2 {print last} {last=$$0}' ${tmp2} > ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     DEPENDS ${type}.inc m4_type_includes
     )
