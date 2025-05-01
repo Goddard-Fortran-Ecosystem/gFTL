@@ -42,22 +42,26 @@ foreach(type ${types})
   set (actual actual_${type}.txt)
 
   if(WIN32)
-    set(AWK_PROG1 "\"/<start>/,/<stop>/\"")
-    set(AWK_PROG2 "\"NR>2 {print last} {last=$$0}\"")
+    add_custom_command (
+      OUTPUT ${actual}
+      COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+      # Strip all empty lines and comments
+      COMMAND ${AWK} "\"/<start>/,/<stop>/\"" ${tmp} > ${tmp2}
+      COMMAND ${AWK} "\"NR>2 {print last} {last=$$0}\"" ${tmp2} > ${actual}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS ${type}.inc m4_type_includes
+      )
   else()
-    set(AWK_PROG1 "'/<start>/,/<stop>/'")
-    set(AWK_PROG2 "'NR>2 {print last} {last=$$0}'")
+    add_custom_command (
+      OUTPUT ${actual}
+      COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+      # Strip all empty lines and comments
+      COMMAND ${AWK} '/<start>/,/<stop>/' ${tmp} > ${tmp2}
+      COMMAND ${AWK} 'NR>2 {print last} {last=$$0}' ${tmp2} > ${actual}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS ${type}.inc m4_type_includes
+      )
   endif()
-
-  add_custom_command(
-    OUTPUT ${actual}
-    COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
-    # Strip all empty lines and comments
-    COMMAND ${AWK} ${AWK_PROG1} ${tmp} > ${tmp2}
-    COMMAND ${AWK} ${AWK_PROG2} ${tmp2} > ${actual}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${type}.inc m4_type_includes
-  )
 
   list(APPEND actuals ${actual})
 
