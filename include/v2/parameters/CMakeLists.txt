@@ -1,11 +1,6 @@
 # This directory uses m4 to generate various CPP/FPP include files that
 # are used by gFTL templates.  
 
-find_program( M4 m4)
-if( NOT M4 )
-  message( SEND_ERROR "m4 program not found" )
-endif()
-
 function (process_m4 parameter input_file output_file)
 #  message("processing: ${input_file} and ${output_file}")
   add_custom_command (
