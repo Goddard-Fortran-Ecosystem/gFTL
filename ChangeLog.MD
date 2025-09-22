@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Changed
+
+- Remove `macos-13` from CI, add `macos-15`
+- Add `gfortran-15` to macOS CI
+
 ## [1.15.2] - 2025-02-10
 
 ### Fixed
