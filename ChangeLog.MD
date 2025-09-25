@@ -2,9 +2,16 @@
 
 ## Unreleased
 
+### Removed
+
+- Removed download of `m4` on Windows if not found. We now require the user to provide it
+- Removed `filter.x.in` for pure Awk in CMake `custom_command`
+
 ### Changed
 
-- Remove `macos-13` from CI, add `macos-15`
+- Updated CMake minimum version to 3.24
+- Made `awk` and `m4` `REQUIRED` via `find_program`
+- Update CI to use `macos-15`, remove `macos-13`
 - Add `gfortran-15` to macOS CI
 
 ## [1.15.2] - 2025-02-10
@@ -18,7 +25,6 @@
 ### Fixed
 
 - workaround for gfortran tests on containers with unlimited polymorphic entities	
-
 
 ## [1.15.0] - 2025-01-31
 

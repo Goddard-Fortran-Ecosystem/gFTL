@@ -1,5 +1,3 @@
-find_program(M4 m4)
-
 # Note that a set of elements of type LOGICAL is not
 # supported.
 set (keys

@@ -1,7 +1,5 @@
 #add_subdirectory(sut)
 
-find_program(M4 m4)
-
 set (types
   integer
   integer32
