@@ -1,8 +1,3 @@
-find_program( M4 m4)
-if( NOT M4 )
-  message( SEND_ERROR "m4 program not found" )
-endif()
-
 set (base_types
 
   character
