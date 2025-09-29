@@ -175,7 +175,7 @@ jobs:
 
   # NOTE: This is weird because the NVHPC image is so large (~8GB) that
   #      we have to do some tricks to get it to run in GitHub Actions.
-  Nvidia:
+  Nvidia-Build-Only:
     runs-on: ubuntu-24.04
     env:
       FC: nvfortran
