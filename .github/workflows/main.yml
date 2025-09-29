@@ -179,9 +179,10 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       FC: nvfortran
+      NVHPC_IMAGE: nvcr.io/nvidia/nvhpc:25.7-devel-cuda12.9-ubuntu24.04
 
     steps:
-      # 1) Free a lot of space and move Docker's storage to the larger ephemeral disk
+      # Reclaim lots of space
       - name: Free disk space
         uses: jlumbroso/free-disk-space@v1.3.1
         with:
@@ -192,7 +193,8 @@ jobs:
           large-packages: true
           swap-storage: true
 
-      - name: Maximize build space (move /var/lib/docker)
+      # Move /var/lib/docker onto the larger ephemeral disk (do this before any docker pulls)
+      - name: Maximize build space (move Docker storage)
         uses: easimon/maximize-build-space@v10
         with:
           root-reserve-mb: 4096
@@ -202,7 +204,7 @@ jobs:
           remove-codeql: 'true'
           build-mount-path: '/var/lib/docker'
 
-      - name: Ensure Docker is clean
+      - name: Reset Docker daemon & prune
         run: |
           sudo systemctl restart docker
           docker system prune -af || true
@@ -212,56 +214,52 @@ jobs:
         with:
           fetch-depth: 1
 
-      # 2) Pull the big image *after* disk has been reclaimed/moved
       - name: Pull NVHPC image
+        run: docker pull "$NVHPC_IMAGE"
+
+      # Run everything inside the NVHPC container
+      - name: Build & test (inside NVHPC)
         run: |
-          docker pull nvcr.io/nvidia/nvhpc:25.7-devel-cuda12.9-ubuntu24.04
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            -e FC="$FC" \
+            "$NVHPC_IMAGE" \
+            bash -lc '
+              set -euo pipefail
 
-      # 3) Run all your steps inside the container with the workspace mounted
-      #    (This keeps everything nearly identical to your original script)
-      - name: Build & test inside NVHPC container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: nvcr.io/nvidia/nvhpc:25.7-devel-cuda12.9-ubuntu24.04
-          options: >-
-            -v ${{ github.workspace }}:/workspace
-            -w /workspace
-            -e FC=${{ env.FC }}
-          run: |
-            set -euo pipefail
+              echo "== Versions =="
+              ${FC} --version || true
 
-            echo "== Versions =="
-            ${FC} --version || true
+              # Base NVHPC images are minimal; install what you need
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                cmake git python-is-python3 ca-certificates pkg-config make
 
-            # NVHPC images are minimal; install what you need
-            apt-get update
-            DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-              cmake git python-is-python3 ca-certificates pkg-config make
+              cmake --version
 
-            cmake --version
+              echo "== Git safe.directory =="
+              git config --global --add safe.directory "*"
 
-            echo "== Git safe.directory =="
-            git config --global --add safe.directory '*'
+              echo "== Build GFE Prereqs =="
+              bash ./tools/ci-install-gfe.bash
 
-            echo "== Build GFE Prereqs =="
-            bash ./tools/ci-install-gfe.bash
+              echo "== Build gFTL =="
+              mkdir -p build
+              cd build
+              cmake .. \
+                -DCMAKE_Fortran_COMPILER=${FC} \
+                -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL \
+                -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+              make -j4
 
-            echo "== Build gFTL =="
-            mkdir -p build
-            cd build
-            cmake .. \
-              -DCMAKE_Fortran_COMPILER=${FC} \
-              -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL \
-              -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-            make -j4
+              echo "== Build Tests =="
+              make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
 
-            echo "== Build Tests =="
-            make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
+              echo "== Run Tests =="
+              ctest -j1 --output-on-failure --repeat until-pass:4
+            '
 
-            echo "== Run Tests =="
-            ctest -j1 --output-on-failure --repeat until-pass:4
-
-      # 4) Collect artifacts on failure (paths are in the mounted workspace)
       - name: Archive log files on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -269,6 +267,8 @@ jobs:
           name: logfiles
           path: |
             build/**/*.log
+
+
 
   Flang:
     runs-on: ubuntu-latest
