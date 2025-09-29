@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.16.0] - 2025-09-29
+
 ### Removed
 
 - Removed download of `m4` on Windows if not found. We now require the user to provide it
