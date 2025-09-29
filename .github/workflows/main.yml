@@ -60,7 +60,7 @@ jobs:
           cmake --version
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -107,7 +107,7 @@ jobs:
     name: Intel Fortran
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -174,8 +174,8 @@ jobs:
             build/**/*.log
 
   Nvidia:
-    runs-on: ubuntu-22.04
-    container: nvcr.io/nvidia/nvhpc:24.7-devel-cuda12.5-ubuntu22.04
+    runs-on: ubuntu-24.04
+    container: nvcr.io/nvidia/nvhpc:25.7-devel-cuda12.9-ubuntu24.04
     env:
       FC: nvfortran
 
@@ -187,7 +187,7 @@ jobs:
           cmake --version
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -243,7 +243,7 @@ jobs:
           cmake --version
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
