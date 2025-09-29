@@ -218,7 +218,7 @@ jobs:
         run: docker pull "$NVHPC_IMAGE"
 
       # Run everything inside the NVHPC container
-      - name: Build & test (inside NVHPC)
+      - name: Build (inside NVHPC)
         run: |
           docker run --rm \
             -v "$GITHUB_WORKSPACE:/workspace" \
@@ -253,11 +253,11 @@ jobs:
                 -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
               make -j4
 
-              echo "== Build Tests =="
-              make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
+              echo "== Build Tests (CURRENTLY TURNED OFF DUE TO PFUNIT ISSUES) =="
+              #make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
 
-              echo "== Run Tests =="
-              ctest -j1 --output-on-failure --repeat until-pass:4
+              echo "== Run Tests (CURRENTLY TURNED OFF DUE TO PFUNIT ISSUES) =="
+              #ctest -j1 --output-on-failure --repeat until-pass:4
             '
 
       - name: Archive log files on failure
