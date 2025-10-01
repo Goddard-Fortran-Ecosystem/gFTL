@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed NVHPC CI to build (does not run tests yet)
+
 ## [1.16.0] - 2025-09-29
 
 ### Removed
