@@ -210,7 +210,7 @@ jobs:
           docker system prune -af || true
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
@@ -267,8 +267,6 @@ jobs:
           name: logfiles
           path: |
             build/**/*.log
-
-
 
   Flang:
     runs-on: ubuntu-latest
