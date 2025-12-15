@@ -30,9 +30,7 @@ set (types
   kitchen_sink
   )
 
-find_program(AWK awk)
-configure_file (filter.x.in filter.x @ONLY)
-find_program(FILTER filter.x ${CMAKE_CURRENT_BINARY_DIR})
+find_program(AWK NAMES gawk awk nawk awk.exe REQUIRED)
 
 set(actuals)
 foreach(type ${types})
@@ -43,20 +41,33 @@ foreach(type ${types})
   set (tmp2 tmp2_${type}.txt)
   set (actual actual_${type}.txt)
 
-  add_custom_command (
-    OUTPUT ${actual}
-        COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
-    # Strip all empty lines and comments
-    COMMAND ${FILTER} ${tmp} ${actual}
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DEPENDS ${type}.inc m4_type_includes
-    )
+  if(WIN32)
+    add_custom_command (
+      OUTPUT ${actual}
+      COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+      # Strip all empty lines and comments
+      COMMAND ${AWK} "\"/<start>/,/<stop>/\"" ${tmp} > ${tmp2}
+      COMMAND ${AWK} "\"NR>2 {print last} {last=$$0}\"" ${tmp2} > ${actual}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS ${type}.inc m4_type_includes
+      )
+  else()
+    add_custom_command (
+      OUTPUT ${actual}
+      COMMAND ${CPP} -traditional -I${GFTL_SOURCE_DIR}/include/v2 -I${GFTL_BINARY_DIR}/include/v2 ${source} > ${tmp}
+      # Strip all empty lines and comments
+      COMMAND ${AWK} '/<start>/,/<stop>/' ${tmp} > ${tmp2}
+      COMMAND ${AWK} 'NR>2 {print last} {last=$$0}' ${tmp2} > ${actual}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      DEPENDS ${type}.inc m4_type_includes
+      )
+  endif()
 
   list(APPEND actuals ${actual})
 
   add_test(
     NAME test_derived_${type}
-    COMMAND diff ${expected} ${actual}
+    COMMAND ${CMAKE_COMMAND} -E compare_files --ignore-eol ${expected} ${actual}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 
