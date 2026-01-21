@@ -174,7 +174,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       FC: nvfortran
-      NVHPC_IMAGE: nvcr.io/nvidia/nvhpc:25.7-devel-cuda12.9-ubuntu24.04
+      NVHPC_IMAGE: nvcr.io/nvidia/nvhpc:25.11-devel-cuda13.0-ubuntu24.04
 
     steps:
       # Reclaim lots of space
