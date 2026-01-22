@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Remove `gfortran-12` from macos runners, clean up CI
+
 ## [1.16.0] - 2025-09-29
 
 ### Removed
