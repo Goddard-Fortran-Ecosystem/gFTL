@@ -1,6 +1,7 @@
 #include "parameters/T/copy_algorithm_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+#undef __guard
 #define __guard __algorithm_guard
 #define __iterator __algorithm_iterator
 #include "algorithms/dir_specification.inc"

@@ -79,6 +79,7 @@
 #include "parameters/T1/undef_pair_T1.inc"   
 #include "parameters/T2/undef_pair_T2.inc"   
 
+#undef __guard
 #define __guard __map_guard
 
 
