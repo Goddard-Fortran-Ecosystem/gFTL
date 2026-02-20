@@ -15,7 +15,6 @@
 !---------------
 
 #include "parameters/T/copy_deque_T_to_internal_T.inc"
-#undef __guard
 #define __guard __deque_guard
 
 #if defined(__deque_iterator)

@@ -10,7 +10,6 @@
 
 ! define generic internal template parameters from pair parameters.
 #include "parameters/T/copy_ptr_T_to_internal_T.inc"
-#undef __guard
 #define __guard __ptr_guard
 
 ! define derived generic template parameters from internal parameters.

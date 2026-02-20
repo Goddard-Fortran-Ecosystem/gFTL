@@ -54,7 +54,6 @@
 #include "parameters/T/undef_vector_T.inc"
 
 
-#undef __guard
 #define __guard __omap_guard
 
 #include "parameters/Key/copy_omap_Key_to_internal_Key.inc"

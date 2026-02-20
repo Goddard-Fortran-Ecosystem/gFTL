@@ -10,7 +10,6 @@
 
 
 #include "parameters/T/copy_stack_T_to_internal_T.inc"
-#undef __guard
 #define __guard __stack_guard
 
 ! define derived generic template parameters from internal parameters.

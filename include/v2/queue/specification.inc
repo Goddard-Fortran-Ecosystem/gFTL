@@ -26,7 +26,6 @@
 
 
 #include "parameters/T/copy_queue_T_to_internal_T.inc"
-#undef __guard
 #define __guard __queue_guard
 
 ! define derived generic template parameters from internal parameters.
