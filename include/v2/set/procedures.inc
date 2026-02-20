@@ -17,6 +17,9 @@
 #include "parameters/T/copy_set_T_to_internal_T.inc"
 #include "parameters/T/define_derived_macros.inc"
 
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __set_guard
 
 #define __LEFT 0
