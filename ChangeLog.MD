@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Fixed macro redefinition warnings during template instantiation (#268)
+  - Added `#undef` before `#define` in `cpp_copy` m4 macro to prevent warnings when template parameters are copied multiple times
+  - Added conditional `#undef __guard` statements in all container template files to prevent warnings when containers nest other containers (e.g., Map uses Pair, Set uses Vector)
+
 ### Changed
 
 - Remove `gfortran-12` from macos runners, clean up CI
