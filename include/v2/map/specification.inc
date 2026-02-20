@@ -72,6 +72,9 @@
 #include "parameters/T/undef_set_T.inc"
 
 
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __map_guard
 
 #include "parameters/Key/copy_map_Key_to_internal_Key.inc"

@@ -52,6 +52,9 @@
 #undef __vector_guard
 #include "parameters/T/undef_vector_T.inc"
 
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __omap_guard
 
 #include "parameters/Key/copy_omap_Key_to_internal_Key.inc"

@@ -9,6 +9,9 @@
    
 
 #ifdef __algorithm_riterator
+#  if (defined(__guard))
+#    undef __guard
+#  endif
 #  define __guard __IDENTITY(__algorithm_guard)reverse_
 #  define __iterator __algorithm_riterator
 #  include "algorithms/dir_procedures.inc"
