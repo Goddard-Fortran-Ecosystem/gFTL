@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## [1.17.0] - 2026-02-23
+
 ### Fixed
 
 - Fixed macro redefinition warnings during template instantiation (#268)
