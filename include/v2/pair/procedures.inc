@@ -17,6 +17,9 @@
 ! define generic internal template parameters from pair parameters.
 #include "parameters/T1/copy_pair_T1_to_internal_T1.inc"
 #include "parameters/T2/copy_pair_T2_to_internal_T2.inc"
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __pair_guard
 
 ! define derived generic template parameters from internal parameters.

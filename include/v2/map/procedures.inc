@@ -79,6 +79,9 @@
 #include "parameters/T1/undef_pair_T1.inc"   
 #include "parameters/T2/undef_pair_T2.inc"   
 
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __map_guard
 
 

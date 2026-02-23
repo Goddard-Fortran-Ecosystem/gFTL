@@ -16,6 +16,9 @@
 
 ! define generic internal template parameters from pair parameters.
 #include "parameters/T/copy_vector_T_to_internal_T.inc"
+#if (defined(__guard))
+#  undef __guard
+#endif
 #define __guard __vector_guard
 
 ! define derived generic template parameters from internal parameters.
