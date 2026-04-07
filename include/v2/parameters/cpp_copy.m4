@@ -4,6 +4,7 @@ changecom()
 define(`cpp_copy',`
 #ifdef _T_in()_$1
 ! define _T_out()_$1
+#    undef _T_out()_$1
 ifelse($#,1,
 #    define _T_out()_$1 _T_in()_$1,
 $#,2,
@@ -13,6 +14,7 @@ $#,2,
 
 )
 
+#undef _T_out()
 #define _T_out() _T_in()
 
 cpp_copy(name)

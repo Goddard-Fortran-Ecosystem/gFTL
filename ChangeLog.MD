@@ -6,6 +6,18 @@
 
 - Add preliminary LFortran support
 
+## [1.17.0] - 2026-02-23
+
+### Fixed
+
+- Fixed macro redefinition warnings during template instantiation (#268)
+  - Added `#undef` before `#define` in `cpp_copy` m4 macro to prevent warnings when template parameters are copied multiple times
+  - Added conditional `#undef __guard` statements in all container template files to prevent warnings when containers nest other containers (e.g., Map uses Pair, Set uses Vector)
+
+### Changed
+
+- Remove `gfortran-12` from macos runners, clean up CI
+
 ## [1.16.0] - 2025-09-29
 
 ### Removed

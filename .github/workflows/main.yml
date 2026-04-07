@@ -19,6 +19,7 @@ jobs:
         compiler: [gfortran-12, gfortran-13, gfortran-14, gfortran-15]
         # gfortran-10 and -11 are only on ubuntu-22.04
         # gfortran-13 and -14 and -15 are not on ubuntu-22.04
+        # gfortran-12 is not on macos
         # gfortran-15 is only on macos
         include:
           - os: ubuntu-22.04
@@ -34,6 +35,10 @@ jobs:
             compiler: gfortran-15
           - os: ubuntu-24.04
             compiler: gfortran-15
+          - os: macos-14
+            compiler: gfortran-12
+          - os: macos-15
+            compiler: gfortran-12
 
       # fail-fast if set to 'true' here is good for production, but when
       # debugging, set to 'false'. fail-fast means if *any* ci test in the matrix fails
@@ -60,7 +65,7 @@ jobs:
           cmake --version
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -72,28 +77,23 @@ jobs:
         run: |
           bash ./tools/ci-install-gfe.bash
 
+      - name: Configure gFTL
+        run: |
+          cmake -B build -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+
       - name: Build gFTL
         run: |
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j4
+          cmake --build build --parallel 4
 
-      - name: Build Tests
+      - name: Build and Run Tests
         run: |
-          cd build
-          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
-
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -j1 --output-on-failure --repeat until-pass:4
+          cmake --build build --parallel 4 --target tests || ctest --test-dir build --parallel 1 --output-on-failure --repeat until-pass:4
 
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-${{ matrix.compiler }}-${{ matrix.os }}
           path: |
             build/**/*.log
 
@@ -107,7 +107,7 @@ jobs:
     name: Intel Fortran
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -148,84 +148,111 @@ jobs:
         run: |
           bash ./tools/ci-install-gfe.bash
 
+      - name: Configure gFTL
+        run: |
+          cmake -B build -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+
       - name: Build gFTL
         run: |
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j4
+          cmake --build build --parallel 4
 
-      - name: Build Tests
+      - name: Build and Run Tests
         run: |
-          cd build
-          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
-
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -j1 --output-on-failure --repeat until-pass:4
+          cmake --build build --parallel 4 --target tests || ctest --test-dir build --parallel 1 --output-on-failure --repeat until-pass:4
 
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-Intel
           path: |
             build/**/*.log
 
-  Nvidia:
-    runs-on: ubuntu-22.04
-    container: nvcr.io/nvidia/nvhpc:24.7-devel-cuda12.5-ubuntu22.04
+  # NOTE: This is weird because the NVHPC image is so large (~8GB) that
+  #      we have to do some tricks to get it to run in GitHub Actions.
+  Nvidia-Build-Only:
+    runs-on: ubuntu-24.04
     env:
       FC: nvfortran
+      NVHPC_IMAGE: nvcr.io/nvidia/nvhpc:25.11-devel-cuda13.0-ubuntu24.04
 
-    name: Nvidia HPC
     steps:
-      - name: Versions
+      # Reclaim lots of space
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
+      # Move /var/lib/docker onto the larger ephemeral disk (do this before any docker pulls)
+      - name: Maximize build space (move Docker storage)
+        uses: easimon/maximize-build-space@v10
+        with:
+          root-reserve-mb: 4096
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          build-mount-path: '/var/lib/docker'
+
+      - name: Reset Docker daemon & prune
         run: |
-          ${FC} --version
-          cmake --version
+          sudo systemctl restart docker
+          docker system prune -af || true
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
-      - name: Set all directories as git safe
-        run: |
-          git config --global --add safe.directory '*'
+      - name: Pull NVHPC image
+        run: docker pull "$NVHPC_IMAGE"
 
-      - name: Add python-is-python3 package
+      # Run everything inside the NVHPC container
+      - name: Build (inside NVHPC)
         run: |
-          apt-get update
-          apt-get install -y python-is-python3
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -w /workspace \
+            -e FC="$FC" \
+            "$NVHPC_IMAGE" \
+            bash -lc '
+              set -euo pipefail
 
-      - name: Build GFE Prereqs
-        run: |
-          bash ./tools/ci-install-gfe.bash
+              echo "== Versions =="
+              ${FC} --version || true
 
-      - name: Build gFTL
-        run: |
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j4
+              # Base NVHPC images are minimal; install what you need
+              apt-get update
+              DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+                cmake git python-is-python3 ca-certificates pkg-config make
 
-      - name: Build Tests
-        run: |
-          cd build
-          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
+              cmake --version
 
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -j1 --output-on-failure --repeat until-pass:4
+              echo "== Git safe.directory =="
+              git config --global --add safe.directory "*"
+
+              echo "== Build GFE Prereqs =="
+              bash ./tools/ci-install-gfe.bash
+
+              echo "== Build gFTL =="
+              cmake -B build -DSKIP_ROBUST=ON -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+              cmake --build build --parallel 4
+
+              echo "== Build Tests (CURRENTLY TURNED OFF DUE TO PFUNIT ISSUES) =="
+              #make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
+
+            '
 
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v4
         if: failure()
+        uses: actions/upload-artifact@v6
         with:
-          name: logfiles
+          name: logfiles-Nvidia
           path: |
             build/**/*.log
 
@@ -234,6 +261,13 @@ jobs:
     container: gmao/llvm-flang:latest
     env:
       FC: flang-new
+      LANGUAGE: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+      LC_TYPE: en_US.UTF-8
+      OMPI_ALLOW_RUN_AS_ROOT: 1
+      OMPI_ALLOW_RUN_AS_ROOT_CONFIRM: 1
+      OMPI_MCA_btl_vader_single_copy_mechanism: none
 
     name: Flang
     steps:
@@ -243,7 +277,7 @@ jobs:
           cmake --version
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -260,28 +294,23 @@ jobs:
         run: |
           bash ./tools/ci-install-gfe.bash
 
+      - name: Configure gFTL
+        run: |
+          cmake -B build -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
+
       - name: Build gFTL
         run: |
-          mkdir -p build
-          cd build
-          cmake .. -DCMAKE_Fortran_COMPILER=${FC} -DCMAKE_INSTALL_PREFIX=${HOME}/Software/gFTL -DCMAKE_PREFIX_PATH=${HOME}/Software/GFE
-          make -j4
+          cmake --build build --parallel 4
 
-      - name: Build Tests
+      - name: Build and Run Tests
         run: |
-          cd build
-          make -j4 tests || ctest -j1 --output-on-failure --repeat until-pass:4
-
-      - name: Run Tests
-        run: |
-          cd build
-          ctest -j1 --output-on-failure --repeat until-pass:4
+          cmake --build build --parallel 4 --target tests || ctest --test-dir build --parallel 1 --output-on-failure --repeat until-pass:4
 
       - name: Archive log files on failure
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         if: failure()
         with:
-          name: logfiles
+          name: logfiles-Flang
           path: |
             build/**/*.log
 
