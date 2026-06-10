@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Changed
+
+- Update CI to match build matrix of GFE
+
 ## [1.17.0] - 2026-02-23
 
 ### Fixed
