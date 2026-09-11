@@ -1,0 +1,159 @@
+name: Windows CI Tests
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "**.md"
+      - "**.MD"
+      - "License.txt"
+      - "Copyright.txt"
+  workflow_call:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  Windows-GNU:
+    name: Windows / gfortran
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Install m4
+        run: choco install gnuwin32-m4 -y
+
+      - name: Set up Fortran (MinGW gfortran)
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: gcc
+
+      - name: Versions
+        run: |
+          gfortran --version
+          gcc --version
+          ninja --version
+          cmake --version
+
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash \
+            -G "Ninja" \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_FLAGS="-D_WIN32" \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=ON \
+            -DSKIP_ROBUST=YES
+
+      - name: Configure gFTL
+        run: |
+          cmake -B build -G "Ninja" \
+            -DCMAKE_Fortran_COMPILER=gfortran \
+            -DCMAKE_C_COMPILER=gcc \
+            -DCMAKE_Fortran_FLAGS="-D_WIN32" \
+            -DCMAKE_INSTALL_PREFIX="${HOME}/Software/gFTL" \
+            -DCMAKE_PREFIX_PATH="${HOME}/Software/GFE"
+
+      - name: Build gFTL
+        run: cmake --build build --parallel 4
+
+      - name: Build and Run Tests target
+        run: |
+          cmake --build build --parallel 4 --target tests || true
+
+      - name: Run Ctest
+        run: ctest --test-dir build --parallel 4 --output-on-failure --repeat until-pass:4
+
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: logfiles-Windows-GNU
+          path: |
+            build/**/*.log
+
+  Windows-Intel:
+    name: Windows / ifx
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Set all directories as git safe
+        run: |
+          git config --global --add safe.directory '*'
+
+      - name: Install m4
+        run: choco install gnuwin32-m4 -y
+
+      - name: Set up Intel Fortran (ifx)
+        uses: fortran-lang/setup-fortran@v1
+        with:
+          compiler: intel
+          version: "2025.3.2"
+
+      - name: Set up MSVC toolchain
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Versions
+        run: |
+          ifx --version
+          cl
+          ninja --version
+          cmake --version
+
+      - name: Build GFE Prereqs
+        run: |
+          bash ./tools/ci-install-gfe.bash \
+            -G "Ninja" \
+            -DCMAKE_Fortran_COMPILER=ifx \
+            -DCMAKE_C_COMPILER=cl \
+            -DSKIP_MPI=YES \
+            -DSKIP_OPENMP=ON \
+            -DSKIP_ROBUST=YES
+
+      - name: Configure gFTL
+        run: |
+          cmake -B build -G "Ninja" \
+            -DCMAKE_Fortran_COMPILER=ifx \
+            -DCMAKE_C_COMPILER=cl \
+            -DCMAKE_INSTALL_PREFIX="${HOME}/Software/gFTL" \
+            -DCMAKE_PREFIX_PATH="${HOME}/Software/GFE"
+
+      - name: Build gFTL
+        run: cmake --build build --parallel 4
+
+      - name: Build and Run Tests target
+        run: |
+          cmake --build build --parallel 4 --target tests || true
+
+      - name: Run Ctest
+        run: ctest --test-dir build --parallel 4 --output-on-failure --repeat until-pass:4
+
+      - name: Archive log files on failure
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: logfiles-Windows-Intel
+          path: |
+            build/**/*.log

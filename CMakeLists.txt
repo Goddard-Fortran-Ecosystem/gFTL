@@ -48,6 +48,9 @@ if (CMAKE_Fortran_COMPILER)
     
     set (CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${GFTL_SOURCE_DIR}/cmake")
     include (${CMAKE_Fortran_COMPILER_ID} RESULT_VARIABLE found)
+    if (WIN32)
+      add_compile_definitions(_WIN32)
+    endif()
     include (CheckFortranSource)
     include (CheckCompilerCapabilities)
   
