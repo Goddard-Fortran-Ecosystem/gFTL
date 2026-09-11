@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Windows CI workflow for MinGW `gfortran` and Intel `ifx`
+
 ### Changed
 
 - Update CI to match build matrix of GFE
